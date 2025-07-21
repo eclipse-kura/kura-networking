@@ -3,6 +3,7 @@
 classes
 target
 RemoteSystemsTempFiles
+lib
 .metadata
 .recommenders
 .sonarlint
