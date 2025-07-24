@@ -168,6 +168,7 @@
                             -Dosgi.console=5002
                             -Declipse.security=osgi
                             -Dorg.osgi.framework.security=osgi
+                            -XX:CompileCommand=exclude,org/osgi/framework/AdminPermission,parseActions
                             -Dosgi.signedcontent.support=all
                             -XX:HeapDumpPath=/dev/null
                             -Dorg.eclipse.kura.mode=emulator
@@ -176,7 +177,6 @@
                             -Ddpa.configuration=${kura.workdir}/data/dpa.properties
                             -Dkura.data=${kura.workdir}/data
                             -Dkura.snapshots=${kura.workdir}/user/snapshots
-                            -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.kura.jetty.customizer.KuraJettyCustomizer
                             -Dlog4j.configurationFile=file:${kura.workdir}/log4j/log4j.xml
                         </argLine>
                         <!--
@@ -196,6 +196,16 @@
                             <bundle>
                                 <id>org.apache.aries.spifly.dynamic.bundle</id>
                                 <level>1</level>
+                                <autoStart>true</autoStart>
+                            </bundle>
+                            <bundle>
+                                <id>org.eclipse.kura.http.server.manager</id>
+                                <level>4</level>
+                                <autoStart>true</autoStart>
+                            </bundle>
+                            <bundle>
+                                <id>org.apache.felix.http.bridge</id>
+                                <level>4</level>
                                 <autoStart>true</autoStart>
                             </bundle>
                         </bundleStartLevel>
@@ -267,7 +277,22 @@
                                 <!-- logging -->
                                 <requirement>
                                     <type>p2-installable-unit</type>
+                                    <id>org.apache.logging.log4j.api</id>
+                                    <versionRange>0.0.0</versionRange>
+                                </requirement>
+                                <requirement>
+                                    <type>p2-installable-unit</type>
                                     <id>org.apache.logging.log4j.core</id>
+                                    <versionRange>0.0.0</versionRange>
+                                </requirement>
+                                <requirement>
+                                    <type>eclipse-plugin</type>
+                                    <id>log4j2-api-config</id>
+                                    <versionRange>0.0.0</versionRange>
+                                </requirement>
+                                <requirement>
+                                    <type>p2-installable-unit</type>
+                                    <id>org.apache.logging.log4j.slf4j2.impl</id>
                                     <versionRange>0.0.0</versionRange>
                                 </requirement>
                                 <!-- kura emulator and other deps -->
@@ -359,6 +384,16 @@
                                 <requirement>
                                     <type>p2-installable-unit</type>
                                     <id>org.eclipse.equinox.metatype</id>
+                                    <versionRange>0.0.0</versionRange>
+                                </requirement>
+                                <requirement>
+                                    <type>eclipse-plugin</type>
+                                    <id>org.eclipse.kura.rest.provider</id>
+                                    <versionRange>0.0.0</versionRange>
+                                </requirement>
+                                <requirement>
+                                    <type>eclipse-plugin</type>
+                                    <id>org.eclipse.kura.core.identity</id>
                                     <versionRange>0.0.0</versionRange>
                                 </requirement>
                             </extraRequirements>

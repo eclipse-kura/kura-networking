@@ -39,7 +39,6 @@ import org.eclipse.kura.core.testutil.service.ServiceUtil;
 import org.eclipse.kura.crypto.CryptoService;
 import org.eclipse.kura.rest.network.configuration.provider.test.responses.MockComponentConfiguration;
 import org.eclipse.kura.rest.network.configuration.provider.test.responses.RestNetworkConfigurationJson;
-import org.eclipse.kura.util.wire.test.WireTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
@@ -297,8 +296,8 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
 
     @BeforeClass
     public static void setUp() throws Exception {
-        WireTestUtil.trackService(ConfigurationService.class, Optional.empty()).get(30, TimeUnit.SECONDS);
-        final ConfigurationAdmin configurationAdmin = WireTestUtil
+        ServiceUtil.trackService(ConfigurationService.class, Optional.empty()).get(30, TimeUnit.SECONDS);
+        final ConfigurationAdmin configurationAdmin = ServiceUtil
                 .trackService(ConfigurationAdmin.class, Optional.empty()).get(30, TimeUnit.SECONDS);
         final Configuration config = configurationAdmin.getConfiguration(
                 "org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", "?");
@@ -312,7 +311,6 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
                 .registerService(ConfigurationService.class, configurationService, configurationServiceProperties);
     }
 
-    @SuppressWarnings("unchecked")
     private void givenIdentity(final String username, final Optional<String> password, final List<String> roles) {
         final UserAdmin userAdmin;
         try {

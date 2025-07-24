@@ -13,21 +13,23 @@
 	 Eurotech
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<groupId>org.eclipse.kura</groupId>
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<parent>
-	    <groupId>org.eclipse.kura</groupId>
-		<artifactId>kura-networking.parent</artifactId>
-	    <version>3.0.0-SNAPSHOT</version>
-	</parent>
+    <modelVersion>4.0.0</modelVersion>
 
-	<properties>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../test/*/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-	</properties>
+    <parent>
+        <groupId>org.eclipse.kura</groupId>
+        <artifactId>kura-networking.parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>org.eclipse.kura.rest.network.configuration.provider</artifactId>
-	<packaging>eclipse-plugin</packaging>
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${project.basedir}/../test/*/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
+    <artifactId>org.eclipse.kura.rest.network.configuration.provider</artifactId>
+    <packaging>eclipse-plugin</packaging>
 </project>
