@@ -11,3 +11,4 @@ lib
 .project
 .settings
 .vscode
+hs_err_pid*.log
