@@ -195,7 +195,7 @@
                             </bundle>
                             <bundle>
                                 <id>org.apache.aries.spifly.dynamic.bundle</id>
-                                <level>2</level>
+                                <level>1</level>
                                 <autoStart>true</autoStart>
                             </bundle>
                         </bundleStartLevel>
@@ -217,7 +217,7 @@
                             </configuration>
                         </execution>
                     </executions>
-                    <configuration/>
+                    <configuration />
                 </plugin>
 
                 <plugin>
