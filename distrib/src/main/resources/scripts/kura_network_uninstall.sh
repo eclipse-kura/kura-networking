@@ -46,20 +46,20 @@ restore_netplan() {
 restore_nm_installation() {
     # restore /etc/network/interfaces.kurasave
     if test -f /etc/network/interfaces.kurasave; then
-        mv /etc/network/interfaces.kurasave/etc/network/interfaces
+        mv /etc/network/interfaces.kurasave /etc/network/interfaces
     fi
 
     # restore iptables
     if test -f /etc/sysconfig/iptables.kurasave; then
-        mv /etc/sysconfig/iptables.kurasave/etc/sysconfig/iptables
+        mv /etc/sysconfig/iptables.kurasave /etc/sysconfig/iptables
     fi
     if test -f /proc/sys/net/ipv4/ip_forward.kurasave; then
         mv "${BASE_DIR}/${KURA_SYMLINK}/.data/ip_forward.kurasave" /proc/sys/net/ipv4/ip_forward 
     fi
     
     # restore /etc/default/dnsmasq.kurasave
-    if [ -f /etc/default/dnsmasq.kurasave]; then
-        mv /etc/default/dnsmasq.kurasave/etc/default/dnsmasq
+    if [ -f /etc/default/dnsmasq.kurasave ]; then
+        mv /etc/default/dnsmasq.kurasave /etc/default/dnsmasq
     fi
 
     restore_named_config
@@ -85,9 +85,9 @@ recover_web_ui_kura_properties() {
     fi
 }
 
-restore_kura_service() {
-    if [ f /lib/systemd/system/kura.service.kurasave ]; then
-        mv /lib/systemd/system/kura.service.kurasave /lib/systemd/system/kura.service
+remove_kura_networking_service() {
+    if [ -f /usr/lib/systemd/system/kura.service.d/kura-networking.conf ]; then
+        rm /usr/lib/systemd/system/kura.service.d/kura-networking.conf
     fi
 }
 
@@ -103,7 +103,7 @@ kura_uninstall() {
         recover_dnsmasq_conf_file
 
         recover_web_ui_kura_properties
-        restore_kura_service
+        remove_kura_networking_service
     fi
 
     # flush all cached filesystem to disk

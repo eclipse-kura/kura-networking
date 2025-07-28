@@ -498,7 +498,7 @@
                                 </data>
                                 <data>
                                     <type>file</type>
-                                    <src>${project.basedir}/src/main/resources/scripts/kura.service</src>
+                                    <src>${project.basedir}/src/main/resources/scripts/kura-networking.conf</src>
                                     <dst>kura.service</dst>
                                     <mapper>
                                         <type>perm</type>

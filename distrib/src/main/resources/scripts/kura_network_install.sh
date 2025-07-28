@@ -192,8 +192,11 @@ setup_web_ui_kura_properties() {
 kura_install() {
     echo "Installing Kura networking..."
 
-    cp /lib/systemd/system/kura.service /lib/systemd/system/kura.service.kurasave
-    sed "s|INSTALL_DIR|${INSTALL_DIR}|" ${INSTALL_DIR}/kura/install/kura.service > /lib/systemd/system/kura.service
+    if [ ! -d "/usr/lib/systemd/system/kura.service.d" ]; then
+      mkdir -p "$/usr/lib/systemd/system/kura.service.d"
+    fi
+
+    sed "s|INSTALL_DIR|${INSTALL_DIR}|" ${INSTALL_DIR}/kura/install/kura-networking.conf > /usr/lib/systemd/system/kura.service.d/kura-networking.conf
     systemctl daemon-reload
     systemctl enable kura
 

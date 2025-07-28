@@ -81,6 +81,8 @@ import org.osgi.framework.ServiceRegistration;
 @RunWith(Parameterized.class)
 public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest {
 
+    private static final String EXCEPTION_MESSAGE_TEXT = "exception message";
+
     @Test
     public void shouldRejectRequestWithMissingInterfeceIdField() {
         whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{}");
@@ -128,7 +130,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Test
     public void shouldRportGeneralExceptionGettingInterfaceList() {
-        givenExceptionThrownByNetworkStatusServiceMethods(new IllegalStateException("exception message"));
+        givenExceptionThrownByNetworkStatusServiceMethods(new IllegalStateException(EXCEPTION_MESSAGE_TEXT));
 
         whenRequestIsPerformed(new MethodSpec("GET"), INTERFACE_IDS_PATH);
 
@@ -138,7 +140,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Test
     public void shouldReportGeneralExceptionGettingAllInterfacesStatus() {
-        givenExceptionThrownByNetworkStatusServiceMethods(new IllegalStateException("exception message"));
+        givenExceptionThrownByNetworkStatusServiceMethods(new IllegalStateException(EXCEPTION_MESSAGE_TEXT));
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
@@ -168,7 +170,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Test
     public void shouldReportExceptionMessageGettingAllInterfaces() {
-        givenExceptionRetrievingInterfaceStatus("foo", new IllegalArgumentException("exception message"));
+        givenExceptionRetrievingInterfaceStatus("foo", new IllegalArgumentException(EXCEPTION_MESSAGE_TEXT));
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
@@ -179,7 +181,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Test
     public void shouldReportExceptionMessageByInterfaceId() {
-        givenExceptionRetrievingInterfaceStatus("foo", new IllegalArgumentException("exception message"));
+        givenExceptionRetrievingInterfaceStatus("foo", new IllegalArgumentException(EXCEPTION_MESSAGE_TEXT));
 
         whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
                 "{\"interfaceIds\":[\"foo\"]}");
@@ -365,7 +367,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     }
 
     @Test
-    public void shouldEncodeUnFilledIpV4Addresses() throws UnknownHostException {
+    public void shouldEncodeUnFilledIpV4Addresses() {
 
         givenLoopbackInterfaceWithUnFilledIP4Address("lo0");
 
@@ -426,7 +428,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     }
 
     @Test
-    public void shouldEncodeUnFilledIpV6Addresses() throws UnknownHostException {
+    public void shouldEncodeUnFilledIpV6Addresses() {
 
         givenLoopbackInterfaceWithUnFilledIP6Address("lo0");
 
@@ -1035,10 +1037,10 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
                 final String id = i.getArgument(0);
                 final Result result = this.currentStatus.get(id);
 
-                if (result instanceof Success) {
-                    return Optional.of(((Success) result).status);
-                } else if (result instanceof Failure) {
-                    throw ((Failure) result).exception;
+                if (result instanceof Success success) {
+                    return Optional.of((success.status));
+                } else if (result instanceof Failure failure) {
+                    throw failure.exception;
                 }
 
                 return Optional.empty();
@@ -1124,12 +1126,12 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
                         .build())));
     }
 
-    private void givenLoopbackInterfaceWithUnFilledIP4Address(final String id) throws UnknownHostException {
+    private void givenLoopbackInterfaceWithUnFilledIP4Address(final String id) {
         givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId(id)
                 .withInterfaceIp4Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP4Address>builder().build())));
     }
 
-    private void givenLoopbackInterfaceWithUnFilledIP6Address(final String id) throws UnknownHostException {
+    private void givenLoopbackInterfaceWithUnFilledIP6Address(final String id) {
         givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId(id)
                 .withInterfaceIp6Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP6Address>builder().build())));
     }
