@@ -40,10 +40,10 @@ export LOG=/tmp/kura_network_install_${TIMESTAMP}.log
 export PATH=$PATH:/usr/java/bin:/usr/bin/java/bin
 echo "Configuring Kura networking..."
 
-bash /opt/eclipse/kura.data/kura_network_install.sh ${STATUS} /opt/eclipse kura 2>&1 | tee -a $LOG | systemd-cat -t Kura
+bash /opt/eclipse/kura/.data/kura_network_install.sh ${STATUS} /opt/eclipse kura 2>&1 | tee -a $LOG | systemd-cat -t Kura
 
-mkdir -p /opt/eclipse/kuralog
-mv $LOG /opt/eclipse/kuralog/
+mkdir -p /opt/eclipse/kura/log
+mv $LOG /opt/eclipse/kura/log/
 
 if test -f /tmp/install_error; then
     echo "Kura networking installation failed. Please uninstall Kura networking manually."
