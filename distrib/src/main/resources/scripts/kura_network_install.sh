@@ -1,8 +1,15 @@
 #!/bin/bash
 #
-# Copyright (c) 2020, 2025 Eurotech and/or its affiliates
+#  Copyright (c) 2020, 2025 Eurotech and/or its affiliates and others
 #
-#  All rights reserved.
+#  This program and the accompanying materials are made
+#  available under the terms of the Eclipse Public License 2.0
+#  which is available at https://www.eclipse.org/legal/epl-2.0/
+#
+#  SPDX-License-Identifier: EPL-2.0
+#
+#  Contributors:
+#   Eurotech
 #
 
 STATUS=$1
@@ -193,10 +200,10 @@ kura_install() {
     echo "Installing Kura networking..."
 
     if [ ! -d "/usr/lib/systemd/system/kura.service.d" ]; then
-      mkdir -p "$/usr/lib/systemd/system/kura.service.d"
+      mkdir -p "/usr/lib/systemd/system/kura.service.d"
     fi
 
-    sed "s|INSTALL_DIR|${INSTALL_DIR}|" ${INSTALL_DIR}/kura/install/kura-networking.conf > /usr/lib/systemd/system/kura.service.d/kura-networking.conf
+    cp "${BASE_DIR}/${KURA_SYMLINK}/install/kura-networking.conf" /usr/lib/systemd/system/kura.service.d/kura-networking.conf
     systemctl daemon-reload
     systemctl enable kura
 

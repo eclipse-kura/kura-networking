@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Copyright (c) 2023, 2024 Eurotech and/or its affiliates and others
+#  Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
 #
 #  This program and the accompanying materials are made
 #  available under the terms of the Eclipse Public License 2.0
@@ -47,6 +47,10 @@ customize_snapshot() {
     python3 "/opt/eclipse/kura/install/customize_snapshot.py" "--networking_profile"
 }
 
+customize_snapshot() {
+    python3 "/opt/eclipse/kura/install/customize_snapshot_network.py" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
+}
+
 customize_iptables() {
     if [ "${IS_NETWORKING_PROFILE}" = "true" ]; then
         mv "/opt/eclipse/kura/install/iptables" "/opt/eclipse/kura/.data/iptables"
@@ -63,31 +67,6 @@ customize_kura_properties() {
     python3 "/opt/eclipse/kura/install/customize_kura_properties.py" "${BOARD}"
 }
 
-customize_ram() {
-    local BOARD=$1
-    
-    if [ ${BOARD} = "generic-device" ]; then    
-        # dynamic RAM assignment
-        RAM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-        RAM_MB=$(expr $RAM_KB / 1024)
-        RAM_MB_FOR_KURA=$(expr $RAM_MB / 4)
-    
-        if [ "$RAM_MB" -lt 1024 ]; then
-            RAM_MB_FOR_KURA="256"
-        fi
-    
-        echo "Setting kura RAM to ${RAM_MB_FOR_KURA}"
-        start_scripts_to_change=("start_kura.sh" "start_kura_debug.sh" "start_kura_background.sh")
-    
-        RAM_REPLACEMENT_STRING="-Xms${RAM_MB_FOR_KURA}m -Xmx${RAM_MB_FOR_KURA}m"
-        for installer_name in "${start_scripts_to_change[@]}"; do
-            echo "Updating RAM values for $installer_name"
-            sed -i "s/-Xms[0-9]*m -Xmx[0-9]*m/$RAM_REPLACEMENT_STRING/g" "/opt/eclipse/kura/bin/$installer_name"
-        done
-        
-    fi    
-}
-
 IS_NETWORKING_PROFILE=$1
 
 setup_libudev
@@ -99,10 +78,6 @@ then
     echo "Customizing installation for Raspberry PI"
 fi
 
-mv "/opt/eclipse/kura/install/jdk.dio.properties-${BOARD}" "/opt/eclipse/kura/framework/jdk.dio.properties"
-
 customize_snapshot
 customize_kura_properties "${BOARD}"
 customize_iptables
-customize_ram "${BOARD}"
-

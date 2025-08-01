@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Copyright (c) 2025 Eurotech and/or its affiliates and others
+#
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#  Eurotech
+#
+
+XML_HEADER='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+SNAPSHOT_0_PATH='/opt/eclipse/kura/user/snapshots/snapshot_0.xml'
+
+echo "Checking snapshot_0.xml..."
+
+read -r line < "$SNAPSHOT_0_PATH"
+if [[ "$line" != "$XML_HEADER"* ]]; then
+  echo "Error: Snapshot encrypted." >&2
+  echo "In order to install kura-networking, kura-core must never have been started." >&2
+  exit 1
+fi

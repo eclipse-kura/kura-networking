@@ -29,86 +29,63 @@ ResultInactive=no
 ResultActive=no
 ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/51-org.freedesktop.systemd1.pkla
         fi
-        if [[ $NN == "NO" ]]; then
-            if [ ! -f /etc/polkit-1/localauthority/50-local.d/52-org.freedesktop.networkmanager.pkla ]; then
-                echo "[No password prompt for kurad user when using NetworkManager]
+
+        if [ ! -f /etc/polkit-1/localauthority/50-local.d/52-org.freedesktop.networkmanager.pkla ]; then
+            echo "[No password prompt for kurad user when using NetworkManager]
 Identity=unix-user:kurad
 Action=org.freedesktop.NetworkManager.*
 ResultInactive=no
 ResultActive=no
 ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/52-org.freedesktop.networkmanager.pkla
-            fi
-            if [ ! -f /etc/polkit-1/localauthority/50-local.d/53-org.freedesktop.modemmanager.pkla ]; then
-                echo "[No password prompt for kurad user when using ModemManager]
+        fi
+        if [ ! -f /etc/polkit-1/localauthority/50-local.d/53-org.freedesktop.modemmanager.pkla ]; then
+            echo "[No password prompt for kurad user when using ModemManager]
 Identity=unix-user:kurad
 Action=org.freedesktop.ModemManager1.*
 ResultInactive=no
 ResultActive=no
 ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/53-org.freedesktop.modemmanager.pkla
-            fi
-            if [ ! -f /etc/polkit-1/localauthority/50-local.d/54-fi.w1.wpa_supplicant1.pkla ]; then
-                echo "[No password prompt for kurad user when using Wpa Supplicant]
+        fi
+        if [ ! -f /etc/polkit-1/localauthority/50-local.d/54-fi.w1.wpa_supplicant1.pkla ]; then
+            echo "[No password prompt for kurad user when using Wpa Supplicant]
 Identity=unix-user:kurad
 Action=fi.w1.wpa_supplicant1.*
 ResultInactive=no
 ResultActive=no
 ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/54-fi.w1.wpa_supplicant1.pkla
-            fi
         fi
     else
-        if [[ $NN == "NO" ]]; then
-            if [ ! -f /usr/share/polkit-1/rules.d/kura.rules ]; then
-                echo "polkit.addRule(function(action, subject) {
-        if (action.id == \"org.freedesktop.systemd1.manage-units\" &&
-            subject.user == \"kurad\" &&
-            (action.lookup(\"unit\") == \"named.service\" ||
-            action.lookup(\"unit\") == \"chrony.service\" ||
-            action.lookup(\"unit\") == \"chronyd.service\" ||
-            action.lookup(\"unit\") == \"bluetooth.service\")) {
-            return polkit.Result.YES;
-        }
-        if (action.id == \"org.freedesktop.systemd1.manage-unit-files\" &&
-            subject.user == \"kurad\") {
-            return polkit.Result.YES;
-        }
-        if ((action.id == \"org.freedesktop.login1.reboot-multiple-sessions\" ||
-            action.id == \"org.freedesktop.login1.suspend-multiple-sessions\" ||
-            action.id == \"org.freedesktop.login1.power-off-multiple-sessions\") &&
-            subject.user == \"kurad\") {
-            return polkit.Result.YES;
-        }
-    });" >/usr/share/polkit-1/rules.d/kura.rules
-            fi
-            if [ ! -f /usr/share/polkit-1/rules.d/kura-nm.rules ]; then
-                echo "polkit.addRule(function(action, subject) {
-        if ((action.id.indexOf(\"org.freedesktop.NetworkManager.\") == 0 ||
-            action.id.indexOf(\"org.freedesktop.ModemManager1.\") == 0 ||
-            action.id.indexOf(\"fi.w1.wpa_supplicant1.\") == 0) &&
-            subject.user == \"kurad\") {
-            return polkit.Result.YES;
-        }
-    });" >/usr/share/polkit-1/rules.d/kura-nm.rules
-            fi
-        else
+        if [ ! -f /usr/share/polkit-1/rules.d/kura.rules ]; then
             echo "polkit.addRule(function(action, subject) {
-if (action.id == \"org.freedesktop.systemd1.manage-units\" &&
-    subject.user == \"kurad\" &&
-    (action.lookup(\"unit\") == \"bluetooth.service\" ||
-    action.lookup(\"unit\") == \"chrony.service\" ||
-    action.lookup(\"unit\") == \"chronyd.service\" )) {
-    return polkit.Result.YES;
-}
-if (action.id == \"org.freedesktop.systemd1.manage-unit-files\" &&
-    subject.user == \"kurad\") {
-    return polkit.Result.YES;
-}
-if ((action.id == \"org.freedesktop.login1.reboot-multiple-sessions\" ||
-    action.id == \"org.freedesktop.login1.suspend-multiple-sessions\" ||
-    action.id == \"org.freedesktop.login1.power-off-multiple-sessions\") &&
-    subject.user == \"kurad\") {
-    return polkit.Result.YES;
-}
+    if (action.id == \"org.freedesktop.systemd1.manage-units\" &&
+        subject.user == \"kurad\" &&
+        (action.lookup(\"unit\") == \"named.service\" ||
+        action.lookup(\"unit\") == \"chrony.service\" ||
+        action.lookup(\"unit\") == \"chronyd.service\" ||
+        action.lookup(\"unit\") == \"bluetooth.service\")) {
+        return polkit.Result.YES;
+    }
+    if (action.id == \"org.freedesktop.systemd1.manage-unit-files\" &&
+        subject.user == \"kurad\") {
+        return polkit.Result.YES;
+    }
+    if ((action.id == \"org.freedesktop.login1.reboot-multiple-sessions\" ||
+        action.id == \"org.freedesktop.login1.suspend-multiple-sessions\" ||
+        action.id == \"org.freedesktop.login1.power-off-multiple-sessions\") &&
+        subject.user == \"kurad\") {
+        return polkit.Result.YES;
+    }
 });" >/usr/share/polkit-1/rules.d/kura.rules
+        fi
+        if [ ! -f /usr/share/polkit-1/rules.d/kura-nm.rules ]; then
+            echo "polkit.addRule(function(action, subject) {
+    if ((action.id.indexOf(\"org.freedesktop.NetworkManager.\") == 0 ||
+        action.id.indexOf(\"org.freedesktop.ModemManager1.\") == 0 ||
+        action.id.indexOf(\"fi.w1.wpa_supplicant1.\") == 0) &&
+        subject.user == \"kurad\") {
+        return polkit.Result.YES;
+    }
+});" >/usr/share/polkit-1/rules.d/kura-nm.rules
         fi
     fi
 
@@ -140,7 +117,7 @@ if ((action.id == \"org.freedesktop.login1.reboot-multiple-sessions\" ||
     fi
 
     # grant kurad user the privileges to manage wpa supplicant via dbus
-    if ! grep -lR kurad /etc/dbus-1/system.d/wpa_supplicant.conf && [ $NN == "NO" ]; then
+    if ! grep -lR kurad /etc/dbus-1/system.d/wpa_supplicant.conf ; then
         cp /etc/dbus-1/system.d/wpa_supplicant.conf /etc/dbus-1/system.d/wpa_supplicant.conf.save
         awk 'done != 1 && /^<\/busconfig>/ {
             print "    <policy user=\"kurad\">"
@@ -201,7 +178,6 @@ while [[ $# > 0 ]]; do
         echo "Options:"
         echo "    -i | --install    create kura default users"
         echo "    -u | --uninstall  delete kura default users"
-        echo "    -nn               set kura no network version"
         echo "Default: --install"
         exit 0
         ;;

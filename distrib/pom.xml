@@ -421,8 +421,8 @@
                                 </data>
                                 <data>
                                     <type>file</type>
-                                    <src>${project.basedir}/src/main/resources/scripts/customize_snapshot.py</src>
-                                    <dst>customize_snapshot.py</dst>
+                                    <src>${project.basedir}/src/main/resources/scripts/customize_snapshot_network.py</src>
+                                    <dst>customize_snapshot_network.py</dst>
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>/opt/eclipse/kura/install</prefix>
@@ -499,7 +499,7 @@
                                 <data>
                                     <type>file</type>
                                     <src>${project.basedir}/src/main/resources/scripts/kura-networking.conf</src>
-                                    <dst>kura.service</dst>
+                                    <dst>kura-networking.conf</dst>
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>/opt/eclipse/kura/install</prefix>
