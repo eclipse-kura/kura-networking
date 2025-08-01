@@ -26,8 +26,7 @@
     </parent>
 
     <properties>
-        <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/../test/*/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../tests/org.eclipse.kura.rest.network.configuration.provider.test/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <artifactId>org.eclipse.kura.rest.network.configuration.provider</artifactId>

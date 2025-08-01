@@ -27,6 +27,6 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../test/org.eclipse.kura.net.admin.firewall.test/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../tests/org.eclipse.kura.net.admin.firewall.test/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 </project>
