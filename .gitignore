@@ -12,3 +12,5 @@ lib
 .settings
 .vscode
 hs_err_pid*.log
+.tycho-consumer-pom.xml
+
