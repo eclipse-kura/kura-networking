@@ -158,6 +158,11 @@ def main():
         interfaces_list += "," + eth_name
         logging.info("%s : replaced ETH_INTERFACE_%s with %s", safe_path, str(i), eth_name)
 
+    for i, wlan_name in enumerate(wlan_names[:1]):
+        snapshot_content = snapshot_content.replace('WIFI_INTERFACE_' + str(i), wlan_name)
+        interfaces_list += "," + wlan_name
+        logging.info("%s : replaced WIFI_INTERFACE_%s with %s", safe_path, str(i), wlan_name)
+
     snapshot_content = snapshot_content.replace('INTERFACES_LIST', interfaces_list)
 
     write_file_safely(safe_path, snapshot_content)
