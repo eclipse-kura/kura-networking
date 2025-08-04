@@ -12,6 +12,21 @@
 #  Eurotech
 #
 
+XML_HEADER='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+SNAPSHOT_0_PATH='/opt/eclipse/kura/user/snapshots/snapshot_0.xml'
+
+check_snapshot_0() {
+    if [[ -f "$SNAPSHOT_0_PATH" ]]; then
+      read -r line < "$SNAPSHOT_0_PATH"
+      if [[ "$line" != "$XML_HEADER"* ]]; then
+        echo "Error: Snapshot encrypted." >&2
+        echo "In order to install kura-networking, kura-core must never have been started." >&2
+        exit 1
+      fi
+    fi
+}
+
+
 case "$1" in
     configure)
         STATUS=install
@@ -33,7 +48,10 @@ case "$1" in
         ;;
 esac
 
-echo ""
+echo "Checking kura snapshot_0.xml..."
+check_snapshot_0
+echo "kura snapshot_0.xml ok."
+
 echo "Installing Kura networking..."
 export TIMESTAMP=`date +%Y%m%d%H%M`
 export LOG=/tmp/kura_network_install_${TIMESTAMP}.log

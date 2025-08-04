@@ -43,18 +43,18 @@ customize_snapshot() {
         mkdir /opt/eclipse/kura/user/snapshots/
     fi
 
-    mv "/opt/eclipse/kura/install/snapshot_0.xml" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
-    python3 "/opt/eclipse/kura/install/customize_snapshot.py" "--networking_profile"
+    mv "/opt/eclipse/kura/kura-networking-install/snapshot_0.xml" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
+    python3 "/opt/eclipse/kura/kura-networking-install/customize_snapshot.py" "--networking_profile"
 }
 
 customize_snapshot() {
-    python3 "/opt/eclipse/kura/install/customize_snapshot_network.py" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
+    python3 "/opt/eclipse/kura/kura-networking-install/customize_snapshot_network.py" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
 }
 
 customize_iptables() {
     if [ "${IS_NETWORKING_PROFILE}" = "true" ]; then
-        mv "/opt/eclipse/kura/install/iptables" "/opt/eclipse/kura/.data/iptables"
-        python3 "/opt/eclipse/kura/install/customize_iptables.py"
+        mv "/opt/eclipse/kura/kura-networking-install/iptables" "/opt/eclipse/kura/.data/iptables"
+        python3 "/opt/eclipse/kura/kura-networking-install/customize_iptables.py"
     fi
 }
 
@@ -64,7 +64,7 @@ customize_kura_properties() {
     KURA_PLATFORM=$( uname -m )
     sed -i "s/kura_platform/${KURA_PLATFORM}/g" "/opt/eclipse/kura/framework/kura.properties"
 
-    python3 "/opt/eclipse/kura/install/customize_kura_properties.py" "${BOARD}"
+    python3 "/opt/eclipse/kura/kura-networking-install/customize_kura_properties.py" "${BOARD}"
 }
 
 IS_NETWORKING_PROFILE=$1

@@ -12,7 +12,7 @@ from network_tools import get_eth_wlan_interfaces_names
 import os.path
 
 # Define constants at the top of the file
-TEMPLATE_DIR = "/opt/eclipse/kura/install"
+TEMPLATE_DIR = "/opt/eclipse/kura/kura-networking-install"
 TEMPLATES = {
     "firewall": os.path.join(TEMPLATE_DIR, "template_firewall_eth"),
     "firewall_wlan" : os.path.join(TEMPLATE_DIR, "template_firewall_eth_wlan"),

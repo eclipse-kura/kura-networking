@@ -133,7 +133,7 @@ setup_network_manager() {
     # comment network interface configurations in interfaces file
     if python3 -V > /dev/null 2>&1
     then
-        python3 "${BASE_DIR}/${KURA_SYMLINK}/install/comment_interfaces_file.py"
+        python3 "${BASE_DIR}/${KURA_SYMLINK}/kura-networking-install/comment_interfaces_file.py"
     else
         echo "python3 not found. Please manually review the /etc/network/interfaces file and comment configured network interfaces."
     fi
@@ -142,7 +142,7 @@ setup_network_manager() {
     if [ -f /etc/default/dnsmasq ]; then
         mv /etc/default/dnsmasq /etc/default/dnsmasq.kurasave
     fi
-    cp "${BASE_DIR}/${KURA_SYMLINK}/install/dnsmasq" /etc/default/dnsmasq
+    cp "${BASE_DIR}/${KURA_SYMLINK}/kura-networking-install/dnsmasq" /etc/default/dnsmasq
 
     install_named_config
 
@@ -203,7 +203,7 @@ kura_install() {
       mkdir -p "/usr/lib/systemd/system/kura.service.d"
     fi
 
-    cp "${BASE_DIR}/${KURA_SYMLINK}/install/kura-networking.conf" /usr/lib/systemd/system/kura.service.d/kura-networking.conf
+    cp "${BASE_DIR}/${KURA_SYMLINK}/kura-networking-install/kura-networking.conf" /usr/lib/systemd/system/kura.service.d/kura-networking.conf
     systemctl daemon-reload
     systemctl enable kura
 
@@ -219,7 +219,7 @@ kura_install() {
 
     setup_network_manager
 
-    bash "${BASE_DIR}/${KURA_SYMLINK}/install/customize-installation.sh" "install" true
+    bash "${BASE_DIR}/${KURA_SYMLINK}/kura-networking-install/customize-installation.sh" "install" true
 
     setup_web_ui_kura_properties
 
@@ -230,7 +230,7 @@ kura_install() {
 
     setup_dnsmasq_conf_file
 
-    rm -r "${BASE_DIR}/${KURA_SYMLINK}/install"
+    rm -r "${BASE_DIR}/${KURA_SYMLINK}/kura-networking-install"
 
     # flush all cached filesystem to disk
     sync

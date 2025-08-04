@@ -389,7 +389,7 @@
                                     <dst>network_tools.py</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -401,7 +401,7 @@
                                     <dst>customize_iptables.py</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -413,7 +413,7 @@
                                     <dst>customize_kura_properties.py</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -425,7 +425,7 @@
                                     <dst>customize_snapshot_network.py</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -437,7 +437,7 @@
                                     <dst>customize-installation.sh</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -449,7 +449,7 @@
                                     <dst>comment_interfaces_file.py</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -461,7 +461,7 @@
                                     <dst>dnsmasq</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -472,7 +472,7 @@
                                     <src>${project.basedir}/src/main/resources/scripts/iptables</src>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -490,7 +490,7 @@
                                     <src>${project.basedir}/src/main/resources/scripts/snapshots</src>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
@@ -502,7 +502,7 @@
                                     <dst>kura-networking.conf</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/install</prefix>
+                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
                                         <user>root</user>
                                         <group>root</group>
                                         <filemode>644</filemode>
