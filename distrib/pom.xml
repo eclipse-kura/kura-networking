@@ -266,8 +266,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.4.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -278,8 +278,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.5s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -290,8 +290,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.5s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -302,8 +302,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.4s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -314,8 +314,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.5s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -326,8 +326,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.4.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -338,8 +338,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.4s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -350,8 +350,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.4s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
@@ -362,8 +362,8 @@
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${addon.4s.installation.dir}</prefix>
-                                        <user>esfd</user>
-                                        <group>esfd</group>
+                                        <user>kurad</user>
+                                        <group>kurad</group>
                                         <filemode>600</filemode>
                                     </mapper>
                                 </data>
