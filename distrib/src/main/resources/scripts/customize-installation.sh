@@ -39,15 +39,6 @@ setup_libudev() {
 }
 
 customize_snapshot() {
-    if [ ! -d "/opt/eclipse/kura/user/snapshots/" ]; then
-        mkdir /opt/eclipse/kura/user/snapshots/
-    fi
-
-    mv "/opt/eclipse/kura/kura-networking-install/snapshot_0.xml" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
-    python3 "/opt/eclipse/kura/kura-networking-install/customize_snapshot.py" "--networking_profile"
-}
-
-customize_snapshot() {
     python3 "/opt/eclipse/kura/kura-networking-install/customize_snapshot_network.py" "/opt/eclipse/kura/user/snapshots/snapshot_0.xml"
 }
 
