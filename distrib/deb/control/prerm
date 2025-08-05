@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+#
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#  Eurotech
+#
+
+if pgrep -x "java" > /dev/null; then
+    /bin/systemctl stop kura> /dev/null 2>&1
+fi
+if [ -d /tmp/.kura/ ]; then
+    rm -fr /tmp/.kura/ > /dev/null 2>&1
+fi
+echo ""
+echo "Uninstalling Kura networking..."
+export TIMESTAMP=`date +%Y%m%d%H%M`
+export LOG=/tmp/kura_network_uninstall_${TIMESTAMP}.log
+
+bash /opt/eclipse/kura/.data/kura_network_uninstall.sh remove /opt/eclipse kura 2>&1 | tee -a $LOG | systemd-cat -t Kura
+
+mkdir -p /opt/eclipse/kura/log
+mv $LOG /opt/eclipse/kura/log/
