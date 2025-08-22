@@ -38,12 +38,6 @@
                     <version>2.0.0-SNAPSHOT</version>
                     <type>jar</type>
                 </dependency>
-                <dependency>
-                    <groupId>org.eclipse.kura</groupId>
-                    <artifactId>kura-artemis-bom</artifactId>
-                    <version>1.0.0-SNAPSHOT</version>
-                    <type>pom</type>
-                </dependency>
             </dependencies>
 
             <repositories>
