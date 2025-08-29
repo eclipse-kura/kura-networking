@@ -30,101 +30,235 @@
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../tests/org.eclipse.kura.nm.test/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.hypfvieh</groupId>
+                <artifactId>dbus-java</artifactId>
+                <version>3.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-unixsocket</artifactId>
+                <version>0.38.17</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-ffi</artifactId>
+                <version>2.2.11</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-constants</artifactId>
+                <version>0.10.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-enxio</artifactId>
+                <version>0.32.13</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-posix</artifactId>
+                <version>3.1.15</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-a64asm</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-x86asm</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jffi</artifactId>
+                <version>1.3.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
+                <version>9.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-unixsocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-ffi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-constants</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-enxio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-posix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-a64asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-x86asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jffi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-analysis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-tree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <verbose>true</verbose>
+                    <filesets>
+                        <fileset>
+                            <directory>lib/</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.8.1</version>
                 <executions>
                     <execution>
+                        <id>copy-dependencies</id>
                         <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
                         <configuration>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
+                            <includeArtifactIds>
+                                dbus-java, jnr-unixsocket, jnr-ffi, jnr-constants, jnr-enxio,
+                                jnr-posix, jnr-a64asm, jnr-x86asm, jffi, asm, asm-analysis,
+                                asm-commons, asm-tree, asm-util
+                            </includeArtifactIds>
                             <stripVersion>false</stripVersion>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.github.hypfvieh</groupId>
-                                    <artifactId>dbus-java</artifactId>
-                                    <version>3.3.2</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-unixsocket</artifactId>
-                                    <version>0.38.17</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-ffi</artifactId>
-                                    <version>2.2.11</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-constants</artifactId>
-                                    <version>0.10.3</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-enxio</artifactId>
-                                    <version>0.32.13</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-posix</artifactId>
-                                    <version>3.1.15</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-a64asm</artifactId>
-                                    <version>1.0.0</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jnr-x86asm</artifactId>
-                                    <version>1.0.2</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.github.jnr</groupId>
-                                    <artifactId>jffi</artifactId>
-                                    <version>1.3.9</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.ow2.asm</groupId>
-                                    <artifactId>asm</artifactId>
-                                    <version>9.2</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.ow2.asm</groupId>
-                                    <artifactId>asm-analysis</artifactId>
-                                    <version>9.2</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.ow2.asm</groupId>
-                                    <artifactId>asm-commons</artifactId>
-                                    <version>9.2</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.ow2.asm</groupId>
-                                    <artifactId>asm-tree</artifactId>
-                                    <version>9.2</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.ow2.asm</groupId>
-                                    <artifactId>asm-util</artifactId>
-                                    <version>9.2</version>
-                                </artifactItem>
-                            </artifactItems>
                         </configuration>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>biz.aQute.bnd</groupId>
-                <artifactId>bnd-maven-plugin</artifactId>
-            </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!--This
+                plugin's configuration is used to store Eclipse m2e settings
+                    only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.codehaus.mojo
+                                        </groupId>
+                                        <artifactId>
+                                            properties-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.2.1,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>read-project-properties</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.codehaus.mojo
+                                        </groupId>
+                                        <artifactId>
+                                            build-helper-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.9,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>regex-property</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+
 </project>
