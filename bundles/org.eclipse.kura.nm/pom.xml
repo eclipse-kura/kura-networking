@@ -112,12 +112,16 @@
                 </configuration>
             </plugin>
 
+            <!-- README
+            Cannot use copy-dependencies goal because these dependencies are shded from target
+            platform ones, hence the wrong ones will be used 
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>download-dependencies</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy</goal>
