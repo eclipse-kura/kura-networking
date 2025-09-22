@@ -16,14 +16,11 @@ package org.eclipse.kura.linux.net.iptables;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,8 +48,6 @@ import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.NetworkPair;
 import org.eclipse.kura.net.firewall.RuleType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class IpTablesConfigTest extends FirewallTestUtils {
@@ -76,7 +71,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     }
 
     @Test
-    public void clearAllKuraChainsTest() throws KuraException {
+    public void clearAllKuraChainsTest() {
         setUpMock();
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.clearAllKuraChains();
@@ -91,7 +86,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     }
 
     @Test
-    public void saveTest() throws KuraException {
+    public void saveTest() {
         setUpMock();
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.save();
@@ -100,7 +95,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     }
 
     @Test
-    public void saveWithFilenameTest() throws KuraException {
+    public void saveWithFilenameTest() {
         setUpMock();
 
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
@@ -110,7 +105,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     }
 
     @Test
-    public void restoreWithFilenameTest() throws KuraException {
+    public void restoreWithFilenameTest() {
         setUpMock();
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.restore(iptablesConfig.getFirewallConfigFileName());
@@ -277,12 +272,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         Files.deleteIfExists(configFile.toPath());
     }
 
-    // ===== NEW COMPREHENSIVE TESTS =====
-
     @Test
     public void testDefaultConstructor() {
         IptablesConfig config = new IptablesConfig();
-        
+
         assertNotNull("Local rules should not be null", config.getLocalRules());
         assertNotNull("Port forward rules should not be null", config.getPortForwardRules());
         assertNotNull("Auto NAT rules should not be null", config.getAutoNatRules());
@@ -297,7 +290,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     public void testConstructorWithExecutorService() {
         CommandExecutorService mockService = mock(CommandExecutorService.class);
         IptablesConfig config = new IptablesConfig(mockService);
-        
+
         assertNotNull("Local rules should not be null", config.getLocalRules());
         assertNotNull("Port forward rules should not be null", config.getPortForwardRules());
         assertNotNull("Auto NAT rules should not be null", config.getAutoNatRules());
@@ -313,10 +306,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         Set<NATRule> natRules = new LinkedHashSet<>();
         CommandExecutorService mockService = mock(CommandExecutorService.class);
         boolean allowIcmp = false;
-        
-        IptablesConfig config = new IptablesConfig(localRules, portForwardRules, 
-                                                   autoNatRules, natRules, allowIcmp, mockService);
-        
+
+        IptablesConfig config = new IptablesConfig(localRules, portForwardRules,
+                autoNatRules, natRules, allowIcmp, mockService);
+
         assertSame("Local rules should be the same instance", localRules, config.getLocalRules());
         assertSame("Port forward rules should be the same instance", portForwardRules, config.getPortForwardRules());
         assertSame("Auto NAT rules should be the same instance", autoNatRules, config.getAutoNatRules());
@@ -330,61 +323,61 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void testGetters() {
         IptablesConfig config = new IptablesConfig();
-        
+
         assertNotNull("getFirewallConfigFileName should not return null", config.getFirewallConfigFileName());
         assertNotNull("getFirewallConfigTmpFileName should not return null", config.getFirewallConfigTmpFileName());
-        assertTrue("getFirewallConfigFileName should contain iptables", 
-                  config.getFirewallConfigFileName().contains("iptables"));
-        assertTrue("getFirewallConfigTmpFileName should contain tmp", 
-                  config.getFirewallConfigTmpFileName().contains(".tmp"));
+        assertTrue("getFirewallConfigFileName should contain iptables",
+                config.getFirewallConfigFileName().contains("iptables"));
+        assertTrue("getFirewallConfigTmpFileName should contain tmp",
+                config.getFirewallConfigTmpFileName().contains(".tmp"));
     }
 
     @Test
     public void testSettersAndGetters() {
         IptablesConfig config = new IptablesConfig();
-        
+
         // Test local rules
         Set<LocalRule> newLocalRules = new LinkedHashSet<>();
         config.setLocalRules(newLocalRules);
         assertSame("Local rules should be updated", newLocalRules, config.getLocalRules());
-        
+
         // Test port forward rules
         Set<PortForwardRule> newPortForwardRules = new LinkedHashSet<>();
         config.setPortForwardRules(newPortForwardRules);
         assertSame("Port forward rules should be updated", newPortForwardRules, config.getPortForwardRules());
-        
+
         // Test auto NAT rules
         Set<NATRule> newAutoNatRules = new LinkedHashSet<>();
         config.setAutoNatRules(newAutoNatRules);
         assertSame("Auto NAT rules should be updated", newAutoNatRules, config.getAutoNatRules());
-        
+
         // Test NAT rules
         Set<NATRule> newNatRules = new LinkedHashSet<>();
         config.setNatRules(newNatRules);
         assertSame("NAT rules should be updated", newNatRules, config.getNatRules());
-        
+
         // Test additional filter rules
         Set<String> newFilterRules = new LinkedHashSet<>();
         newFilterRules.add("-A input-kura -p tcp --dport 8080 -j ACCEPT");
         config.setAdditionalFilterRules(newFilterRules);
         assertSame("Additional filter rules should be updated", newFilterRules, config.getAdditionalFilterRules());
-        
+
         // Test additional NAT rules
         Set<String> newNatRulesSet = new LinkedHashSet<>();
         newNatRulesSet.add("-A postrouting-kura -o eth1 -j MASQUERADE");
         config.setAdditionalNatRules(newNatRulesSet);
         assertSame("Additional NAT rules should be updated", newNatRulesSet, config.getAdditionalNatRules());
-        
+
         // Test additional mangle rules
         Set<String> newMangleRules = new LinkedHashSet<>();
         newMangleRules.add("-A prerouting-kura -p tcp --dport 80 -j MARK --set-mark 1");
         config.setAdditionalMangleRules(newMangleRules);
         assertSame("Additional mangle rules should be updated", newMangleRules, config.getAdditionalMangleRules());
-        
+
         // Test ICMP settings
         config.setAllowIcmp(false);
         assertFalse("ICMP should be disabled", config.allowIcmp());
-        
+
         config.setAllowIcmp(true);
         assertTrue("ICMP should be enabled", config.allowIcmp());
     }
@@ -392,11 +385,11 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void testIcmpArrayMethods() {
         IptablesConfig config = new IptablesConfig();
-        
+
         String[] allowIcmp = config.getAllowIcmp();
         assertNotNull("getAllowIcmp should not return null", allowIcmp);
         assertTrue("getAllowIcmp should return non-empty array", allowIcmp.length > 0);
-        
+
         String[] notAllowIcmp = config.getNotAllowIcmp();
         assertNotNull("getNotAllowIcmp should not return null", notAllowIcmp);
         assertTrue("getNotAllowIcmp should return non-empty array", notAllowIcmp.length > 0);
@@ -411,7 +404,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 return "/invalid/path/that/does/not/exist/iptables.tmp";
             }
         };
-        
+
         config.clearAllChains();
     }
 
@@ -424,14 +417,14 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 return "/invalid/path/that/does/not/exist/iptables.tmp";
             }
         };
-        
+
         config.applyBlockPolicy();
     }
 
     @Test
     public void testClearAllKuraChainsWithNullExecutorService() {
         IptablesConfig config = new IptablesConfig(); // No executor service
-        
+
         // Should not throw an exception, just log an error
         config.clearAllKuraChains();
     }
@@ -452,14 +445,14 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     public void testSaveKuraChainsWithEmptyRules() throws KuraException, IOException {
         setUpMock();
         IptablesConfig config = new IptablesConfig(executorServiceMock);
-        
+
         // All rule sets are empty by default
         try {
             config.saveKuraChains();
         } catch (KuraIOException e) {
             // Expected if file operations fail, but the method should handle empty rules
         }
-        
+
         // Verify the temporary file was attempted to be created
         File tempFile = new File(config.getFirewallConfigTmpFileName());
         if (tempFile.exists()) {
@@ -475,10 +468,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 return "/non/existent/file.conf";
             }
         };
-        
+
         // Should return immediately without error if file doesn't exist
         config.restore();
-        
+
         // Verify rules remain empty
         assertTrue("Local rules should be empty", config.getLocalRules().isEmpty());
         assertTrue("Port forward rules should be empty", config.getPortForwardRules().isEmpty());
@@ -489,15 +482,15 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void testApplyRulesWithFailedCommands() {
         CommandExecutorService mockService = mock(CommandExecutorService.class);
-        CommandStatus failedStatus = new CommandStatus(new Command(new String[] {}), 
-                                                       new LinuxExitStatus(1));
+        CommandStatus failedStatus = new CommandStatus(new Command(new String[] {}),
+                new LinuxExitStatus(1));
         when(mockService.execute(any(Command.class))).thenReturn(failedStatus);
-        
+
         IptablesConfig config = new IptablesConfig(mockService);
-        
+
         // Should not throw exception even if commands fail
         config.applyRules();
-        
+
         // Verify that execute was called multiple times (for various commands)
         verify(mockService, atLeast(10)).execute(any(Command.class));
     }
@@ -505,28 +498,28 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void testSaveKuraChainsWithAdditionalRules() throws KuraException, IOException {
         setUpMock();
-        
+
         Set<String> additionalFilterRules = new LinkedHashSet<>();
         additionalFilterRules.add("-A input-kura -p tcp --dport 8080 -j ACCEPT");
         additionalFilterRules.add("-A input-kura -p tcp --dport 9090 -j ACCEPT");
-        
+
         Set<String> additionalNatRules = new LinkedHashSet<>();
         additionalNatRules.add("-A postrouting-kura -o eth2 -j MASQUERADE");
-        
+
         Set<String> additionalMangleRules = new LinkedHashSet<>();
         additionalMangleRules.add("-A prerouting-kura -p tcp --dport 80 -j MARK --set-mark 1");
-        
+
         IptablesConfig config = new IptablesConfig(executorServiceMock);
         config.setAdditionalFilterRules(additionalFilterRules);
         config.setAdditionalNatRules(additionalNatRules);
         config.setAdditionalMangleRules(additionalMangleRules);
-        
+
         try {
             config.saveKuraChains();
         } catch (KuraIOException e) {
             // Expected if file operations fail
         }
-        
+
         // Verify additional rules are written to the configuration
         File tempFile = new File(config.getFirewallConfigTmpFileName());
         if (tempFile.exists()) {
@@ -534,7 +527,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 AtomicBoolean foundFilterRule = new AtomicBoolean(false);
                 AtomicBoolean foundNatRule = new AtomicBoolean(false);
                 AtomicBoolean foundMangleRule = new AtomicBoolean(false);
-                
+
                 lines.forEach(line -> {
                     if (line.contains("-A input-kura -p tcp --dport 8080 -j ACCEPT")) {
                         foundFilterRule.set(true);
@@ -546,7 +539,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                         foundMangleRule.set(true);
                     }
                 });
-                
+
                 assertTrue("Additional filter rule should be present", foundFilterRule.get());
                 assertTrue("Additional NAT rule should be present", foundNatRule.get());
                 assertTrue("Additional mangle rule should be present", foundMangleRule.get());
@@ -560,20 +553,18 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
         IptablesConfig config = new IptablesConfig(executorServiceMock);
         config.setAllowIcmp(false);
-        
+
         try {
             config.saveKuraChains();
         } catch (KuraIOException e) {
             // Expected if file operations fail
         }
-        
+
         // Verify ICMP rules are configured for disallowing ICMP
         File tempFile = new File(config.getFirewallConfigTmpFileName());
         if (tempFile.exists()) {
             try (Stream<String> lines = Files.lines(tempFile.toPath())) {
-                boolean foundDropRule = lines.anyMatch(line -> 
-                    line.contains("icmp") && line.contains("DROP")
-                );
+                boolean foundDropRule = lines.anyMatch(line -> line.contains("icmp") && line.contains("DROP"));
                 assertTrue("Should contain ICMP DROP rule when ICMP is disallowed", foundDropRule);
             }
             Files.deleteIfExists(tempFile.toPath());
@@ -588,17 +579,17 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 return getFirewallConfigTmpFileName();
             }
         };
-        
+
         // Create a file with invalid iptables content
         String invalidContent = "*filter\n" +
-                               ":INPUT DROP [0:0]\n" +
-                               "-A invalid-chain-name-that-causes-parsing-error\n" +
-                               "COMMIT\n";
-        
+                ":INPUT DROP [0:0]\n" +
+                "-A invalid-chain-name-that-causes-parsing-error\n" +
+                "COMMIT\n";
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(config.getFirewallConfigTmpFileName()))) {
             writer.write(invalidContent);
         }
-        
+
         try {
             config.restore();
         } finally {
@@ -611,7 +602,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     public void testGetIptablesCommand() {
         IptablesConfig config = new IptablesConfig();
         String command = config.getIptablesCommand();
-        
+
         assertNotNull("iptables command should not be null", command);
         assertTrue("iptables command should contain 'iptables'", command.contains("iptables"));
     }
@@ -624,22 +615,22 @@ public class IpTablesConfigTest extends FirewallTestUtils {
             protected String getIptablesCommand() {
                 return super.getIptablesCommand();
             }
-            
+
             @Override
             protected String[] getAllowIcmp() {
                 return super.getAllowIcmp();
             }
-            
+
             @Override
             protected String[] getNotAllowIcmp() {
                 return super.getNotAllowIcmp();
             }
         };
-        
+
         assertNotNull("getIptablesCommand should not return null", config.getIptablesCommand());
         assertNotNull("getAllowIcmp should not return null", config.getAllowIcmp());
         assertNotNull("getNotAllowIcmp should not return null", config.getNotAllowIcmp());
-        
+
         assertTrue("getAllowIcmp should return non-empty array", config.getAllowIcmp().length > 0);
         assertTrue("getNotAllowIcmp should return non-empty array", config.getNotAllowIcmp().length > 0);
     }
@@ -647,33 +638,35 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void testSaveKuraChainsFileMoving() throws KuraException, IOException {
         setUpMock();
-        
+
         // Create a temporary config that we can control file paths for
         IptablesConfig config = new IptablesConfig(executorServiceMock) {
-            private String tempFileName = System.getProperty("java.io.tmpdir") + "/test-iptables-" + System.currentTimeMillis() + ".tmp";
-            private String configFileName = System.getProperty("java.io.tmpdir") + "/test-iptables-" + System.currentTimeMillis() + ".conf";
-            
+            private String tempFileName = System.getProperty("java.io.tmpdir") + "/test-iptables-"
+                    + System.currentTimeMillis() + ".tmp";
+            private String configFileName = System.getProperty("java.io.tmpdir") + "/test-iptables-"
+                    + System.currentTimeMillis() + ".conf";
+
             @Override
             public String getFirewallConfigTmpFileName() {
                 return tempFileName;
             }
-            
+
             @Override
             public String getFirewallConfigFileName() {
                 return configFileName;
             }
         };
-        
+
         config.saveKuraChains();
-        
+
         // Verify the final config file was created (temp file was moved)
         File finalConfigFile = new File(config.getFirewallConfigFileName());
         assertTrue("Final config file should exist", finalConfigFile.exists());
-        
+
         // Verify temp file was moved (no longer exists)
         File tempFile = new File(config.getFirewallConfigTmpFileName());
         assertFalse("Temp file should not exist after move", tempFile.exists());
-        
+
         // Clean up
         Files.deleteIfExists(finalConfigFile.toPath());
     }
