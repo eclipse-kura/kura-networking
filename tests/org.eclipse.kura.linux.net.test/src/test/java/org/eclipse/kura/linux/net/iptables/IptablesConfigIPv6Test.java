@@ -298,28 +298,27 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
     }
 
     private void createTestIPv6Config(IptablesConfigIPv6 iptablesConfig, boolean allowIcmp) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(iptablesConfig.getFirewallConfigTmpFileName()));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(iptablesConfig.getFirewallConfigTmpFileName()))) {
 
-        writer.write("*filter\n");
-        writer.write(":INPUT DROP [0:0]\n");
-        writer.write(":FORWARD DROP [0:0]\n");
-        writer.write(":OUTPUT ACCEPT [0:0]\n");
-        writer.write(":input-kura - [0:0]\n");
-        writer.write(":output-kura - [0:0]\n");
-        writer.write(":forward-kura - [0:0]\n");
+            writer.write("*filter\n");
+            writer.write(":INPUT DROP [0:0]\n");
+            writer.write(":FORWARD DROP [0:0]\n");
+            writer.write(":OUTPUT ACCEPT [0:0]\n");
+            writer.write(":input-kura - [0:0]\n");
+            writer.write(":output-kura - [0:0]\n");
+            writer.write(":forward-kura - [0:0]\n");
 
-        if (allowIcmp) {
-            // Add sample IPv6 ICMP rules for testing
-            for (String rule : EXPECTED_IPV6_ICMP_RULES) {
-                writer.write(rule + "\n");
+            if (allowIcmp) {
+                // Add sample IPv6 ICMP rules for testing
+                for (String rule : EXPECTED_IPV6_ICMP_RULES) {
+                    writer.write(rule + "\n");
+                }
             }
+
+            writer.write("-A input-kura -j RETURN\n");
+            writer.write("-A output-kura -j RETURN\n");
+            writer.write("-A forward-kura -j RETURN\n");
+            writer.write("COMMIT\n");
         }
-
-        writer.write("-A input-kura -j RETURN\n");
-        writer.write("-A output-kura -j RETURN\n");
-        writer.write("-A forward-kura -j RETURN\n");
-        writer.write("COMMIT\n");
-
-        writer.close();
     }
 }
