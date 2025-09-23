@@ -15,24 +15,42 @@ package org.eclipse.kura.linux.net.iptables;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class IptablesConfigIPv6Test extends FirewallTestUtils {
+
+    @BeforeClass
+    public static void setUp() {
+        setUpMock();
+    }
+
+    // Test state variables
+    private IptablesConfigIPv6 iptablesConfig;
+    private Set<String> foundRules;
+    private String[] icmpRules;
+    private Exception occurredException;
+    private boolean hasIcmpAcceptRules;
+    private int criticalRulesWithoutSourceRestriction;
+    private boolean allowIcmp;
 
     // Expected IPv6 ICMP rules from IptablesConfigIPv6.ALLOW_ICMP_IPV6
     private static final String[] EXPECTED_IPV6_ICMP_RULES = {
@@ -93,94 +111,201 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
     private static final String SOURCE_RESTRICTION_REGEX = ".*-s\\s+[^\\s]+.*";
 
     @Test
-    public void shouldSaveIPv6IcmpRulesWhenIcmpAllowed() throws KuraException, IOException {
-        IptablesConfigIPv6 iptablesConfig = new IptablesConfigIPv6(new LinkedHashSet<>(), new LinkedHashSet<>(),
-                new LinkedHashSet<>(), new LinkedHashSet<>(), true, executorServiceMock);
+    public void shouldSaveIPv6IcmpRulesWhenIcmpAllowed() {
+        givenIptablesConfigWithIcmpAllowed(true);
 
+        whenSaveKuraChainsIsCalled();
+
+        thenIPv6IcmpRulesAreGenerated();
+        thenCriticalIPv6IcmpRulesAreWithoutSourceRestrictions();
+        thenNoExceptionOccurred();
+    }
+
+    @Test
+    public void shouldNotSaveIPv6IcmpRulesWhenIcmpNotAllowed() {
+        givenIptablesConfigWithIcmpAllowed(false);
+
+        whenSaveKuraChainsIsCalled();
+
+        thenNoIPv6IcmpAcceptRulesArePresent();
+        thenNoExceptionOccurred();
+    }
+
+    @Test
+    public void shouldGenerateCorrectIPv6ConfigFile() {
+        givenDefaultIptablesConfig();
+
+        whenGetConfigFilePathsAreCalled();
+
+        thenFirewallConfigFileNameIs("/etc/sysconfig/ip6tables");
+        thenFirewallConfigTmpFileNameIs("/tmp/ip6tables");
+    }
+
+    @Test
+    public void shouldVerifyCriticalIPv6Types() {
+        givenDefaultIptablesConfig();
+
+        whenGetAllowIcmpIsCalled();
+
+        thenCriticalIPv6TypesAreAllowedWithoutSourceRestrictions();
+    }
+
+    /**
+     * Test specifically for the fix that removed source restrictions from critical
+     * ICMPv6 types.
+     * This test verifies that Router/Neighbor Discovery packets (types 133-136) are
+     * allowed
+     * from any source, which is essential for IPv6 connectivity.
+     */
+    @Test
+    public void shouldAllowCriticalIPv6ICMPWithoutSourceRestrictions() {
+        givenDefaultIptablesConfig();
+
+        whenGetAllowIcmpIsCalled();
+
+        thenRouterSolicitationIsAllowedWithoutSourceRestriction();
+        thenRouterAdvertisementIsAllowedWithoutSourceRestriction();
+        thenNeighborSolicitationIsAllowedWithoutSourceRestriction();
+        thenNeighborAdvertisementIsAllowedWithoutSourceRestriction();
+    }
+
+    /**
+     * Test to verify that the IPv6 firewall rules enable DNS resolution.
+     * This tests the fix for the issue where overly restrictive source restrictions
+     * on critical ICMPv6 types prevented IPv6 DNS resolution.
+     */
+    @Test
+    public void shouldEnableIPv6DnsResolutionThroughUnrestrictedICMP() {
+        givenDefaultIptablesConfig();
+
+        whenGetAllowIcmpIsCalled();
+
+        thenAllCriticalIPv6TypesAreAllowedWithoutSourceRestrictions();
+        thenMulticastListenerDiscoveryIsSupported();
+    }
+
+    // Given methods
+    private void givenIptablesConfigWithIcmpAllowed(boolean allowIcmp) {
+        this.allowIcmp = allowIcmp;
+        this.iptablesConfig = new IptablesConfigIPv6(new LinkedHashSet<>(), new LinkedHashSet<>(),
+                new LinkedHashSet<>(), new LinkedHashSet<>(), allowIcmp, executorServiceMock);
+    }
+
+    private void givenDefaultIptablesConfig() {
+        this.iptablesConfig = new IptablesConfigIPv6();
+    }
+
+    // When methods
+    private void whenSaveKuraChainsIsCalled() {
         try {
-            iptablesConfig.saveKuraChains();
+            this.iptablesConfig.saveKuraChains();
         } catch (KuraIOException e) {
             // Expected in test environment without actual filesystem access
+        } catch (Exception e) {
+            this.occurredException = e;
         }
+    }
 
-        // Verify that the generated config contains expected IPv6 ICMP rules
-        Set<String> foundRules = new HashSet<>();
-        try (Stream<String> lines = Files.lines(Paths.get(iptablesConfig.getFirewallConfigTmpFileName()))) {
+    private void whenGetConfigFilePathsAreCalled() {
+        // This method is used to test the file path getters
+        // The actual calls happen in the then methods
+    }
+
+    private void whenGetAllowIcmpIsCalled() {
+        try {
+            this.icmpRules = this.iptablesConfig.getAllowIcmp();
+        } catch (Exception e) {
+            this.occurredException = e;
+        }
+    }
+
+    // Then methods
+    private void thenIPv6IcmpRulesAreGenerated() {
+        this.foundRules = new HashSet<>();
+        try (Stream<String> lines = Files.lines(Paths.get(this.iptablesConfig.getFirewallConfigTmpFileName()))) {
             lines.forEach(line -> {
                 String trimmed = line.trim();
                 for (String expectedRule : EXPECTED_IPV6_ICMP_RULES) {
                     if (trimmed.equals(expectedRule)) {
-                        foundRules.add(expectedRule);
+                        this.foundRules.add(expectedRule);
                     }
                 }
             });
         } catch (IOException e) {
             // Test environment - create expected config manually
-            createTestIPv6Config(iptablesConfig, true);
-            return; // Exit early since we can't read the actual file
+            try {
+                createTestIPv6Config(this.iptablesConfig, this.allowIcmp);
+            } catch (IOException ioException) {
+                this.occurredException = ioException;
+            }
         }
-
-        // Verify critical IPv6 ICMP rules are present
-        assertTrue("IPv6 ICMP rules should include neighbor discovery types without source restrictions",
-                foundRules.stream().anyMatch(rule -> rule.contains("--icmpv6-type 133") && !rule.contains("-s")));
-        assertTrue("IPv6 ICMP rules should include router advertisement without source restrictions",
-                foundRules.stream().anyMatch(rule -> rule.contains("--icmpv6-type 134") && !rule.contains("-s")));
-        assertTrue("IPv6 ICMP rules should include neighbor solicitation without source restrictions",
-                foundRules.stream().anyMatch(rule -> rule.contains("--icmpv6-type 135") && !rule.contains("-s")));
-        assertTrue("IPv6 ICMP rules should include neighbor advertisement without source restrictions",
-                foundRules.stream().anyMatch(rule -> rule.contains("--icmpv6-type 136") && !rule.contains("-s")));
-
-        File configFile = new File(iptablesConfig.getFirewallConfigTmpFileName());
-        Files.deleteIfExists(configFile.toPath());
     }
 
-    @Test
-    public void shouldNotSaveIPv6IcmpRulesWhenIcmpNotAllowed() throws KuraException, IOException {
-        IptablesConfigIPv6 iptablesConfig = new IptablesConfigIPv6(new LinkedHashSet<>(), new LinkedHashSet<>(),
-                new LinkedHashSet<>(), new LinkedHashSet<>(), false, executorServiceMock);
-
+    private void thenCriticalIPv6IcmpRulesAreWithoutSourceRestrictions() {
+        if (this.foundRules != null) {
+            assertTrue("IPv6 ICMP rules should include neighbor discovery types without source restrictions",
+                    this.foundRules.stream()
+                            .anyMatch(rule -> rule.contains("--icmpv6-type 133") && !rule.contains("-s")));
+            assertTrue("IPv6 ICMP rules should include router advertisement without source restrictions",
+                    this.foundRules.stream()
+                            .anyMatch(rule -> rule.contains("--icmpv6-type 134") && !rule.contains("-s")));
+            assertTrue("IPv6 ICMP rules should include neighbor solicitation without source restrictions",
+                    this.foundRules.stream()
+                            .anyMatch(rule -> rule.contains("--icmpv6-type 135") && !rule.contains("-s")));
+            assertTrue("IPv6 ICMP rules should include neighbor advertisement without source restrictions",
+                    this.foundRules.stream()
+                            .anyMatch(rule -> rule.contains("--icmpv6-type 136") && !rule.contains("-s")));
+        }
+        // Clean up
         try {
-            iptablesConfig.saveKuraChains();
-        } catch (KuraIOException e) {
-            // Expected in test environment
+            File configFile = new File(this.iptablesConfig.getFirewallConfigTmpFileName());
+            Files.deleteIfExists(configFile.toPath());
+        } catch (IOException e) {
+            // Ignore cleanup errors
+        }
+    }
+
+    private void thenNoIPv6IcmpAcceptRulesArePresent() {
+        // Create test config to verify no IPv6 ICMP ACCEPT rules are present
+        try {
+            createTestIPv6Config(this.iptablesConfig, false);
+        } catch (IOException e) {
+            this.occurredException = e;
+            return;
         }
 
-        // Create test config to verify no IPv6 ICMP ACCEPT rules are present
-        createTestIPv6Config(iptablesConfig, false);
-
-        boolean hasIcmpAcceptRules = false;
-        try (Stream<String> lines = Files.lines(Paths.get(iptablesConfig.getFirewallConfigTmpFileName()))) {
-            hasIcmpAcceptRules = lines
+        this.hasIcmpAcceptRules = false;
+        try (Stream<String> lines = Files.lines(Paths.get(this.iptablesConfig.getFirewallConfigTmpFileName()))) {
+            this.hasIcmpAcceptRules = lines
                     .anyMatch(line -> line.trim().contains("-p ipv6-icmp") && line.trim().contains("-j ACCEPT"));
         } catch (IOException e) {
             // Test environment - assume correct behavior
-            hasIcmpAcceptRules = false;
+            this.hasIcmpAcceptRules = false;
         }
 
-        assertFalse("No IPv6 ICMP ACCEPT rules should be present when ICMP is not allowed", hasIcmpAcceptRules);
+        assertFalse("No IPv6 ICMP ACCEPT rules should be present when ICMP is not allowed", this.hasIcmpAcceptRules);
 
-        File configFile = new File(iptablesConfig.getFirewallConfigTmpFileName());
-        Files.deleteIfExists(configFile.toPath());
+        // Clean up
+        try {
+            File configFile = new File(this.iptablesConfig.getFirewallConfigTmpFileName());
+            Files.deleteIfExists(configFile.toPath());
+        } catch (IOException e) {
+            // Ignore cleanup errors
+        }
     }
 
-    @Test
-    public void shouldGenerateCorrectIPv6ConfigFile() {
-        IptablesConfigIPv6 iptablesConfig = new IptablesConfigIPv6();
-
-        // Test file structure
-        assertEquals("/etc/sysconfig/ip6tables", iptablesConfig.getFirewallConfigFileName());
-        assertEquals("/tmp/ip6tables", iptablesConfig.getFirewallConfigTmpFileName());
+    private void thenFirewallConfigFileNameIs(String expectedFileName) {
+        assertEquals(expectedFileName, this.iptablesConfig.getFirewallConfigFileName());
     }
 
-    @Test
-    public void shouldVerifyCriticalIPv6Types() {
-        // Verify that critical ICMPv6 types don't have source restrictions in current
-        // implementation
-        String[] allowIcmpIPv6 = new IptablesConfigIPv6().getAllowIcmp();
+    private void thenFirewallConfigTmpFileNameIs(String expectedTmpFileName) {
+        assertEquals(expectedTmpFileName, this.iptablesConfig.getFirewallConfigTmpFileName());
+    }
 
+    private void thenCriticalIPv6TypesAreAllowedWithoutSourceRestrictions() {
         for (String criticalType : CRITICAL_ICMPV6_TYPES_WITHOUT_SOURCE) {
             boolean foundWithoutSourceRestriction = false;
-            for (String rule : allowIcmpIPv6) {
+            for (String rule : this.icmpRules) {
                 if (rule.contains("--icmpv6-type " + criticalType) &&
                         rule.contains("-j ACCEPT") &&
                         !rule.contains("-s ")) { // No source restriction
@@ -193,21 +318,9 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         }
     }
 
-    /**
-     * Test specifically for the fix that removed source restrictions from critical
-     * ICMPv6 types.
-     * This test verifies that Router/Neighbor Discovery packets (types 133-136) are
-     * allowed
-     * from any source, which is essential for IPv6 connectivity.
-     */
-    @Test
-    public void shouldAllowCriticalIPv6ICMPWithoutSourceRestrictions() {
-        IptablesConfigIPv6 config = new IptablesConfigIPv6();
-        String[] icmpRules = config.getAllowIcmp();
-
-        // Verify Router Solicitation (133) has no source restriction
+    private void thenRouterSolicitationIsAllowedWithoutSourceRestriction() {
         boolean routerSolicitationFound = false;
-        for (String rule : icmpRules) {
+        for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 133") && rule.contains("-j ACCEPT")) {
                 assertFalse("Router Solicitation (133) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
@@ -215,10 +328,11 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
             }
         }
         assertTrue("Router Solicitation (133) rule should exist", routerSolicitationFound);
+    }
 
-        // Verify Router Advertisement (134) has no source restriction
+    private void thenRouterAdvertisementIsAllowedWithoutSourceRestriction() {
         boolean routerAdvertisementFound = false;
-        for (String rule : icmpRules) {
+        for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 134") && rule.contains("-j ACCEPT")) {
                 assertFalse("Router Advertisement (134) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
@@ -226,10 +340,11 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
             }
         }
         assertTrue("Router Advertisement (134) rule should exist", routerAdvertisementFound);
+    }
 
-        // Verify Neighbor Solicitation (135) has no source restriction
+    private void thenNeighborSolicitationIsAllowedWithoutSourceRestriction() {
         boolean neighborSolicitationFound = false;
-        for (String rule : icmpRules) {
+        for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 135") && rule.contains("-j ACCEPT")) {
                 assertFalse("Neighbor Solicitation (135) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
@@ -237,10 +352,11 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
             }
         }
         assertTrue("Neighbor Solicitation (135) rule should exist", neighborSolicitationFound);
+    }
 
-        // Verify Neighbor Advertisement (136) has no source restriction
+    private void thenNeighborAdvertisementIsAllowedWithoutSourceRestriction() {
         boolean neighborAdvertisementFound = false;
-        for (String rule : icmpRules) {
+        for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 136") && rule.contains("-j ACCEPT")) {
                 assertFalse("Neighbor Advertisement (136) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
@@ -250,22 +366,10 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         assertTrue("Neighbor Advertisement (136) rule should exist", neighborAdvertisementFound);
     }
 
-    /**
-     * Test to verify that the IPv6 firewall rules enable DNS resolution.
-     * This tests the fix for the issue where overly restrictive source restrictions
-     * on critical ICMPv6 types prevented IPv6 DNS resolution.
-     */
-    @Test
-    public void shouldEnableIPv6DnsResolutionThroughUnrestrictedICMP() {
-        IptablesConfigIPv6 config = new IptablesConfigIPv6();
-        String[] icmpRules = config.getAllowIcmp();
+    private void thenAllCriticalIPv6TypesAreAllowedWithoutSourceRestrictions() {
+        this.criticalRulesWithoutSourceRestriction = 0;
 
-        // Verify that essential ICMPv6 types for DNS resolution are allowed
-        // These types are necessary for neighbor discovery which enables DNS queries
-
-        int criticalRulesWithoutSourceRestriction = 0;
-
-        for (String rule : icmpRules) {
+        for (String rule : this.icmpRules) {
             // Check for Router/Neighbor Discovery rules without source restrictions
             if ((rule.contains("--icmpv6-type 133") ||
                     rule.contains("--icmpv6-type 134") ||
@@ -273,19 +377,20 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
                     rule.contains("--icmpv6-type 136")) &&
                     rule.contains("-j ACCEPT") &&
                     !rule.matches(SOURCE_RESTRICTION_REGEX)) {
-                criticalRulesWithoutSourceRestriction++;
+                this.criticalRulesWithoutSourceRestriction++;
             }
         }
 
         // All four critical types should be present without source restrictions
         assertTrue(
                 "All critical ICMPv6 types (133-136) should be allowed without source restrictions to enable DNS resolution. Found: "
-                        + criticalRulesWithoutSourceRestriction + " out of 4",
-                criticalRulesWithoutSourceRestriction >= 4);
+                        + this.criticalRulesWithoutSourceRestriction + " out of 4",
+                this.criticalRulesWithoutSourceRestriction >= 4);
+    }
 
-        // Verify that multicast types are also allowed for complete DNS functionality
+    private void thenMulticastListenerDiscoveryIsSupported() {
         boolean hasMulticastSupport = false;
-        for (String rule : icmpRules) {
+        for (String rule : this.icmpRules) {
             if ((rule.contains("--icmpv6-type 130") ||
                     rule.contains("--icmpv6-type 131") ||
                     rule.contains("--icmpv6-type 132")) &&
@@ -297,6 +402,19 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
 
         assertTrue("Multicast Listener Discovery should be supported for complete IPv6 functionality",
                 hasMulticastSupport);
+    }
+
+    private void thenNoExceptionOccurred() {
+        String errorMessage = "No exception expected";
+        if (Objects.nonNull(this.occurredException)) {
+            StringWriter sw = new StringWriter();
+            this.occurredException.printStackTrace(new PrintWriter(sw));
+
+            errorMessage = String.format("No exception expected, \"%s\" found. Caused by: %s",
+                    this.occurredException.getClass().getName(), sw.toString());
+        }
+
+        assertNull(errorMessage, this.occurredException);
     }
 
     private void createTestIPv6Config(IptablesConfigIPv6 iptablesConfig, boolean allowIcmp) throws IOException {
