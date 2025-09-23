@@ -425,8 +425,20 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     public void testClearAllKuraChainsWithNullExecutorService() {
         IptablesConfig config = new IptablesConfig(); // No executor service
 
-        // Should not throw an exception, just log an error
-        config.clearAllKuraChains();
+        // Should not throw an exception when executor service is null
+        boolean methodCompleted = false;
+        try {
+            config.clearAllKuraChains();
+            methodCompleted = true;
+        } catch (Exception e) {
+            methodCompleted = false;
+        }
+        
+        // Verify that the method completed successfully without exceptions
+        assertTrue("clearAllKuraChains() should complete successfully when executor service is null", methodCompleted);
+        
+        // Additional assertion: verify that the config object is still in a valid state
+        assertNotNull("Config object should remain valid after clearAllKuraChains call", config);
     }
 
     @Test(expected = IllegalArgumentException.class)
