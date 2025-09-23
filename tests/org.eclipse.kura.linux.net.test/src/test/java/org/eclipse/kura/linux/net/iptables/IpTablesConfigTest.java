@@ -706,4 +706,23 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         Files.deleteIfExists(finalConfigFile.toPath());
     }
 
+    @Test
+    public void clearAllKuraChainsFailureTest() {
+        setUpMock();
+        
+        // Create failure status to simulate command execution failure
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        
+        // Mock any command execution to return failure status
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Test that clearAllKuraChains method executes and triggers error logging
+        IptablesConfig iptablesConfigWithMock = new IptablesConfig(executorServiceMock);
+        iptablesConfigWithMock.clearAllKuraChains();
+        
+        // Verify that execute was called multiple times (once for each flush command)
+        verify(executorServiceMock, atLeast(7)).execute(any(Command.class));
+    }
+
 }
