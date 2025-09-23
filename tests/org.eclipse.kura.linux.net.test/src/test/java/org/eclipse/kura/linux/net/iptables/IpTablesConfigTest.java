@@ -820,7 +820,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         // Create IptablesConfig with local rules
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<LocalRule> localRules = new HashSet<>();
-        localRules.add(new LocalRule(RuleType.IP_FORWARDING));
+        localRules.add(new LocalRule(0, null, null, null, null, null, null));
         iptablesConfig.setLocalRules(localRules);
         
         // This will call writeLocalRulesToFilterTable(null) which triggers command execution
@@ -843,7 +843,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<NATRule> natRules = new HashSet<>();
         try {
-            NATRule natRule = new NATRule("eth0", "eth1", "192.168.1.0/24", "tcp", true);
+            NATRule natRule = new NATRule("eth0", "eth1", "tcp", "192.168.1.0/24", "0.0.0.0/0", true, RuleType.IP_FORWARDING);
             natRules.add(natRule);
             iptablesConfig.setNatRules(natRules);
         } catch (Exception e) {
@@ -870,7 +870,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<NATRule> autoNatRules = new HashSet<>();
         try {
-            NATRule autoNatRule = new NATRule("eth0", "eth1", true);
+            NATRule autoNatRule = new NATRule("eth0", "eth1", true, RuleType.GENERIC);
             autoNatRules.add(autoNatRule);
             iptablesConfig.setAutoNatRules(autoNatRules);
         } catch (Exception e) {
