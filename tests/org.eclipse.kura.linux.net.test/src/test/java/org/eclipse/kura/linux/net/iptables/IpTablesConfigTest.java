@@ -725,4 +725,163 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         verify(executorServiceMock, atLeast(7)).execute(any(Command.class));
     }
 
+    @Test
+    public void saveFailureTest() {
+        setUpMock();
+        
+        // Create failure status to simulate iptables-save command failure
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        
+        // Mock save command to return failure
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Test that save method executes and triggers error logging
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        iptablesConfig.save();
+        
+        // Verify that execute was called for the save command
+        verify(executorServiceMock, times(1)).execute(any(Command.class));
+    }
+
+    @Test
+    public void saveWithFilenameFailureTest() {
+        setUpMock();
+        
+        // Create failure status to simulate iptables-save command failure
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        
+        // Mock save command to return failure
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Test that save method with filename executes and triggers error logging
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        iptablesConfig.save("/tmp/test-iptables");
+        
+        // Verify that execute was called for the save command
+        verify(executorServiceMock, times(1)).execute(any(Command.class));
+    }
+
+    @Test
+    public void restoreFailureTest() throws IOException {
+        setUpMock();
+        
+        // Create failure status to simulate iptables-restore command failure
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        
+        // Mock restore command to return failure
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Create a temporary file for the test
+        File tempFile = File.createTempFile("test-iptables", ".tmp");
+        tempFile.deleteOnExit();
+        
+        // Test that restore method executes and triggers error logging
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        iptablesConfig.restore(tempFile.getAbsolutePath());
+        
+        // Verify that execute was called for the restore command
+        verify(executorServiceMock, times(1)).execute(any(Command.class));
+    }
+
+    @Test
+    public void restoreFileDeleteFailureTest() throws IOException {
+        setUpMock();
+        
+        // Create success status for the restore command
+        CommandStatus successStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(0));
+        
+        // Mock restore command to return success
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(successStatus);
+        
+        // Use a non-existent directory path to trigger file deletion IOException
+        String invalidPath = "/non/existent/directory/test-file";
+        
+        // Test that restore method executes and triggers file deletion error logging (line 389)
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        iptablesConfig.restore(invalidPath);
+        
+        // Verify that execute was called for the restore command
+        verify(executorServiceMock, times(1)).execute(any(Command.class));
+    }
+
+    @Test
+    public void applyRulesWithLocalRulesFailureTest() {
+        setUpMock();
+        
+        // Create failure status for any command execution
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Create IptablesConfig with local rules
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        Set<LocalRule> localRules = new HashSet<>();
+        localRules.add(new LocalRule(RuleType.IP_FORWARDING));
+        iptablesConfig.setLocalRules(localRules);
+        
+        // This will call writeLocalRulesToFilterTable(null) which triggers command execution
+        iptablesConfig.applyRules();
+        
+        // Verify that commands were executed
+        verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
+    }
+
+    @Test
+    public void applyRulesWithNatRulesFailureTest() {
+        setUpMock();
+        
+        // Create failure status for any command execution
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Create IptablesConfig with NAT rules
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        Set<NATRule> natRules = new HashSet<>();
+        try {
+            NATRule natRule = new NATRule("eth0", "eth1", "192.168.1.0/24", "tcp", true);
+            natRules.add(natRule);
+            iptablesConfig.setNatRules(natRules);
+        } catch (Exception e) {
+            // Skip if rule creation fails, focus on the mock setup
+        }
+        
+        // This will call writeNatRulesToFilterTable(null) which triggers command execution
+        iptablesConfig.applyRules();
+        
+        // Verify that commands were executed
+        verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
+    }
+
+    @Test
+    public void applyRulesWithAutoNatRulesFailureTest() {
+        setUpMock();
+        
+        // Create failure status for any command execution
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+                new LinuxExitStatus(1));
+        when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
+        
+        // Create IptablesConfig with auto NAT rules
+        IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
+        Set<NATRule> autoNatRules = new HashSet<>();
+        try {
+            NATRule autoNatRule = new NATRule("eth0", "eth1", true);
+            autoNatRules.add(autoNatRule);
+            iptablesConfig.setAutoNatRules(autoNatRules);
+        } catch (Exception e) {
+            // Skip if rule creation fails, focus on the mock setup
+        }
+        
+        // This will call writeAutoNatRulesToFilterTable(null) which triggers command execution
+        iptablesConfig.applyRules();
+        
+        // Verify that commands were executed  
+        verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
+    }
+
 }
