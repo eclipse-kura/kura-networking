@@ -89,6 +89,9 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
             "136" // Neighbor Advertisement
     };
 
+    // Regex pattern to match iptables rules that have source restrictions
+    private static final String SOURCE_RESTRICTION_REGEX = ".*-s\\s+[^\\s]+.*";
+
     @Test
     public void shouldSaveIPv6IcmpRulesWhenIcmpAllowed() throws KuraException, IOException {
         IptablesConfigIPv6 iptablesConfig = new IptablesConfigIPv6(new LinkedHashSet<>(), new LinkedHashSet<>(),
@@ -207,7 +210,7 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         for (String rule : icmpRules) {
             if (rule.contains("--icmpv6-type 133") && rule.contains("-j ACCEPT")) {
                 assertFalse("Router Solicitation (133) should not have source restriction, but rule was: " + rule,
-                        rule.matches(".*-s\\s+[^\\s]+.*"));
+                        rule.matches(SOURCE_RESTRICTION_REGEX));
                 routerSolicitationFound = true;
             }
         }
@@ -218,7 +221,7 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         for (String rule : icmpRules) {
             if (rule.contains("--icmpv6-type 134") && rule.contains("-j ACCEPT")) {
                 assertFalse("Router Advertisement (134) should not have source restriction, but rule was: " + rule,
-                        rule.matches(".*-s\\s+[^\\s]+.*"));
+                        rule.matches(SOURCE_RESTRICTION_REGEX));
                 routerAdvertisementFound = true;
             }
         }
@@ -229,7 +232,7 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         for (String rule : icmpRules) {
             if (rule.contains("--icmpv6-type 135") && rule.contains("-j ACCEPT")) {
                 assertFalse("Neighbor Solicitation (135) should not have source restriction, but rule was: " + rule,
-                        rule.matches(".*-s\\s+[^\\s]+.*"));
+                        rule.matches(SOURCE_RESTRICTION_REGEX));
                 neighborSolicitationFound = true;
             }
         }
@@ -240,7 +243,7 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         for (String rule : icmpRules) {
             if (rule.contains("--icmpv6-type 136") && rule.contains("-j ACCEPT")) {
                 assertFalse("Neighbor Advertisement (136) should not have source restriction, but rule was: " + rule,
-                        rule.matches(".*-s\\s+[^\\s]+.*"));
+                        rule.matches(SOURCE_RESTRICTION_REGEX));
                 neighborAdvertisementFound = true;
             }
         }
@@ -269,7 +272,7 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
                     rule.contains("--icmpv6-type 135") ||
                     rule.contains("--icmpv6-type 136")) &&
                     rule.contains("-j ACCEPT") &&
-                    !rule.matches(".*-s\\s+[^\\s]+.*")) {
+                    !rule.matches(SOURCE_RESTRICTION_REGEX)) {
                 criticalRulesWithoutSourceRestriction++;
             }
         }
