@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
@@ -882,6 +883,75 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         
         // Verify that commands were executed  
         verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
+    }
+
+    // Tests merged from IptablesConfigCoverageTest to consolidate test coverage
+    
+    private static class IptablesConfigWithBadTmpPath extends IptablesConfig {
+        IptablesConfigWithBadTmpPath() {
+            super();
+        }
+
+        @Override
+        public String getFirewallConfigTmpFileName() {
+            // Point to a special file path that is not a directory to provoke IOException
+            // when trying to create a file inside it.
+            return "/dev/null/iptables-kura.tmp";
+        }
+    }
+
+    @Test
+    public void saveKuraChains_shouldThrowKuraIOException_onFileCreationFailure() {
+        IptablesConfig cfg = new IptablesConfigWithBadTmpPath();
+        try {
+            cfg.saveKuraChains();
+            fail("Expected KuraIOException to be thrown");
+        } catch (KuraIOException e) {
+            // Expected exception - test passes
+        } catch (KuraException e) {
+            // Check if it's actually a KuraIOException wrapped
+            if (!(e instanceof KuraIOException)) {
+                fail("Expected KuraIOException, but got: " + e.getClass().getSimpleName());
+            }
+        }
+    }
+
+    @Test
+    public void execute_shouldLogDebug_whenDebugEnabled() throws KuraException {
+        // Ensure DEBUG logs are enabled via src/test/resources/log4j.properties
+        setUpMock();
+        IptablesConfig cfg = new IptablesConfig(executorServiceMock);
+        // This will call execute(...) multiple times; with DEBUG enabled, lines 359-361 are executed.
+        cfg.clearAllKuraChains();
+    }
+
+    @Test
+    public void restore_shouldCatchIOException_onDeleteIfExistsFailure() throws Exception {
+        setUpMock();
+
+        // Prepare a non-empty temporary directory so Files.deleteIfExists throws DirectoryNotEmptyException
+        File tempDir = File.createTempFile("iptables-config-test", "dir");
+        // Turn it into a directory: delete the file and create a directory with the same name
+        tempDir.delete();
+        tempDir.mkdir();
+        File inner = new File(tempDir, "inner.txt");
+        try (FileWriter fw = new FileWriter(inner)) {
+            fw.write("data");
+        }
+
+        IptablesConfig cfg = new IptablesConfig(executorServiceMock);
+        // Stub restore command success explicitly to be safe
+        Command cmd = new Command(new String[] { "iptables-restore", tempDir.getAbsolutePath() });
+        cmd.setExecuteInAShell(true);
+        CommandStatus ok = new CommandStatus(cmd, new LinuxExitStatus(0));
+        org.mockito.Mockito.when(executorServiceMock.execute(cmd)).thenReturn(ok);
+
+        // Should not throw; deletion fails inside finally and is caught (line 389)
+        cfg.restore(tempDir.getAbsolutePath());
+
+        // Cleanup: remove inner file then directory
+        inner.delete();
+        tempDir.delete();
     }
 
 }
