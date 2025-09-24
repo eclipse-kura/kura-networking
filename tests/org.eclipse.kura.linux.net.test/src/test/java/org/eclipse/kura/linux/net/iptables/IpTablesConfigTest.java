@@ -923,6 +923,9 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         IptablesConfig cfg = new IptablesConfig(executorServiceMock);
         // This will call execute(...) multiple times; with DEBUG enabled, lines 359-361 are executed.
         cfg.clearAllKuraChains();
+        
+        // Verify that execute was called multiple times (at least once for each flush command)
+        verify(executorServiceMock, atLeast(7)).execute(any(Command.class));
     }
 
     @Test
