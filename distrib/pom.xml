@@ -385,32 +385,8 @@
                                 </data>
                                 <data>
                                     <type>file</type>
-                                    <src>${project.basedir}/src/main/resources/scripts/network_tools.py</src>
-                                    <dst>network_tools.py</dst>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
-                                        <user>root</user>
-                                        <group>root</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <type>file</type>
                                     <src>${project.basedir}/src/main/resources/scripts/customize_iptables.py</src>
                                     <dst>customize_iptables.py</dst>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/opt/eclipse/kura/kura-networking-install</prefix>
-                                        <user>root</user>
-                                        <group>root</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <type>file</type>
-                                    <src>${project.basedir}/src/main/resources/scripts/customize_kura_properties.py</src>
-                                    <dst>customize_kura_properties.py</dst>
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>/opt/eclipse/kura/kura-networking-install</prefix>

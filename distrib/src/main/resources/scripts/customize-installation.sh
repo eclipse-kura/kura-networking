@@ -49,15 +49,6 @@ customize_iptables() {
     fi
 }
 
-customize_kura_properties() {
-    local BOARD=$1
-    
-    KURA_PLATFORM=$( uname -m )
-    sed -i "s/kura_platform/${KURA_PLATFORM}/g" "/opt/eclipse/kura/framework/kura.properties"
-
-    python3 "/opt/eclipse/kura/kura-networking-install/customize_kura_properties.py" "${BOARD}"
-}
-
 IS_NETWORKING_PROFILE=$1
 
 setup_libudev
@@ -70,5 +61,4 @@ then
 fi
 
 customize_snapshot
-customize_kura_properties "${BOARD}"
 customize_iptables

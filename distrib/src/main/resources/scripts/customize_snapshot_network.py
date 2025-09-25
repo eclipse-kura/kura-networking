@@ -7,9 +7,12 @@
 import sys
 import logging
 import os
-import argparse
-from network_tools import get_eth_wlan_interfaces_names
 import os.path
+import argparse
+
+sys.path.append("/opt/eclipse/kura/.data")
+
+from network_tools import get_eth_wlan_interfaces_names
 
 # Define constants at the top of the file
 TEMPLATE_DIR = "/opt/eclipse/kura/kura-networking-install"

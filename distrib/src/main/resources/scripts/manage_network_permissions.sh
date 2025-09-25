@@ -95,9 +95,11 @@ ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/54-fi.w1.wpa_supplicant1
     fi
 
     # grant kurad user the privileges to manage ble via dbus
-    grep -lR kurad /etc/dbus-1/system.d/bluetooth.conf
-    if [ $? != 0 ]; then
-        cp /etc/dbus-1/system.d/bluetooth.conf /etc/dbus-1/system.d/bluetooth.conf.save
+    BLUETOOTH_DBUS_POLKIT_CONFIG="/etc/dbus-1/system.d/bluetooth.conf"
+    if [ -f $BLUETOOTH_DBUS_POLKIT_CONFIG ] && [ "$(grep -lR kurad $BLUETOOTH_DBUS_POLKIT_CONFIG)" != 0 ]; then
+        echo "Patching '$BLUETOOTH_DBUS_POLKIT_CONFIG' to grant kurad user the privileges to manage bluetooth via dbus"
+
+        cp "$BLUETOOTH_DBUS_POLKIT_CONFIG" "$BLUETOOTH_DBUS_POLKIT_CONFIG".kurasave
         awk 'done != 1 && /^<\/busconfig>/ {
             print "  <policy user=\"kurad\">"
             print "    <allow own=\"org.bluez\"/>"
@@ -113,12 +115,15 @@ ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/54-fi.w1.wpa_supplicant1
             print "    <allow send_interface=\"org.freedesktop.DBus.Properties\"/>"
             print "  </policy>\n"
             done = 1
-        } 1' /etc/dbus-1/system.d/bluetooth.conf >tempfile && mv tempfile /etc/dbus-1/system.d/bluetooth.conf
+        } 1' "$BLUETOOTH_DBUS_POLKIT_CONFIG" >tempfile && mv tempfile "$BLUETOOTH_DBUS_POLKIT_CONFIG"
     fi
 
     # grant kurad user the privileges to manage wpa supplicant via dbus
-    if ! grep -lR kurad /etc/dbus-1/system.d/wpa_supplicant.conf ; then
-        cp /etc/dbus-1/system.d/wpa_supplicant.conf /etc/dbus-1/system.d/wpa_supplicant.conf.save
+    WPASUPP_DBUS_POLKIT_CONFIG="/etc/dbus-1/system.d/wpa_supplicant.conf"
+    if [ -f "$WPASUPP_DBUS_POLKIT_CONFIG" ] && [ "$(grep -lR kurad $WPASUPP_DBUS_POLKIT_CONFIG)" != 0 ]; then
+        echo "Patching '$WPASUPP_DBUS_POLKIT_CONFIG' to grant kurad user the privileges to manage wpa supplicant via dbus"
+
+        cp "$WPASUPP_DBUS_POLKIT_CONFIG" "$WPASUPP_DBUS_POLKIT_CONFIG".kurasave
         awk 'done != 1 && /^<\/busconfig>/ {
             print "    <policy user=\"kurad\">"
             print "        <allow own=\"fi.w1.wpa_supplicant1\"/>"
@@ -127,7 +132,7 @@ ResultAny=yes" >/etc/polkit-1/localauthority/50-local.d/54-fi.w1.wpa_supplicant1
             print "        <allow receive_sender=\"fi.w1.wpa_supplicant1\" receive_type=\"signal\"/>"
             print "    </policy>\n"
             done = 1
-        } 1' /etc/dbus-1/system.d/wpa_supplicant.conf >tempfile && mv tempfile /etc/dbus-1/system.d/wpa_supplicant.conf
+        } 1' "$WPASUPP_DBUS_POLKIT_CONFIG" >tempfile && mv tempfile "$WPASUPP_DBUS_POLKIT_CONFIG"
     fi
 }
 
@@ -157,8 +162,12 @@ function delete_polkit_rules {
     fi
 
     # recover old configs
-    mv /etc/dbus-1/system.d/bluetooth.conf.save /etc/dbus-1/system.d/bluetooth.conf
-    mv /etc/dbus-1/system.d/wpa_supplicant.conf.save /etc/dbus-1/system.d/wpa_supplicant.conf
+    if [ -f /etc/dbus-1/system.d/bluetooth.conf.kurasave ]; then
+        mv /etc/dbus-1/system.d/bluetooth.conf.kurasave /etc/dbus-1/system.d/bluetooth.conf
+    fi
+    if [ -f /etc/dbus-1/system.d/wpa_supplicant.conf.kurasave ]; then
+        mv /etc/dbus-1/system.d/wpa_supplicant.conf.kurasave /etc/dbus-1/system.d/wpa_supplicant.conf
+    fi
 }
 
 INSTALL=YES
