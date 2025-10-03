@@ -412,8 +412,8 @@ public abstract class AbstractLinuxFirewall {
         }
         for (String rule : rules) {
             // Check for both icmp (IPv4) and ipv6-icmp (IPv6) rules
-            if (rule.contains("-p icmp") || rule.contains("-p ipv6-icmp") || rule.contains("--protocol icmp") 
-                    || rule.contains("--protocol ipv6-icmp")) {
+            if (rule.contains("-p icmp") || rule.contains("-p ipv6-icmp") || rule.contains("-p icmpv6")
+                    || rule.contains("--protocol icmp") || rule.contains("--protocol ipv6-icmp") || rule.contains("--protocol icmpv6")) {
                 return true;
             }
         }
