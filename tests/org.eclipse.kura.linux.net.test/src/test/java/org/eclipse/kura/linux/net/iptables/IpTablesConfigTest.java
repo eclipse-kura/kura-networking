@@ -4,9 +4,9 @@
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -225,7 +225,8 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
                 "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
                 "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
-                "-A prerouting-kura -p icmp -j DROP", "-A prerouting-kura -f -j DROP" };
+                "-A prerouting-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j DROP", 
+                "-A prerouting-kura -f -j DROP" };
         Set<String> mangleRules = new HashSet<String>(Arrays.asList(mangleRulesArray));
 
         // These rules are fake...
