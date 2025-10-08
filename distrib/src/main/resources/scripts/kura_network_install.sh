@@ -103,8 +103,6 @@ setup_network_manager() {
     systemctl disable dhcpcd
     systemctl stop dhcpcd5
     systemctl disable dhcpcd5
-    systemctl stop systemd-hostnamed
-    systemctl disable systemd-hostnamed
     systemctl stop systemd-networkd
     systemctl disable systemd-networkd
 
