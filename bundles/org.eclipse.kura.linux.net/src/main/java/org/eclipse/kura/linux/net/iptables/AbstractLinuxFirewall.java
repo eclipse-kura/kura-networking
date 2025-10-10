@@ -394,10 +394,9 @@ public abstract class AbstractLinuxFirewall {
         this.iptables.setAdditionalNatRules(this.additionalNatRules);
         this.iptables.setAdditionalMangleRules(this.additionalMangleRules);
 
-        // Only set allowIcmp if ICMP rules are not already present in additional rules
-        if (!hasIcmpRulesInAdditionalRules()) {
-            this.iptables.setAllowIcmp(this.allowIcmp);
-        }
+        boolean customIcmpRulesExist = hasIcmpRulesInAdditionalRules();
+        // Only apply default ICMP rules if no custom ICMP rules are defined
+        this.iptables.setAllowIcmp(!customIcmpRulesExist);
     }
 
     private boolean hasIcmpRulesInAdditionalRules() {

@@ -1112,14 +1112,6 @@ public class IptablesConfig extends IptablesConfigConstants {
                     logger.debug("ICMP rule: {}", allowIcmpRule);
                 }
             }
-        } else {
-            for (String doNotAllowIcmpRule : getNotAllowIcmp()) {
-                if (!execute((getIptablesCommand() + " " + doNotAllowIcmpRule + " -t " + FILTER)).getExitStatus()
-                        .isSuccessful()) {
-                    logger.error("Failed to apply ICMP rule");
-                    logger.debug("ICMP rule: {}", doNotAllowIcmpRule);
-                }
-            }
         }
     }
 
