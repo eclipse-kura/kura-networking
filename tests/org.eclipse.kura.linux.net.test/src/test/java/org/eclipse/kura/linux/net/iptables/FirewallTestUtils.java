@@ -194,12 +194,7 @@ public class FirewallTestUtils {
         commandApplyList.add(new Command("iptables -A input-kura -i lo -j ACCEPT -t filter".split(" ")));
         commandApplyList.add(new Command(
                 "iptables -A input-kura -m state --state RELATED,ESTABLISHED -j ACCEPT -t filter".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -A input-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j DROP -t filter"
-                        .split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -A output-kura -p icmp -m icmp --icmp-type 0 -m state --state RELATED,ESTABLISHED -j DROP -t filter"
-                        .split(" ")));
+        // DO_NOT_ALLOW_ICMP rules are no longer added explicitly - the default DROP policy handles ICMP blocking
         commandApplyList.add(
                 new Command("iptables -t mangle -A prerouting-kura -m conntrack --ctstate INVALID -j DROP".split(" ")));
         commandApplyList.add(new Command(
@@ -231,7 +226,7 @@ public class FirewallTestUtils {
                 "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP".split(" ")));
         commandApplyList.add(new Command(
                 "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP".split(" ")));
-        commandApplyList.add(new Command("iptables -t mangle -A prerouting-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j DROP".split(" ")));
+        // ICMP DROP rule in mangle table removed - ICMP blocking is now handled by default DROP policy
         commandApplyList.add(new Command("iptables -t mangle -A prerouting-kura -f -j DROP".split(" ")));
         commandApplyList.add(new Command("iptables -t filter -A input-kura -p tcp -f -j DROP".split(" ")));
         commandApplyList.add(new Command("iptables -t nat -A prerouting-kura -p tcp -f -j DROP".split(" ")));

@@ -225,7 +225,6 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                 "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
                 "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
                 "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
-                "-A prerouting-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j DROP", 
                 "-A prerouting-kura -f -j DROP" };
         Set<String> mangleRules = new HashSet<String>(Arrays.asList(mangleRulesArray));
 
@@ -394,7 +393,8 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         String[] notAllowIcmp = config.getNotAllowIcmp();
         assertNotNull("getNotAllowIcmp should not return null", notAllowIcmp);
-        assertTrue("getNotAllowIcmp should return non-empty array", notAllowIcmp.length > 0);
+        // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking ICMP
+        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0, notAllowIcmp.length);
     }
 
     @Test(expected = KuraIOException.class)
@@ -587,12 +587,13 @@ public class IpTablesConfigTest extends FirewallTestUtils {
             // Expected if file operations fail
         }
 
-        // Verify ICMP rules are configured for disallowing ICMP
+        // Verify that when ICMP is disallowed, no explicit DROP rules are added
+        // The default DROP policy on INPUT and FORWARD chains handles the blocking
         File tempFile = new File(config.getFirewallConfigTmpFileName());
         if (tempFile.exists()) {
             try (Stream<String> lines = Files.lines(tempFile.toPath())) {
-                boolean foundDropRule = lines.anyMatch(line -> line.contains("icmp") && line.contains("DROP"));
-                assertTrue("Should contain ICMP DROP rule when ICMP is disallowed", foundDropRule);
+                boolean foundIcmpRule = lines.anyMatch(line -> line.contains("icmp"));
+                assertFalse("Should not contain explicit ICMP rules when ICMP is disallowed (default DROP policy handles blocking)", foundIcmpRule);
             }
             Files.deleteIfExists(tempFile.toPath());
         }
@@ -669,7 +670,8 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         assertNotNull("getNotAllowIcmp should not return null", config.getNotAllowIcmp());
 
         assertTrue("getAllowIcmp should return non-empty array", config.getAllowIcmp().length > 0);
-        assertTrue("getNotAllowIcmp should return non-empty array", config.getNotAllowIcmp().length > 0);
+        // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking ICMP
+        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0, config.getNotAllowIcmp().length);
     }
 
     @Test
