@@ -78,7 +78,6 @@ public class FloodingProtectionConfiguratorTest {
             "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
             "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
             "-A prerouting-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j DROP",
-            "-A prerouting-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 129 -j DROP",
             "-A prerouting-kura -m ipv6header --header dst --soft -j DROP",
             "-A prerouting-kura -m ipv6header --header hop --soft -j DROP",
             "-A prerouting-kura -m ipv6header --header route --soft -j DROP",
