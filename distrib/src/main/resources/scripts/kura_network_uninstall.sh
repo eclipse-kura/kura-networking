@@ -86,6 +86,21 @@ recover_dnsmasq_conf_file() {
     fi
 }
 
+remove_dnsmasq_leases() {
+    DNSMASQ_LEASES_FILE="/var/lib/dhcp/dnsmasq.leases"
+    if [ -f "${DNSMASQ_LEASES_FILE}" ]; then
+        # Check if the file owner is kur before removing
+        FILE_OWNER=$(stat -c '%U' "${DNSMASQ_LEASES_FILE}" 2>/dev/null)
+        if [ "${FILE_OWNER}" = "kurad" ]; then
+            rm -f "${DNSMASQ_LEASES_FILE}"
+        else
+            echo "Warning: ${DNSMASQ_LEASES_FILE} owner is '${FILE_OWNER}', not 'kurad'. Skipping removal."
+        fi
+    else  
+        echo "Warning: ${DNSMASQ_LEASES_FILE} does not exist."
+    fi
+}
+
 recover_web_ui_kura_properties() {
     if [ -f "${BASE_DIR}/${KURA_SYMLINK}/framework/kura.properties" ]; then
         sed -i "s|^kura.have.net.admin=.*|kura.have.net.admin=false|" "${BASE_DIR}/${KURA_SYMLINK}/framework/kura.properties"
@@ -126,5 +141,7 @@ run_kura_networking_uninstall() {
 }
 
 run_kura_networking_uninstall
+
+remove_dnsmasq_leases
 
 exit 0
