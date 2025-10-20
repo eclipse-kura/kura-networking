@@ -120,6 +120,7 @@ kura_uninstall() {
         bash "${BASE_DIR}/${KURA_SYMLINK}/.data/manage_network_permissions.sh" -u
         restore_nm_installation
         recover_dnsmasq_conf_file
+        remove_dnsmasq_leases
 
         recover_web_ui_kura_properties
         remove_kura_networking_service
@@ -138,7 +139,5 @@ run_kura_networking_uninstall() {
 }
 
 run_kura_networking_uninstall
-
-remove_dnsmasq_leases
 
 exit 0
