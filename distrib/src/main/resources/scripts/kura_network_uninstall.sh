@@ -87,17 +87,14 @@ recover_dnsmasq_conf_file() {
 }
 
 remove_dnsmasq_leases() {
+    # Remove dnsmasq leases file if it exists and is owned by 'kurad'
     DNSMASQ_LEASES_FILE="/var/lib/dhcp/dnsmasq.leases"
     if [ -f "${DNSMASQ_LEASES_FILE}" ]; then
-        # Check if the file owner is kur before removing
         FILE_OWNER=$(stat -c '%U' "${DNSMASQ_LEASES_FILE}" 2>/dev/null)
         if [ "${FILE_OWNER}" = "kurad" ]; then
             rm -f "${DNSMASQ_LEASES_FILE}"
-        else
-            echo "Warning: ${DNSMASQ_LEASES_FILE} owner is '${FILE_OWNER}', not 'kurad'. Skipping removal."
+            echo "The dnsmasq leases file has been successfully removed."
         fi
-    else  
-        echo "Warning: ${DNSMASQ_LEASES_FILE} does not exist."
     fi
 }
 
