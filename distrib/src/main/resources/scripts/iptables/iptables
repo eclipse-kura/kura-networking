@@ -47,8 +47,6 @@ COMMIT
 -A input-kura -i WIFI_INTERFACE_0 -p udp -m udp --dport 53 -j ACCEPT
 -A input-kura -i ETH_INTERFACE_0 -p udp -m udp --dport 53 -j ACCEPT
 -A input-kura -s 127.0.0.1/32 -p tcp -m tcp --dport 5002 -j ACCEPT
--A input-kura -i WIFI_INTERFACE_0 -p tcp -m tcp --dport 1450 -j ACCEPT
--A input-kura -i ETH_INTERFACE_0 -p tcp -m tcp --dport 1450 -j ACCEPT
 -A input-kura -i WIFI_INTERFACE_0 -p tcp -m tcp --dport 443 -j ACCEPT
 -A input-kura -i ETH_INTERFACE_0 -p tcp -m tcp --dport 443 -j ACCEPT
 -A input-kura -i WIFI_INTERFACE_0 -p tcp -m tcp --dport 4443 -j ACCEPT
