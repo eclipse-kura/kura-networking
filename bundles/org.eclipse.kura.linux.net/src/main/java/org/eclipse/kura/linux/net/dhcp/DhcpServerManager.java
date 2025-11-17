@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2011, 2025 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -22,14 +22,9 @@ import org.eclipse.kura.KuraIOException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.executor.CommandStatus;
 import org.eclipse.kura.linux.net.dhcp.server.DhcpLinuxTool;
-import org.eclipse.kura.linux.net.dhcp.server.DhcpdConfigConverter;
-import org.eclipse.kura.linux.net.dhcp.server.DhcpdLeaseReader;
-import org.eclipse.kura.linux.net.dhcp.server.DhcpdTool;
 import org.eclipse.kura.linux.net.dhcp.server.DnsmasqConfigConverter;
 import org.eclipse.kura.linux.net.dhcp.server.DnsmasqLeaseReader;
 import org.eclipse.kura.linux.net.dhcp.server.DnsmasqTool;
-import org.eclipse.kura.linux.net.dhcp.server.UdhcpdConfigConverter;
-import org.eclipse.kura.linux.net.dhcp.server.UdhcpdLeaseReader;
 import org.eclipse.kura.linux.net.util.LinuxNetworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +44,12 @@ public class DhcpServerManager {
     }
 
     public DhcpServerManager(CommandExecutorService service) {
-        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
+        switch (dhcpServerTool) {
+        case DNSMASQ, NONE:
             this.linuxTool = new DnsmasqTool(service);
-        } else {
-            this.linuxTool = new DhcpdTool(service, dhcpServerTool);
+            break;
+        default:
+            throw new IllegalArgumentException(dhcpServerTool.name() + " not supported.");
         }
     }
 
@@ -61,10 +58,6 @@ public class DhcpServerManager {
             if (LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue())
                     && LinuxNetworkUtil.systemdSystemUnitExists(DhcpServerTool.DNSMASQ.getValue() + ".service")) {
                 dhcpServerTool = DhcpServerTool.DNSMASQ;
-            } else if (LinuxNetworkUtil.toolExists(DhcpServerTool.UDHCPD.getValue())) {
-                dhcpServerTool = DhcpServerTool.UDHCPD;
-            } else if (LinuxNetworkUtil.toolExists(DhcpServerTool.DHCPD.getValue())) {
-                dhcpServerTool = DhcpServerTool.DHCPD;
             }
         }
 
@@ -130,17 +123,6 @@ public class DhcpServerManager {
         return sb.toString();
     }
 
-    public static String getPidFilename(String interfaceName) {
-        StringBuilder sb = new StringBuilder(PID_FILE_DIR);
-        if (dhcpServerTool == DhcpServerTool.DHCPD || dhcpServerTool == DhcpServerTool.UDHCPD) {
-            sb.append(dhcpServerTool.getValue());
-            sb.append('-');
-            sb.append(interfaceName);
-            sb.append(".pid");
-        }
-        return sb.toString();
-    }
-
     public static String getLeasesFilename(String interfaceName) {
         StringBuilder sb = new StringBuilder(LEASES_FILE_DIR);
         if (dhcpServerTool == DhcpServerTool.NONE) {
@@ -160,22 +142,14 @@ public class DhcpServerManager {
     }
 
     public static Optional<DhcpServerConfigConverter> getConfigConverter() {
-        if (dhcpServerTool == DhcpServerTool.DHCPD) {
-            return Optional.of(new DhcpdConfigConverter());
-        } else if (dhcpServerTool == DhcpServerTool.UDHCPD) {
-            return Optional.of(new UdhcpdConfigConverter());
-        } else if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
+        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
             return Optional.of(new DnsmasqConfigConverter());
         }
         return Optional.empty();
     }
 
     public static Optional<DhcpServerLeaseReader> getLeaseReader() {
-        if (dhcpServerTool == DhcpServerTool.DHCPD) {
-            return Optional.of(new DhcpdLeaseReader());
-        } else if (dhcpServerTool == DhcpServerTool.UDHCPD) {
-            return Optional.of(new UdhcpdLeaseReader());
-        } else if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
+        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
             return Optional.of(new DnsmasqLeaseReader());
         }
         return Optional.empty();
