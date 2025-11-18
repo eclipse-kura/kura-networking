@@ -45,14 +45,13 @@ public class DhcpServerManagerTest {
     private Optional<DhcpServerLeaseReader> returnedLeaseReader;
     private Exception occurredException;
     private MockedStatic<LinuxNetworkUtil> mockedLinuxNetworkUtil;
-    private DhcpServerTool tool;
 
     /*
      * Scenarios
      */
 
     @Test
-    public void shouldReturnConfigFilenameForDnsmasq() throws NoSuchFieldException {
+    public void shouldReturnConfigFilenameForDnsmasq() {
         givenDhcpServerManager(DhcpServerTool.DNSMASQ);
 
         whenGetConfigFilename(EXAMPLE_INTERFACE);
