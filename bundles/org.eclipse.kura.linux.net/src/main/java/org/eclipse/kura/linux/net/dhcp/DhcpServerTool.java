@@ -14,7 +14,6 @@ package org.eclipse.kura.linux.net.dhcp;
 
 public enum DhcpServerTool {
 
-    NONE("none"),
     DNSMASQ("dnsmasq");
 
     private String toolName;

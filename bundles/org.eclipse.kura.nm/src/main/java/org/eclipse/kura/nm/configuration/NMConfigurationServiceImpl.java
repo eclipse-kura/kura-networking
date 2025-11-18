@@ -39,6 +39,7 @@ import org.eclipse.kura.configuration.SelfConfiguringComponent;
 import org.eclipse.kura.crypto.CryptoService;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.internal.linux.net.dns.DnsServerService;
+import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
 import org.eclipse.kura.linux.net.util.LinuxNetworkUtil;
 import org.eclipse.kura.net.NetInterfaceStatus;
 import org.eclipse.kura.net.NetInterfaceType;
@@ -251,7 +252,9 @@ public class NMConfigurationServiceImpl implements SelfConfiguringComponent {
 
             writeNetworkConfigurationSettings(modifiedProps);
             writeFirewallNatRules(interfaces, modifiedProps);
-            writeDhcpServerConfiguration(interfaces);
+            this.dhcpServerMonitor.getDhcpServerManager().ifPresent(dhcpServerManager -> {
+                writeDhcpServerConfiguration(dhcpServerManager, interfaces);
+            });
             this.dnsServerMonitor.setNetworkProperties(this.networkProperties);
 
             this.dhcpServerMonitor.start();
@@ -507,11 +510,11 @@ public class NMConfigurationServiceImpl implements SelfConfiguringComponent {
         return false;
     }
 
-    private void writeDhcpServerConfiguration(Set<String> interfaceNames) {
+    private void writeDhcpServerConfiguration(final DhcpServerManager dhcpServerManager, Set<String> interfaceNames) {
         interfaceNames.forEach(interfaceName -> {
             if (isDhcpServerValid(interfaceName)) {
-                DhcpServerConfigWriter dhcpServerConfigWriter = buildDhcpServerConfigWriter(interfaceName,
-                        this.networkProperties);
+                DhcpServerConfigWriter dhcpServerConfigWriter = buildDhcpServerConfigWriter(dhcpServerManager,
+                        interfaceName, this.networkProperties);
                 try {
                     this.dhcpServerMonitor.disable(interfaceName); // Side effect: we rely on the monitor bringing the
                                                                    // server back up so that the configuration change
@@ -529,9 +532,9 @@ public class NMConfigurationServiceImpl implements SelfConfiguringComponent {
         });
     }
 
-    protected DhcpServerConfigWriter buildDhcpServerConfigWriter(final String interfaceName,
-            final NetworkProperties properties) {
-        return new DhcpServerConfigWriter(interfaceName, properties);
+    protected DhcpServerConfigWriter buildDhcpServerConfigWriter(final DhcpServerManager dhcpServerManager,
+            final String interfaceName, final NetworkProperties properties) {
+        return new DhcpServerConfigWriter(dhcpServerManager, interfaceName, properties);
     }
 
     private boolean isDhcpServerValid(String interfaceName) {

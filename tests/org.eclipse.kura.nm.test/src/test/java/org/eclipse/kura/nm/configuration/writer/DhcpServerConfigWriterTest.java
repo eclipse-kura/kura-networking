@@ -13,7 +13,10 @@
 package org.eclipse.kura.nm.configuration.writer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +31,9 @@ import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerTool;
 import org.eclipse.kura.linux.net.dhcp.server.DnsmasqConfigConverter;
 import org.eclipse.kura.nm.NetworkProperties;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 public class DhcpServerConfigWriterTest {
 
@@ -42,8 +42,8 @@ public class DhcpServerConfigWriterTest {
     @Rule
     public TemporaryFolder mockFiles = new TemporaryFolder();
 
-    private static MockedStatic<DhcpServerManager> dhcpServerMock;
-    private Map<String, Object> networkProperties = new HashMap<>();
+    private final DhcpServerManager dhcpServerMock = mock(DhcpServerManager.class);
+    private final Map<String, Object> networkProperties = new HashMap<>();
     private DhcpServerTool selectedTool;
     private String configFilename;
     private DhcpServerConfigWriter writer;
@@ -65,16 +65,6 @@ public class DhcpServerConfigWriterTest {
     }
 
     @Test
-    public void shouldReturnEmptyConfigFileName() throws Exception {
-        givenDhcpTool(DhcpServerTool.NONE);
-        givenDhcpConfigWriter("eth0");
-
-        whenGetConfigFilename();
-
-        thenDhcpServerFileNameIs("etc");
-    }
-
-    @Test
     public void shouldWriteCorrectDnsmasqConfigurationFile() throws Exception {
         givenDhcpTool(DhcpServerTool.DNSMASQ);
         givenNetworkPropertiesWith("net.interface.eth0.config.dhcpServer4.enabled", true);
@@ -90,6 +80,8 @@ public class DhcpServerConfigWriterTest {
 
         whenWriteConfiguration();
 
+        thenUnknownHostExceptionIsNotCaught();
+        thenKuraExceptionIsNotCaught();
         thenConfigFileContains(new StringBuilder().append("interface=eth0\n")
                 .append("dhcp-range=eth0,192.168.0.111,192.168.0.120,900s\n")
                 .append("dhcp-option=eth0,1,255.255.255.0\n").append("dhcp-option=eth0,3,192.168.0.11\n")
@@ -112,6 +104,8 @@ public class DhcpServerConfigWriterTest {
 
         whenWriteConfiguration();
 
+        thenUnknownHostExceptionIsNotCaught();
+        thenKuraExceptionIsNotCaught();
         thenConfigFileContains(new StringBuilder().append("interface=eth0\n")
                 .append("dhcp-range=eth0,192.168.0.111,192.168.0.120,900s\n")
                 .append("dhcp-option=eth0,1,255.255.255.0\n").append("dhcp-option=eth0,3\n")
@@ -135,6 +129,8 @@ public class DhcpServerConfigWriterTest {
 
         whenWriteConfiguration();
 
+        thenUnknownHostExceptionIsNotCaught();
+        thenKuraExceptionIsNotCaught();
         thenConfigFileContains(new StringBuilder().append("interface=eth0\n")
                 .append("dhcp-range=eth0,192.168.0.111,192.168.0.120,900s\n")
                 .append("dhcp-option=eth0,1,255.255.255.0\n").append("dhcp-option=eth0,3,192.168.0.11\n")
@@ -151,17 +147,10 @@ public class DhcpServerConfigWriterTest {
      */
 
     private void givenDhcpTool(DhcpServerTool tool) {
-        dhcpServerMock = Mockito.mockStatic(DhcpServerManager.class);
 
         switch (tool) {
         case DNSMASQ:
-            dhcpServerMock.when(DhcpServerManager::getTool).thenReturn(DhcpServerTool.DNSMASQ);
-            dhcpServerMock.when(DhcpServerManager::getConfigConverter)
-                    .thenReturn(Optional.of(new DnsmasqConfigConverter()));
-            dhcpServerMock.when(() -> DhcpServerManager.getLeasesFilename("eth0")).thenReturn("/tmp/dnsmasq.leases");
-            break;
-        case NONE:
-            dhcpServerMock.when(DhcpServerManager::getTool).thenReturn(DhcpServerTool.NONE);
+            when(this.dhcpServerMock.getConfigConverter()).thenReturn(Optional.of(new DnsmasqConfigConverter()));
             break;
         }
 
@@ -179,14 +168,14 @@ public class DhcpServerConfigWriterTest {
         case DNSMASQ:
             filename = String.format(DNSMASQ_CONFIG_FILENAME, interfaceName);
             break;
-        case NONE:
         default:
             filename = "etc";
         }
 
         this.configFilename = this.mockFiles.newFile(filename).getAbsolutePath();
 
-        this.writer = new DhcpServerConfigWriter(interfaceName, new NetworkProperties(this.networkProperties)) {
+        this.writer = new DhcpServerConfigWriter(this.dhcpServerMock, interfaceName,
+                new NetworkProperties(this.networkProperties)) {
 
             @Override
             protected String getConfigFilename() {
@@ -229,21 +218,12 @@ public class DhcpServerConfigWriterTest {
         assertEquals(expectedContent, content);
     }
 
-    private void thenUnknownHostExceptionIsCaught() {
-        assertTrue(this.isUnknownHostException);
+    private void thenUnknownHostExceptionIsNotCaught() {
+        assertFalse(this.isUnknownHostException);
     }
 
-    private void thenKuraExceptionIsCaught() {
-        assertTrue(this.isKuraException);
-    }
-
-    /*
-     * Utilities
-     */
-
-    @After
-    public void cleanUp() {
-        dhcpServerMock.close();
+    private void thenKuraExceptionIsNotCaught() {
+        assertFalse(this.isKuraException);
     }
 
 }

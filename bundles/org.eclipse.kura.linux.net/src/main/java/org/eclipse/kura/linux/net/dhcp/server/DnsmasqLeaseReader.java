@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -20,13 +20,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerLeaseReader;
-import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
 import org.eclipse.kura.net.dhcp.DhcpLease;
 
 public class DnsmasqLeaseReader extends AbstractDhcpLeaseReader implements DhcpServerLeaseReader {
@@ -34,7 +34,8 @@ public class DnsmasqLeaseReader extends AbstractDhcpLeaseReader implements DhcpS
     @Override
     public List<DhcpLease> readLeases(String interfaceName, CommandExecutorService commandService)
             throws KuraException {
-        File leaseFile = new File(DhcpServerManager.getLeasesFilename(interfaceName));
+
+        File leaseFile = new File(new DnsmasqTool(commandService).getLeasesFilename(Optional.of(interfaceName)));
         try {
             return parseDhcpLeases(new FileInputStream(leaseFile));
         } catch (FileNotFoundException e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,6 +13,7 @@
 package org.eclipse.kura.nm.configuration.monitor;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
+import org.eclipse.kura.linux.net.dhcp.DhcpServerTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,17 +32,25 @@ public class DhcpServerMonitor {
     private static final Logger logger = LoggerFactory.getLogger(DhcpServerMonitor.class);
 
     private final Map<String, Boolean> dhcpServerInterfaceConfiguration;
-    protected DhcpServerManager dhcpServerManager;
+    protected Optional<DhcpServerManager> dhcpServerManager;
     private ScheduledExecutorService worker;
     private ScheduledFuture<?> handle;
 
     public DhcpServerMonitor(CommandExecutorService commandExecutorService) {
         this.dhcpServerInterfaceConfiguration = new ConcurrentHashMap<>();
-        setDhcpServerManager(new DhcpServerManager(commandExecutorService));
+        try {
+            setDhcpServerManager(new DhcpServerManager(DhcpServerTool.DNSMASQ, commandExecutorService));
+        } catch (Exception e) {
+            this.dhcpServerManager = Optional.empty();
+        }
     }
 
     protected void setDhcpServerManager(DhcpServerManager dhcpServerManager) {
-        this.dhcpServerManager = dhcpServerManager;
+        this.dhcpServerManager = Optional.of(dhcpServerManager);
+    }
+
+    public Optional<DhcpServerManager> getDhcpServerManager() {
+        return this.dhcpServerManager;
     }
 
     public void start() {
@@ -66,8 +76,11 @@ public class DhcpServerMonitor {
     }
 
     public void disable(String interfaceName) {
+        if (this.dhcpServerManager.isEmpty()) {
+            return;
+        }
         try {
-            if (this.dhcpServerManager.isRunning(interfaceName)) {
+            if (this.dhcpServerManager.get().isRunning(interfaceName)) {
                 stopDhcpServer(interfaceName);
             }
         } catch (KuraException e) {
@@ -76,13 +89,16 @@ public class DhcpServerMonitor {
     }
 
     private void monitor() {
+        if (this.dhcpServerManager.isEmpty()) {
+            return;
+        }
         this.dhcpServerInterfaceConfiguration.entrySet().forEach(entry -> {
             String interfaceName = entry.getKey();
             boolean enable = entry.getValue();
             try {
-                if (enable && !this.dhcpServerManager.isRunning(interfaceName)) {
+                if (enable && !this.dhcpServerManager.get().isRunning(interfaceName)) {
                     startDhcpServer(interfaceName);
-                } else if (!enable && this.dhcpServerManager.isRunning(interfaceName)) {
+                } else if (!enable && this.dhcpServerManager.get().isRunning(interfaceName)) {
                     stopDhcpServer(interfaceName);
                 }
             } catch (KuraException e) {
@@ -94,7 +110,7 @@ public class DhcpServerMonitor {
     private void startDhcpServer(String interfaceName) {
         logger.debug("Starting DHCP server for {}", interfaceName);
         try {
-            this.dhcpServerManager.enable(interfaceName);
+            this.dhcpServerManager.get().enable(interfaceName);
         } catch (KuraException e) {
             logger.warn("Failed to start DHCP server for the interface " + interfaceName, e);
         }
@@ -104,7 +120,7 @@ public class DhcpServerMonitor {
     private void stopDhcpServer(String interfaceName) {
         logger.debug("Stopping DHCP server for {}", interfaceName);
         try {
-            this.dhcpServerManager.disable(interfaceName);
+            this.dhcpServerManager.get().disable(interfaceName);
         } catch (KuraException e) {
             logger.warn("Failed to stop DHCP server for the interface " + interfaceName, e);
         }

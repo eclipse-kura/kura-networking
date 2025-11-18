@@ -47,6 +47,7 @@ import org.eclipse.kura.core.net.EthernetInterfaceImpl;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.executor.CommandStatus;
+import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
 import org.eclipse.kura.net.NetInterface;
 import org.eclipse.kura.net.NetInterfaceAddress;
 import org.eclipse.kura.net.NetInterfaceType;
@@ -76,6 +77,7 @@ public class NMConfigurationServiceImplTest {
     private Event event;
     private final Set<String> dhcpConfigWriterInterfaces = new HashSet<>();
     private KeystoreService keystoreService = mock(KeystoreService.class);
+    private DhcpServerManager dhcpServerMock = mock(DhcpServerManager.class);
 
     @Test
     public void shouldPostEventAfterActivationTest() throws InterruptedException, KuraException {
@@ -94,7 +96,7 @@ public class NMConfigurationServiceImplTest {
     }
 
     @Test
-    public void shouldRemovedModifiedInterfacesProperty() throws InterruptedException, KuraException {
+    public void shouldRemovedModifiedInterfacesProperty() throws KuraException {
         givenPropertiesWithModifiedInterfaces();
         givenNetworkConfigurationService();
         whenServiceIsActivated();
@@ -520,8 +522,8 @@ public class NMConfigurationServiceImplTest {
             }
 
             @Override
-            protected DhcpServerConfigWriter buildDhcpServerConfigWriter(String interfaceName,
-                    NetworkProperties properties) {
+            protected DhcpServerConfigWriter buildDhcpServerConfigWriter(DhcpServerManager dhcpServerMock,
+                    String interfaceName, NetworkProperties properties) {
                 dhcpConfigWriterInterfaces.add(interfaceName);
                 return Mockito.mock(DhcpServerConfigWriter.class);
             }
@@ -897,55 +899,6 @@ public class NMConfigurationServiceImplTest {
             }
         }
         assertEquals(40, adsConfigured);
-    }
-
-    private void thenComponentDefinitionHasCorrectEnterpriseProperties() {
-        int adsConfigured = 0;
-        for (AD ad : this.ads) {
-
-            if ("net.interfaces".equals(ad.getId())) {
-                assertEquals("net.interfaces", ad.getName());
-                assertEquals("STRING", ad.getType().name());
-                assertTrue(ad.isRequired());
-                adsConfigured++;
-            }
-
-            if ("net.interface.wlp2s0.config.802-1x.eap".equals(ad.getId())) {
-                assertEquals("net.interface.wlp2s0.config.802-1x.eap", ad.getName());
-                assertEquals("STRING", ad.getType().name());
-                assertFalse(ad.isRequired());
-                adsConfigured++;
-            }
-
-            if ("net.interface.wlp2s0.config.802-1x.keystore.pid".equals(ad.getId())) {
-                assertEquals("net.interface.wlp2s0.config.802-1x.keystore.pid", ad.getName());
-                assertEquals("STRING", ad.getType().name());
-                assertFalse(ad.isRequired());
-                adsConfigured++;
-            }
-
-            if ("net.interface.wlp2s0.config.802-1x.ca-cert-name".equals(ad.getId())) {
-                assertEquals("net.interface.wlp2s0.config.802-1x.ca-cert-name", ad.getName());
-                assertEquals("STRING", ad.getType().name());
-                assertFalse(ad.isRequired());
-                adsConfigured++;
-            }
-
-            if ("net.interface.wlp2s0.config.802-1x.client-cert-name".equals(ad.getId())) {
-                assertEquals("net.interface.wlp2s0.config.802-1x.client-cert-name", ad.getName());
-                assertEquals("STRING", ad.getType().name());
-                assertFalse(ad.isRequired());
-                adsConfigured++;
-            }
-
-            if ("net.interface.wlp2s0.config.802-1x.private-key-name".equals(ad.getId())) {
-                assertEquals("net.interface.wlp2s0.config.802-1x.private-key-name", ad.getName());
-                assertEquals("STRING", ad.getType().name());
-                assertFalse(ad.isRequired());
-                adsConfigured++;
-            }
-        }
-        assertEquals(5, adsConfigured);
     }
 
     private void thenPropertiesNumberIsCorrect() {

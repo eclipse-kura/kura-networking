@@ -17,7 +17,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -28,12 +27,9 @@ import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.executor.CommandStatus;
 import org.eclipse.kura.executor.ExitStatus;
-import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.MockedStatic;
 
 public class DnsmasqToolTest {
 
@@ -42,7 +38,6 @@ public class DnsmasqToolTest {
 
     private File tmpConfigFile;
     private CommandExecutorService mockExecutor;
-    private static MockedStatic<DhcpServerManager> mockServerManager;
     private DnsmasqTool tool;
     private boolean isRunning;
     private CommandStatus startInterfaceStatus;
@@ -57,7 +52,6 @@ public class DnsmasqToolTest {
     public void isRunningShouldReturnTrueIfAlreadyStarted() throws Exception {
         givenExecutorReturnsExitStatus(0, true);
         givenConfigFile("etc/dnsmasq.d/dnsmasq-eth0.conf");
-        givenDhcpServerManagerReturn("eth0", this.tmpConfigFile.getAbsolutePath());
         givenDnsmasqTool();
         givenStartInterface("eth0");
 
@@ -70,7 +64,6 @@ public class DnsmasqToolTest {
     public void isRunningShouldReturnFalseIfNeverStarted() throws Exception {
         givenExecutorReturnsExitStatus(0, true);
         givenConfigFile("etc/dnsmasq.d/dnsmasq-eth0.conf");
-        givenDhcpServerManagerReturn("eth0", this.tmpConfigFile.getAbsolutePath());
         givenDnsmasqTool();
 
         whenIsRunning("eth0");
@@ -82,7 +75,6 @@ public class DnsmasqToolTest {
     public void isRunningShouldReturnFalseIfServiceIsNotActive() throws Exception {
         givenExecutorReturnsExitStatus(1, false);
         givenConfigFile("etc/dnsmasq.d/dnsmasq-eth0.conf");
-        givenDhcpServerManagerReturn("eth0", this.tmpConfigFile.getAbsolutePath());
         givenDnsmasqTool();
 
         whenIsRunning("eth0");
@@ -94,26 +86,24 @@ public class DnsmasqToolTest {
     public void shouldRemoveInterfaceConfigIfStartFails() throws Exception {
         givenExecutorReturnsExitStatus(1, false);
         givenConfigFile("etc/dnsmasq.d/dnsmasq-eth0.conf");
-        givenDhcpServerManagerReturn("eth0", this.tmpConfigFile.getAbsolutePath());
         givenDnsmasqTool();
 
         whenStartInterface("eth0");
 
         thenInterfaceNotStarted();
-        thenConfigFileNotPresent("eth0");
+        thenConfigFileNotPresent();
     }
 
     @Test
     public void shouldRemoveInterfaceConfigIfInterfaceDisabled() throws Exception {
         givenExecutorReturnsExitStatus(0, true);
         givenConfigFile("etc/dnsmasq.d/dnsmasq-eth0.conf");
-        givenDhcpServerManagerReturn("eth0", this.tmpConfigFile.getAbsolutePath());
         givenDnsmasqTool();
         givenStartInterface("eth0");
 
         whenDisableInterface("eth0");
 
-        thenConfigFileNotPresent("eth0");
+        thenConfigFileNotPresent();
         thenDisableWasSuccessful();
     }
 
@@ -121,12 +111,11 @@ public class DnsmasqToolTest {
     public void shouldReturnExceptionWhenFailToDisableInterface() throws Exception {
         givenExecutorReturnsExitStatus(1, false);
         givenConfigFile("etc/dnsmasq.d/dnsmasq-eth0.conf");
-        givenDhcpServerManagerReturn("eth0", this.tmpConfigFile.getAbsolutePath());
         givenDnsmasqTool();
 
         whenDisableInterface("eth0");
 
-        thenConfigFileNotPresent("eth0");
+        thenConfigFileNotPresent();
         thenKuraProcessExecutionErrorExceptionOccurred();
     }
 
@@ -160,21 +149,24 @@ public class DnsmasqToolTest {
         when(this.mockExecutor.execute(any())).thenReturn(returnedStatus);
     }
 
-    private void givenDhcpServerManagerReturn(String interfaceName, String returnedConfigFilename) {
-        mockServerManager = mockStatic(DhcpServerManager.class);
-        mockServerManager.when(() -> DhcpServerManager.getConfigFilename(any())).thenReturn(returnedConfigFilename);
-    }
-
     private void givenConfigFile(String filename) throws IOException {
         try {
             this.tmpFolder.newFolder("etc", "dnsmasq.d");
         } catch (Exception e) {
+            // ignore
         }
         this.tmpConfigFile = this.tmpFolder.newFile(filename);
     }
 
-    private void givenDnsmasqTool() throws Exception {
-        this.tool = new DnsmasqTool(this.mockExecutor);
+    private void givenDnsmasqTool() {
+        this.tool = new DnsmasqTool(this.mockExecutor) {
+
+            @Override
+            public String getConfigFilename(String interfaceName) {
+                return DnsmasqToolTest.this.tmpConfigFile.getAbsolutePath();
+            }
+
+        };
         this.tool
                 .setDnsmasqGlobalConfigFile(this.tmpConfigFile.getAbsoluteFile().getParent() + "/dnsmasq-globals.conf");
     }
@@ -215,7 +207,7 @@ public class DnsmasqToolTest {
         assertFalse(this.startInterfaceStatus.getExitStatus().isSuccessful());
     }
 
-    private void thenConfigFileNotPresent(String interfaceName) {
+    private void thenConfigFileNotPresent() {
         assertFalse(this.tmpConfigFile.exists());
     }
 
@@ -231,8 +223,4 @@ public class DnsmasqToolTest {
      * Utilities
      */
 
-    @After
-    public void closeStaticMock() {
-        mockServerManager.close();
-    }
 }

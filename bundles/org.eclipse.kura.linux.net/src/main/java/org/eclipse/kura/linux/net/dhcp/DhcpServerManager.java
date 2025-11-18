@@ -33,37 +33,30 @@ public class DhcpServerManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DhcpServerManager.class);
 
-    private static final String FILE_DIR = "/etc/";
-    private static final String PID_FILE_DIR = "/var/run/";
-    private static final String LEASES_FILE_DIR = "/var/lib/dhcp/";
-    private static DhcpServerTool dhcpServerTool = DhcpServerTool.NONE;
     private final DhcpLinuxTool linuxTool;
 
-    static {
-        dhcpServerTool = getTool();
-    }
+    private final DhcpServerTool dhcpServerTool;
 
-    public DhcpServerManager(CommandExecutorService service) {
-        switch (dhcpServerTool) {
-        case DNSMASQ, NONE:
-            this.linuxTool = new DnsmasqTool(service);
-            break;
-        default:
+    public DhcpServerManager(DhcpServerTool dhcpServerTool, CommandExecutorService service) {
+        this.dhcpServerTool = dhcpServerTool;
+        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
+
+            if (verifyToolAndServiceExists()) {
+                this.linuxTool = new DnsmasqTool(service);
+
+                logger.info("Using {} as DHCP server.", dhcpServerTool.getValue());
+            } else {
+                throw new IllegalArgumentException(dhcpServerTool.name() + " not available on the system.");
+            }
+        } else {
             throw new IllegalArgumentException(dhcpServerTool.name() + " not supported.");
         }
     }
 
-    public static DhcpServerTool getTool() {
-        if (dhcpServerTool == DhcpServerTool.NONE) {
-            if (LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue())
-                    && LinuxNetworkUtil.systemdSystemUnitExists(DhcpServerTool.DNSMASQ.getValue() + ".service")) {
-                dhcpServerTool = DhcpServerTool.DNSMASQ;
-            }
-        }
-
-        logger.info("Using {} as DHCP server.", dhcpServerTool.getValue());
-
-        return dhcpServerTool;
+    // For testing purpose
+    protected boolean verifyToolAndServiceExists() {
+        return LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue()) && //
+                LinuxNetworkUtil.systemdSystemUnitExists(DhcpServerTool.DNSMASQ.getValue() + ".service");
     }
 
     public boolean isRunning(String interfaceName) throws KuraException {
@@ -76,7 +69,7 @@ public class DhcpServerManager {
             disable(interfaceName);
         }
 
-        File configFile = new File(DhcpServerManager.getConfigFilename(interfaceName));
+        File configFile = new File(this.linuxTool.getConfigFilename(interfaceName));
         if (configFile.exists()) {
 
             createLeasesFile(interfaceName);
@@ -95,7 +88,7 @@ public class DhcpServerManager {
 
     private void createLeasesFile(String interfaceName) throws KuraIOException {
         try {
-            FileUtils.touch(new File(DhcpServerManager.getLeasesFilename(interfaceName)));
+            FileUtils.touch(new File(this.linuxTool.getLeasesFilename(Optional.of(interfaceName))));
         } catch (IOException e) {
             throw new KuraIOException(e, "Cannot create DHCP server leases file");
         }
@@ -107,51 +100,21 @@ public class DhcpServerManager {
         return this.linuxTool.disableInterface(interfaceName);
     }
 
-    public static String getConfigFilename(String interfaceName) {
-        StringBuilder sb = new StringBuilder(FILE_DIR);
-        if (dhcpServerTool == DhcpServerTool.NONE) {
-            return sb.toString();
-        }
-        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
-            sb.append("dnsmasq.d/");
-        }
-        sb.append(dhcpServerTool.getValue());
-        sb.append('-');
-        sb.append(interfaceName);
-        sb.append(".conf");
-
-        return sb.toString();
-    }
-
-    public static String getLeasesFilename(String interfaceName) {
-        StringBuilder sb = new StringBuilder(LEASES_FILE_DIR);
-        if (dhcpServerTool == DhcpServerTool.NONE) {
-            return sb.toString();
-        }
-        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
-            sb.append(dhcpServerTool.getValue());
-            sb.append(".leases");
-            return sb.toString();
-        }
-        sb.append(dhcpServerTool.getValue());
-        sb.append('-');
-        sb.append(interfaceName);
-        sb.append(".leases");
-
-        return sb.toString();
-    }
-
-    public static Optional<DhcpServerConfigConverter> getConfigConverter() {
-        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
+    public Optional<DhcpServerConfigConverter> getConfigConverter() {
+        if (this.dhcpServerTool == DhcpServerTool.DNSMASQ) {
             return Optional.of(new DnsmasqConfigConverter());
         }
         return Optional.empty();
     }
 
-    public static Optional<DhcpServerLeaseReader> getLeaseReader() {
-        if (dhcpServerTool == DhcpServerTool.DNSMASQ) {
+    public Optional<DhcpServerLeaseReader> getLeaseReader() {
+        if (this.dhcpServerTool == DhcpServerTool.DNSMASQ) {
             return Optional.of(new DnsmasqLeaseReader());
         }
         return Optional.empty();
+    }
+
+    public String getConfigFilename(String interfaceName) {
+        return this.linuxTool.getConfigFilename(interfaceName);
     }
 }

@@ -26,12 +26,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eclipse.kura.KuraProcessExecutionErrorException;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.executor.CommandStatus;
-import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +41,9 @@ public class DnsmasqTool implements DhcpLinuxTool {
     private static final Logger logger = LoggerFactory.getLogger(DnsmasqTool.class);
 
     private String globalConfigFilename = "/etc/dnsmasq.d/dnsmasq-globals.conf";
+
+    private static final String LEASES_FILE_DIR = "/var/lib/dhcp/";
+    private static final String FILE_DIR = "/etc/";
     private static final String GLOBAL_CONFIGURATION = "port=0\nbind-dynamic\n";
 
     static final String[] IS_ACTIVE_COMMANDLINE = new String[] { "systemctl", "is-active", "--quiet",
@@ -78,8 +81,7 @@ public class DnsmasqTool implements DhcpLinuxTool {
         logger.debug("Starting dnsmasq service for interface {}.", interfaceName);
 
         try {
-            this.configsLastHash.put(interfaceName,
-                    sha1(Paths.get(DhcpServerManager.getConfigFilename(interfaceName))));
+            this.configsLastHash.put(interfaceName, sha1(Paths.get(getConfigFilename(interfaceName))));
             writeGlobalConfig();
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new KuraProcessExecutionErrorException(e,
@@ -128,16 +130,38 @@ public class DnsmasqTool implements DhcpLinuxTool {
         this.globalConfigFilename = globalConfigFilename;
     }
 
+    @Override
+    public String getLeasesFilename(Optional<String> interfaceName) {
+        // ignoring interfaceName
+        StringBuilder sb = new StringBuilder(LEASES_FILE_DIR);
+
+        sb.append(DhcpServerTool.DNSMASQ.getValue());
+        sb.append(".leases");
+        return sb.toString();
+    }
+
+    @Override
+    public String getConfigFilename(String interfaceName) {
+        StringBuilder sb = new StringBuilder(FILE_DIR);
+        sb.append("dnsmasq.d/");
+        sb.append(DhcpServerTool.DNSMASQ.getValue());
+        sb.append('-');
+        sb.append(interfaceName);
+        sb.append(".conf");
+
+        return sb.toString();
+    }
+
     private boolean isConfigFileAlteredOrNonExistent(String interfaceName)
             throws NoSuchAlgorithmException, IOException {
 
-        File configFile = new File(DhcpServerManager.getConfigFilename(interfaceName));
+        File configFile = new File(getConfigFilename(interfaceName));
 
         if (!configFile.exists()) {
             return true;
         }
 
-        byte[] currentHash = sha1(Paths.get(DhcpServerManager.getConfigFilename(interfaceName)));
+        byte[] currentHash = sha1(Paths.get(getConfigFilename(interfaceName)));
 
         if (this.configsLastHash.containsKey(interfaceName)) {
             return !Arrays.equals(currentHash, this.configsLastHash.get(interfaceName));
@@ -148,7 +172,7 @@ public class DnsmasqTool implements DhcpLinuxTool {
 
     private boolean removeInterfaceConfig(String interfaceName) {
         try {
-            File configFile = new File(DhcpServerManager.getConfigFilename(interfaceName));
+            File configFile = new File(getConfigFilename(interfaceName));
             return Files.deleteIfExists(configFile.toPath());
         } catch (Exception e) {
             return false;

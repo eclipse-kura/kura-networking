@@ -44,14 +44,17 @@ public class DhcpServerConfigWriter {
     private static final String WRITE_ERROR_MESSAGE = "Failed to write DHCP config file for ";
     private final String interfaceName;
     private final NetworkProperties networkProperties;
+    private final DhcpServerManager dhcpServerManager;
 
-    public DhcpServerConfigWriter(String interfaceName, NetworkProperties properties) {
+    public DhcpServerConfigWriter(DhcpServerManager dhcpServerManager, String interfaceName,
+            NetworkProperties properties) {
         this.interfaceName = interfaceName;
         this.networkProperties = properties;
+        this.dhcpServerManager = dhcpServerManager;
     }
 
     protected String getConfigFilename() {
-        return DhcpServerManager.getConfigFilename(this.interfaceName);
+        return this.dhcpServerManager.getConfigFilename(this.interfaceName);
     }
 
     public void writeConfiguration() throws KuraException, UnknownHostException {
@@ -83,7 +86,7 @@ public class DhcpServerConfigWriter {
     private void writeConfigFile(String configFileName, DhcpServerConfig4 dhcpServerConfig) throws KuraException {
         try (FileOutputStream fos = new FileOutputStream(configFileName); PrintWriter pw = new PrintWriter(fos)) {
             logger.debug("writing to {} with: {}", configFileName, dhcpServerConfig);
-            Optional<DhcpServerConfigConverter> configConverter = DhcpServerManager.getConfigConverter();
+            Optional<DhcpServerConfigConverter> configConverter = this.dhcpServerManager.getConfigConverter();
             configConverter.ifPresent(converter -> pw.print(converter.convert(dhcpServerConfig)));
             pw.flush();
             fos.getFD().sync();
