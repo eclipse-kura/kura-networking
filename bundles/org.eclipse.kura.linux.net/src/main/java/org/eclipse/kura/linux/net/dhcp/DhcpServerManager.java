@@ -34,10 +34,9 @@ public class DhcpServerManager {
     private static final Logger logger = LoggerFactory.getLogger(DhcpServerManager.class);
 
     private static final String FILE_DIR = "/etc/";
-    private static final String PID_FILE_DIR = "/var/run/";
     private static final String LEASES_FILE_DIR = "/var/lib/dhcp/";
     private static DhcpServerTool dhcpServerTool = DhcpServerTool.NONE;
-    private final DhcpLinuxTool linuxTool;
+    private final Optional<DhcpLinuxTool> linuxTool;
 
     static {
         dhcpServerTool = getTool();
@@ -45,8 +44,11 @@ public class DhcpServerManager {
 
     public DhcpServerManager(CommandExecutorService service) {
         switch (dhcpServerTool) {
-        case DNSMASQ, NONE:
-            this.linuxTool = new DnsmasqTool(service);
+        case DNSMASQ:
+            this.linuxTool = Optional.of(new DnsmasqTool(service));
+            break;
+        case NONE:
+            this.linuxTool = Optional.empty();
             break;
         default:
             throw new IllegalArgumentException(dhcpServerTool.name() + " not supported.");
@@ -54,11 +56,9 @@ public class DhcpServerManager {
     }
 
     public static DhcpServerTool getTool() {
-        if (dhcpServerTool == DhcpServerTool.NONE) {
-            if (LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue())
-                    && LinuxNetworkUtil.systemdSystemUnitExists(DhcpServerTool.DNSMASQ.getValue() + ".service")) {
-                dhcpServerTool = DhcpServerTool.DNSMASQ;
-            }
+        if (dhcpServerTool == DhcpServerTool.NONE && LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue())
+                && LinuxNetworkUtil.systemdSystemUnitExists(DhcpServerTool.DNSMASQ.getValue() + ".service")) {
+            dhcpServerTool = DhcpServerTool.DNSMASQ;
         }
 
         logger.info("Using {} as DHCP server.", dhcpServerTool.getValue());
@@ -67,10 +67,19 @@ public class DhcpServerManager {
     }
 
     public boolean isRunning(String interfaceName) throws KuraException {
-        return this.linuxTool.isRunning(interfaceName);
+        if (!this.linuxTool.isPresent()) {
+            return false;
+        }
+        return this.linuxTool.get().isRunning(interfaceName);
+
     }
 
     public boolean enable(String interfaceName) throws KuraException {
+
+        if (!this.linuxTool.isPresent()) {
+            return false;
+        }
+
         if (isRunning(interfaceName)) {
             logger.error("DHCP server is already running for {}, bringing it down...", interfaceName);
             disable(interfaceName);
@@ -80,7 +89,7 @@ public class DhcpServerManager {
         if (configFile.exists()) {
 
             createLeasesFile(interfaceName);
-            CommandStatus status = this.linuxTool.startInterface(interfaceName);
+            CommandStatus status = this.linuxTool.get().startInterface(interfaceName);
 
             if (status.getExitStatus().isSuccessful()) {
                 logger.debug("DHCP server started.");
@@ -104,7 +113,11 @@ public class DhcpServerManager {
     public boolean disable(String interfaceName) throws KuraException {
         logger.debug("Disable DHCP server for {}", interfaceName);
 
-        return this.linuxTool.disableInterface(interfaceName);
+        if (!this.linuxTool.isPresent()) {
+            return false;
+        }
+
+        return this.linuxTool.get().disableInterface(interfaceName);
     }
 
     public static String getConfigFilename(String interfaceName) {
