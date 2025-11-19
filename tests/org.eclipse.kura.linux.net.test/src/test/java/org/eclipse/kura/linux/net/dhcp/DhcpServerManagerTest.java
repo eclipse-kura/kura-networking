@@ -16,11 +16,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import org.eclipse.kura.KuraException;
+import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
 import org.eclipse.kura.core.testutil.TestUtil;
 import org.eclipse.kura.executor.CommandExecutorService;
+import org.eclipse.kura.executor.CommandStatus;
 import org.eclipse.kura.linux.net.dhcp.server.DnsmasqConfigConverter;
 import org.eclipse.kura.linux.net.dhcp.server.DnsmasqLeaseReader;
 import org.eclipse.kura.linux.net.util.LinuxNetworkUtil;
@@ -49,12 +55,14 @@ public class DhcpServerManagerTest {
     private MockedStatic<LinuxNetworkUtil> mockedLinuxNetworkUtil;
     private DhcpServerTool tool;
 
+    private boolean serverManagerStatus = false;
+
     /*
      * Scenarios
      */
 
     @Test
-    public void shouldReturnConfigFilenameForDnsmasq() throws NoSuchFieldException {
+    public void shouldReturnConfigFilenameForDnsmasq() {
         givenDhcpServerManager(DhcpServerTool.DNSMASQ);
 
         whenGetConfigFilename(EXAMPLE_INTERFACE);
@@ -65,7 +73,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnConfigFilenameForNone() throws NoSuchFieldException {
+    public void shouldReturnConfigFilenameForNone() {
         givenDhcpServerManager(DhcpServerTool.NONE);
 
         whenGetConfigFilename(EXAMPLE_INTERFACE);
@@ -75,7 +83,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnLeasesFilenameForDnsmasq() throws NoSuchFieldException {
+    public void shouldReturnLeasesFilenameForDnsmasq() {
         givenDhcpServerManager(DhcpServerTool.DNSMASQ);
 
         whenGetLeasesFilename(EXAMPLE_INTERFACE);
@@ -85,7 +93,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnLeasesFilenameForNone() throws NoSuchFieldException {
+    public void shouldReturnLeasesFilenameForNone() {
         givenDhcpServerManager(DhcpServerTool.NONE);
 
         whenGetLeasesFilename(EXAMPLE_INTERFACE);
@@ -95,7 +103,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnConfigConverterForDnsmasq() throws NoSuchFieldException {
+    public void shouldReturnConfigConverterForDnsmasq() {
         givenDhcpServerManager(DhcpServerTool.DNSMASQ);
 
         whenGetConfigConverter();
@@ -106,7 +114,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnConfigConverterForNone() throws NoSuchFieldException {
+    public void shouldReturnConfigConverterForNone() {
         givenDhcpServerManager(DhcpServerTool.NONE);
 
         whenGetConfigConverter();
@@ -116,7 +124,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnLeaseReaderForDnsmasq() throws NoSuchFieldException {
+    public void shouldReturnLeaseReaderForDnsmasq() {
         givenDhcpServerManager(DhcpServerTool.DNSMASQ);
 
         whenGetLeaseReader();
@@ -127,7 +135,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldReturnLeaseReaderForNone() throws NoSuchFieldException {
+    public void shouldReturnLeaseReaderForNone() {
         givenDhcpServerManager(DhcpServerTool.NONE);
 
         whenGetLeaseReader();
@@ -137,7 +145,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldGetDnsmasqToolIfBinaryAndUnitArePresent() throws NoSuchFieldException {
+    public void shouldGetDnsmasqToolIfBinaryAndUnitArePresent() {
         givenLinuxNetworkUtil("dnsmasq", Optional.of("dnsmasq.service"));
         givenDhcpServerManager(DhcpServerTool.NONE);
 
@@ -147,7 +155,7 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldNotGetDnsmasqToolIfOnlyBinaryIsPresent() throws NoSuchFieldException {
+    public void shouldNotGetDnsmasqToolIfOnlyBinaryIsPresent() {
         givenLinuxNetworkUtil("dnsmasq", Optional.empty());
         givenDhcpServerManager(DhcpServerTool.NONE);
 
@@ -157,13 +165,24 @@ public class DhcpServerManagerTest {
     }
 
     @Test
-    public void shouldNotGetAnyTool() throws NoSuchFieldException {
+    public void shouldNotGetAnyTool() {
         givenLinuxNetworkUtil("", Optional.empty());
         givenDhcpServerManager(DhcpServerTool.NONE);
 
         whenGetTool();
 
         thenToolIs(DhcpServerTool.NONE);
+    }
+
+    @Test
+    public void shouldNotBeRunningWithNone() {
+        givenLinuxNetworkUtil("", Optional.empty());
+        givenDhcpServerManager(DhcpServerTool.NONE);
+
+        whenCheckServiceStatus("eth0");
+
+        thenNoExceptionsOccurred();
+        thenDhcpServerManagerRunningStatusIs(false);
     }
 
     @After
@@ -181,12 +200,16 @@ public class DhcpServerManagerTest {
      * Given
      */
 
-    private void givenDhcpServerManager(DhcpServerTool dhcpServerTool) throws NoSuchFieldException {
+    private void givenDhcpServerManager(DhcpServerTool dhcpServerTool) {
         this.executorMock = Mockito.mock(CommandExecutorService.class);
+        when(this.executorMock.execute(any())).thenReturn(new CommandStatus(null, new LinuxExitStatus(0)));
 
-        TestUtil.setFieldValue(new DhcpServerManager(null), "dhcpServerTool", dhcpServerTool);
-
-        this.dhcpServerManager = new DhcpServerManager(this.executorMock);
+        try {
+            TestUtil.setFieldValue(new DhcpServerManager(null), "dhcpServerTool", dhcpServerTool);
+            this.dhcpServerManager = new DhcpServerManager(this.executorMock);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     private void givenLinuxNetworkUtil(String toolName, Optional<String> unitName) {
@@ -242,6 +265,14 @@ public class DhcpServerManagerTest {
         }
     }
 
+    private void whenCheckServiceStatus(String ienterfaceName) {
+        try {
+            this.serverManagerStatus = this.dhcpServerManager.isRunning(ienterfaceName);
+        } catch (KuraException e) {
+            this.occurredException = e;
+        }
+    }
+
     /*
      * Then
      */
@@ -281,4 +312,9 @@ public class DhcpServerManagerTest {
     private void thenToolIs(DhcpServerTool expectedTool) {
         assertEquals(expectedTool, this.tool);
     }
+
+    private void thenDhcpServerManagerRunningStatusIs(boolean expectedStatus) {
+        assertEquals(expectedStatus, this.serverManagerStatus);
+    }
+
 }
