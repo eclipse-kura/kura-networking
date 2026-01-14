@@ -7,7 +7,7 @@ node {
             enable: true,
             projectKey: "eclipse-kura_kura-networking",
             tokenId: "sonarcloud-token-kura-networking",
-            exclusions: "**/*.xml,**/*.yml,bundles/org.eclipse.kura.nm/src/main/java/org/freedesktop/**/*,bundles/org.eclipse.kura.nm/src/main/java/fi/w1/**/*",
+            exclusions: "tests/**/*,**/*.xml,**/*.yml,bundles/org.eclipse.kura.nm/src/main/java/org/freedesktop/**/*,bundles/org.eclipse.kura.nm/src/main/java/fi/w1/**/*",
             testExclusions: "**/*"
         ],
     )
