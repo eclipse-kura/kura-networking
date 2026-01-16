@@ -353,15 +353,9 @@ public class NMSettingsConverter {
         KuraIp6ConfigurationMethod ip6ConfigMethod = getIp6ConfigMethod(props, deviceId);
 
         if (ip6ConfigMethod.equals(KuraIp6ConfigurationMethod.AUTO)) {
-
             configureIp6MethodAuto(props, deviceId, settings);
 
-        } else if (ip6ConfigMethod.equals(KuraIp6ConfigurationMethod.DHCP)) {
-
-            settings.put(NM_SETTINGS_IPV6_METHOD, new Variant<>("dhcp"));
-
         } else if (ip6ConfigMethod.equals(KuraIp6ConfigurationMethod.MANUAL)) {
-
             configureIp6MethodManual(props, deviceId, ip6Status, settings);
 
         } else {

@@ -442,7 +442,7 @@ public class NMSettingsConverterTest {
     }
 
     @Test
-    public void buildIpv6SettingsShouldWorkWhenGivenExpectedMapWithDhcpEnableAndWAN() {
+    public void buildIpv6SettingsShouldSetAutoWhenGivenExpectedMapWithDhcpEnableAndWAN() {
         givenMapWith("net.interface.wlan0.config.ip6.address.method", "netIPv6MethodDhcp");
         givenMapWith("net.interface.wlan0.config.ip6.status", "netIPv6StatusEnabledWAN");
         givenNetworkPropsCreatedWithTheMap(this.internetNetworkPropertiesInstanciationMap);
@@ -450,7 +450,7 @@ public class NMSettingsConverterTest {
         whenBuildIpv6SettingsIsRunWith(this.networkProperties, "wlan0", this.nmVersion);
 
         thenNoExceptionOccurred();
-        thenResultingMapContains("method", "dhcp");
+        thenResultingMapContains("method", "auto");
     }
 
     @Test
