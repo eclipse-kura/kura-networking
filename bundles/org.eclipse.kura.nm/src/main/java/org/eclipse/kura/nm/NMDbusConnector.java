@@ -593,7 +593,7 @@ public class NMDbusConnector {
                 && NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings)) {
             logger.info("No changes detected in connection settings for device {}. Skipping update and activation.",
                     deviceId);
-            return;
+            return; // TODO: actually skip the steps below without skipping the whole method
         }
 
         DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
