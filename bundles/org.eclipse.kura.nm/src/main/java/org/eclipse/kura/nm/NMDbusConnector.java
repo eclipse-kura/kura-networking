@@ -37,6 +37,7 @@ import org.eclipse.kura.net.status.NetworkInterfaceStatus;
 import org.eclipse.kura.net.wifi.WifiChannel;
 import org.eclipse.kura.net.wifi.WifiMode;
 import org.eclipse.kura.net.wifi.WifiSecurity;
+import org.eclipse.kura.nm.configuration.NMSettingsComparator;
 import org.eclipse.kura.nm.configuration.NMSettingsConverter;
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
 import org.eclipse.kura.nm.enums.MMModemState;
@@ -586,6 +587,14 @@ public class NMDbusConnector {
         Optional<Connection> connection = this.networkManager.getAssociatedConnection(device);
         Map<String, Map<String, Variant<?>>> newConnectionSettings = NMSettingsConverter.buildSettings(properties,
                 connection, deviceId, interfaceName, deviceType, this.networkManager.getVersion());
+        
+        Map<String, Map<String, Variant<?>>> oldConnectionSettings = connection.isPresent() ? connection.get().GetSettings() : null;
+        if (Objects.nonNull(oldConnectionSettings)
+                && NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings)) {
+            logger.info("No changes detected in connection settings for device {}. Skipping update and activation.",
+                    deviceId);
+            return;
+        }
 
         DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
                 NMDeviceState.NM_DEVICE_STATE_CONFIG, this.timeout);
