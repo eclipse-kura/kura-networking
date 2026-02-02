@@ -589,31 +589,32 @@ public class NMDbusConnector {
                 connection, deviceId, interfaceName, deviceType, this.networkManager.getVersion());
         
         Map<String, Map<String, Variant<?>>> oldConnectionSettings = connection.isPresent() ? connection.get().GetSettings() : null;
-        if (Objects.nonNull(oldConnectionSettings)
-                && NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings)) {
-            logger.info("No changes detected in connection settings for device {}. Skipping update and activation.",
-                    deviceId);
-            return; // TODO: actually skip the steps below without skipping the whole method
-        }
+        if (Objects.isNull(oldConnectionSettings)
+                || !NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings)) {
 
-        DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
+            DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
                 NMDeviceState.NM_DEVICE_STATE_CONFIG, this.timeout);
 
-        if (connection.isPresent()) {
-            connection.get().Update(newConnectionSettings);
-        } else {
-            Settings settings = this.dbusConnection.getRemoteObject(NM_BUS_NAME, NM_SETTINGS_BUS_PATH, Settings.class);
-            DBusPath createdConnectionPath = settings.AddConnection(newConnectionSettings);
-            Connection createdConnection = this.dbusConnection.getRemoteObject(NM_BUS_NAME,
-                    createdConnectionPath.getPath(), Connection.class);
-            connection = Optional.of(createdConnection);
-        }
+            if (connection.isPresent()) {
+                connection.get().Update(newConnectionSettings);
+            } else {
+                Settings settings = this.dbusConnection.getRemoteObject(NM_BUS_NAME, NM_SETTINGS_BUS_PATH, Settings.class);
+                DBusPath createdConnectionPath = settings.AddConnection(newConnectionSettings);
+                Connection createdConnection = this.dbusConnection.getRemoteObject(NM_BUS_NAME,
+                        createdConnectionPath.getPath(), Connection.class);
+                connection = Optional.of(createdConnection);
+            }
 
-        try {
-            this.networkManager.activateConnection(connection.get(), device);
-            dsLock.waitForSignal();
-        } catch (DBusExecutionException e) {
-            logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
+            try {
+                this.networkManager.activateConnection(connection.get(), device);
+                dsLock.waitForSignal();
+            } catch (DBusExecutionException e) {
+                logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
+            }
+
+        } else {
+            logger.info("No changes detected in connection settings for device {}. Skipping update and activation.",
+                    deviceId);
         }
 
         if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
