@@ -4,13 +4,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.freedesktop.dbus.types.Variant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class NMSettingsComparator {
     
-    private static final Logger logger = LoggerFactory.getLogger(NMSettingsComparator.class);
-
     /* This method compares two NM connection settings maps and determines if they are equal. This comparison
      * is asymmetric, meaning that if newConnectionSettings contains all the settings in oldConnectionSettings with the same
      * values, it is considered equal, even if oldConnectionSettings has additional settings.
@@ -21,9 +17,6 @@ public class NMSettingsComparator {
      */
     public static boolean areSettingsEqual(Map<String,Map<String,Variant<?>>> newConnectionSettings,
             Map<String,Map<String,Variant<?>>> oldConnectionSettings) {
-        
-        logger.info("Comparing new connection settings: {}", newConnectionSettings);
-        logger.info("With old connection settings: {}", oldConnectionSettings);
         
         if(Objects.isNull(newConnectionSettings)) {
             throw new IllegalArgumentException("New connection settings cannot be null");
