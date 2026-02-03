@@ -12,66 +12,113 @@
  *******************************************************************************/
 package org.eclipse.kura.nm.configuration;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.crypto.EncryptedPrivateKeyInfo;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
-import org.eclipse.kura.configuration.Password;
-import org.eclipse.kura.nm.NetworkProperties;
-import org.eclipse.kura.nm.SemanticVersion;
-import org.eclipse.kura.nm.enums.NMDeviceType;
-import org.freedesktop.dbus.types.UInt32;
 import org.freedesktop.dbus.types.Variant;
-import org.freedesktop.networkmanager.settings.Connection;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class NMSettingsComparatorTest {
 
     private Map<String, Map<String, Variant<?>>> newSettings = new HashMap<>();
     private Map<String, Map<String, Variant<?>>> oldSettings = new HashMap<>();
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsWhenNewSettingsAreNull() {
+        NMSettingsComparator.areSettingsEqual(null, oldSettings);
+    }
 
     @Test
-    public void basicTest() {
+    public void returnsTrueWhenSettingsAreEqual() {
         newSettings.put("connection", new HashMap<>());
         newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
         
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
 
         assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
+    public void returnsTrueWhenSettingsAreEqualButSubset() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+        
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("auto"));
+
+        assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+    
+    @Test
+    public void returnsTrueWhenBothSettingsAreEmpty() {
+        assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+    
+    @Test
+    public void returnsTrueWhenNewSettingsAreEmpty() {
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
+    public void returnsFalseWhenOldSettingsAreNull() {
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, null));
+    }
+
+    @Test
+    public void returnsFalseWhenSettingsAreNotEqual() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+        
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
+    public void returnsFalseWhenSettingsAreNotEqualButSubset() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+        
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
+
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("auto"));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
+    public void returnsFalseWhenSettingsAreEqualButSuperset() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        newSettings.put("ipv4", new HashMap<>());
+        newSettings.get("ipv4").put("method", new Variant<String>("auto"));
+        
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
 }
