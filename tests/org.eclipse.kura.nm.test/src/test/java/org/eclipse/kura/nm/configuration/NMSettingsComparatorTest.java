@@ -116,6 +116,15 @@ public class NMSettingsComparatorTest {
     }
 
     @Test
+    public void returnsFalseWhenOldSettingsAreEmpty() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
     public void returnsFalseWhenSettingsAreNotEqual() {
         newSettings.put("connection", new HashMap<>());
         newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
