@@ -1,10 +1,15 @@
 package org.eclipse.kura.nm.configuration;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.freedesktop.dbus.types.Variant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NMSettingsComparator {
+    
+    private static final Logger logger = LoggerFactory.getLogger(NMSettingsComparator.class);
 
     /* This method compares two NM connection settings maps and determines if they are equal. This comparison
      * is asymmetric, meaning that if newConnectionSettings contains all the settings in oldConnectionSettings with the same
@@ -16,8 +21,38 @@ public class NMSettingsComparator {
      */
     public static boolean areSettingsEqual(Map<String,Map<String,Variant<?>>> newConnectionSettings,
             Map<String,Map<String,Variant<?>>> oldConnectionSettings) {
-        // TODO Auto-generated method stub
-        return false;
+        
+        logger.info("Comparing new connection settings: {}", newConnectionSettings);
+        logger.info("With old connection settings: {}", oldConnectionSettings);
+        
+        if(Objects.isNull(newConnectionSettings)) {
+            throw new IllegalArgumentException("New connection settings cannot be null");
+        }
+        
+        if(Objects.isNull(oldConnectionSettings)) {
+            return false;
+        }
+        
+        // WARNING: This implementation doesn't work when properties are other Map<String, Variant<?>>, as it doesn't perform a deep comparison.
+        for (String settingKey : newConnectionSettings.keySet()) {
+            Map<String, Variant<?>> newSetting = newConnectionSettings.get(settingKey);
+            Map<String, Variant<?>> oldSetting = oldConnectionSettings.get(settingKey);
+
+            if (oldSetting == null) {
+                return false;
+            }
+
+            for (String propertyKey : newSetting.keySet()) {
+                Variant<?> newValue = newSetting.get(propertyKey);
+                Variant<?> oldValue = oldSetting.get(propertyKey);
+
+                if (!Objects.equals(newValue, oldValue)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }
