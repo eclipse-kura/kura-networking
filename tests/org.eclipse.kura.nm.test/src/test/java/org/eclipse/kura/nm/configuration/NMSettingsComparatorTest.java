@@ -145,8 +145,8 @@ public class NMSettingsComparatorTest {
 
         
         oldSettings.put("connection", new HashMap<>());
-        oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
-        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
 
         oldSettings.put("ipv4", new HashMap<>());
         oldSettings.get("ipv4").put("method", new Variant<String>("manual"));
