@@ -589,6 +589,13 @@ public class NMDbusConnector {
                 connection, deviceId, interfaceName, deviceType, this.networkManager.getVersion());
         
         Map<String, Map<String, Variant<?>>> oldConnectionSettings = connection.isPresent() ? connection.get().GetSettings() : null;
+        
+        // Debug: print settings (remove in production)
+        logger.info("New connection settings for device {}: {}", deviceId, newConnectionSettings);
+        logger.info("Old connection settings for device {}: {}", deviceId, oldConnectionSettings);
+        logger.info("Settings equal: {}", NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings));
+        // End Debug
+        
         if (Objects.isNull(oldConnectionSettings)
                 || !NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings)) {
 
