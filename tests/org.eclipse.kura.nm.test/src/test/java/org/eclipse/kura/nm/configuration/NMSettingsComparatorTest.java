@@ -14,8 +14,13 @@ package org.eclipse.kura.nm.configuration;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.freedesktop.dbus.types.UInt32;
 import org.freedesktop.dbus.types.Variant;
 import org.junit.Test;
 
@@ -57,6 +62,39 @@ public class NMSettingsComparatorTest {
 
         assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
+
+    @Test
+    public void returnsTrueWhenSettingsAreEqualAndMapVariant() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        newSettings.put("ipv4", new HashMap<>());
+        newSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        Map<String, Variant<?>> newAddressEntry = new HashMap<>();
+        newAddressEntry.put("address", new Variant<>("172.16.1.1"));
+        newAddressEntry.put("prefix", new Variant<>(new UInt32(24)));
+        List<Map<String, Variant<?>>> newAddressData = Arrays.asList(newAddressEntry);
+        newSettings.get("ipv4").put("address-data", new Variant<>(newAddressData, "aa{sv}"));
+
+        
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
+
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        Map<String, Variant<?>> oldAddressEntry = new HashMap<>();
+        oldAddressEntry.put("address", new Variant<>("172.16.1.1"));
+        oldAddressEntry.put("prefix", new Variant<>(new UInt32(24)));
+        List<Map<String, Variant<?>>> oldAddressData = Arrays.asList(oldAddressEntry);
+        oldSettings.get("ipv4").put("address-data", new Variant<>(oldAddressData, "aa{sv}"));
+
+        assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
     
     @Test
     public void returnsTrueWhenBothSettingsAreEmpty() {
@@ -89,6 +127,39 @@ public class NMSettingsComparatorTest {
 
         assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
+
+    @Test
+    public void returnsFalseWhenSettingsAreNotEqualAndMapVariant() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        newSettings.put("ipv4", new HashMap<>());
+        newSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        Map<String, Variant<?>> newAddressEntry = new HashMap<>();
+        newAddressEntry.put("address", new Variant<>("172.16.1.1"));
+        newAddressEntry.put("prefix", new Variant<>(new UInt32(24)));
+        List<Map<String, Variant<?>>> newAddressData = Arrays.asList(newAddressEntry);
+        newSettings.get("ipv4").put("address-data", new Variant<>(newAddressData, "aa{sv}"));
+
+        
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
+
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        Map<String, Variant<?>> oldAddressEntry = new HashMap<>();
+        oldAddressEntry.put("address", new Variant<>("172.16.1.2"));
+        oldAddressEntry.put("prefix", new Variant<>(new UInt32(24)));
+        List<Map<String, Variant<?>>> oldAddressData = Arrays.asList(oldAddressEntry);
+        oldSettings.get("ipv4").put("address-data", new Variant<>(oldAddressData, "aa{sv}"));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
 
     @Test
     public void returnsFalseWhenSettingsAreNotEqualButSubset() {
