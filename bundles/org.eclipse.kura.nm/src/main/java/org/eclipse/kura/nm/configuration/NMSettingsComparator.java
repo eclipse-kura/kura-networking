@@ -33,7 +33,6 @@ public class NMSettingsComparator {
             return false;
         }
         
-        // WARNING: This implementation doesn't work when properties are other Map<String, Variant<?>>, as it doesn't perform a deep comparison.
         for (String settingKey : newConnectionSettings.keySet()) {
             Map<String, Variant<?>> newSetting = newConnectionSettings.get(settingKey);
             Map<String, Variant<?>> oldSetting = oldConnectionSettings.get(settingKey);
