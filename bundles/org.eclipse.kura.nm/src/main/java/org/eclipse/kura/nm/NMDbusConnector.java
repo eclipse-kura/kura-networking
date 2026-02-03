@@ -605,7 +605,6 @@ public class NMDbusConnector {
         boolean isReapplySuccessful = false;
         try {
             device.Reapply(newConnectionSettings, new UInt64(0), new UInt32(0));
-            dsLock.waitForSignal();
             isReapplySuccessful = true;
         } catch (DBusExecutionException e) {
             logger.warn("Couldn't reapply settings to {} interface, caused by:", deviceId, e);
