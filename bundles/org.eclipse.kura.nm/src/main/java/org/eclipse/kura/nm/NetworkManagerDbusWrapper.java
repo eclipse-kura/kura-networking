@@ -215,9 +215,8 @@ public class NetworkManagerDbusWrapper {
             device.Reapply(settings, new UInt64(0), new UInt32(0));
             return true;
         } catch (DBusExecutionException e) {
-            logger.error("Failed to reapply settings to device {}", device.getObjectPath(), e);
-        } catch (Exception e) {
-            logger.error("Unexpected error while reapplying settings to device {}", device.getObjectPath(), e);
+            logger.info("Could not reapply settings to device {}", device.getObjectPath());
+            logger.debug("Caused by", e);
         }
         return false;
     }
