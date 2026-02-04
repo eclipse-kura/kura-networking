@@ -616,7 +616,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
-        givenSettingsReapplyFailsFor("1-5");
+        givenSettingsReapplyFailsFor("ttyACM17");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -685,7 +685,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
-        givenSettingsReapplyFailsFor("1-5");
+        givenSettingsReapplyFailsFor("ttyACM17");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -714,7 +714,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
-        givenSettingsReapplyFailsFor("1-5");
+        givenSettingsReapplyFailsFor("ttyACM17");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -744,7 +744,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
-        givenSettingsReapplyFailsFor("1-5");
+        givenSettingsReapplyFailsFor("ttyACM17");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -870,7 +870,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED,
                 true, false, true);
-        givenSettingsReapplyFailsFor("1-5");
+        givenSettingsReapplyFailsFor("ttyACM17");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("1-5", this.commandExecutorService);
