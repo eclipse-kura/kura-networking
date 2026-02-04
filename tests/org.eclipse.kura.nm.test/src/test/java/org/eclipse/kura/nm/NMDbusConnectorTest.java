@@ -435,6 +435,28 @@ public class NMDbusConnectorTest {
     }
 
     @Test
+    public void activateShouldNotBeCalledWhenReapplySucceeds() throws DBusException, IOException {
+        givenBasicMockedDbusConnector();
+        givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
+                NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false, true);
+        givenMockedDeviceList();
+
+        givenNetworkConfigMapWith("net.interfaces", "eth0");
+        givenNetworkConfigMapWith("net.interface.eth0.config.dhcpClient4.enabled", false);
+        givenNetworkConfigMapWith("net.interface.eth0.config.ip4.status", "netIPv4StatusEnabledWAN");
+        givenNetworkConfigMapWith("net.interface.eth0.config.ip4.address", "192.168.0.12");
+        givenNetworkConfigMapWith("net.interface.eth0.config.ip4.prefix", (short) 25);
+        givenNetworkConfigMapWith("net.interface.eth0.config.ip4.dnsServers", "1.1.1.1");
+
+        whenApplyIsCalledWith(this.netConfig);
+
+        thenNoExceptionIsThrown();
+        thenConnectionUpdateIsCalledFor("eth0");
+        thenReapplyIsCalledFor("eth0");
+        thenActivateConnectionIsNotCalledFor("eth0");
+    }
+
+    @Test
     public void applyShouldWorkWithEnabledEthernetWithoutInitialConnection() throws DBusException, IOException {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
@@ -1824,6 +1846,10 @@ public class NMDbusConnectorTest {
 
     private void thenActivateConnectionIsCalledFor(String netInterface) throws DBusException {
         verify(this.mockedNetworkManager).ActivateConnection(any(), any(), any());
+    }
+
+    private void thenReapplyIsCalledFor(String netInterface) throws DBusException {
+        verify(this.mockDevices.get(netInterface)).Reapply(any(), any(), any());
     }
 
     private void thenActivateConnectionIsNotCalledFor(String netInterface) throws DBusException {
