@@ -294,10 +294,13 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDevice("eth0.10", "eth0.10", NMDeviceType.NM_DEVICE_TYPE_VLAN,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0.10");
         givenMockedDeviceList();
 
         whenGetInterfaceIdsIsCalled();
@@ -311,8 +314,10 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenApplyIsCalled();
@@ -327,8 +332,10 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenApplyIsCalledWith(null);
@@ -341,8 +348,10 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenApplyIsCalledWith(new HashMap<String, Object>());
@@ -357,8 +366,10 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenApplySingleIsCalledWith("eth1");
@@ -373,8 +384,10 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenApplySingleIsCalledWith(null);
@@ -387,8 +400,10 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenApplySingleIsCalledWith("");
@@ -401,6 +416,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("unused0", "unused0", NMDeviceType.NM_DEVICE_TYPE_UNUSED1,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("unused0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "unused0");
@@ -418,6 +434,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0");
@@ -438,7 +455,8 @@ public class NMDbusConnectorTest {
     public void activateShouldNotBeCalledWhenReapplySucceeds() throws DBusException, IOException {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
-                NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false, true);
+                NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, false, false);
+        // Reapply will succeed by default
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0");
@@ -461,6 +479,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, false, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
         givenMockToPrepNetworkManagerToAllowDeviceToCreateNewConnection();
 
@@ -482,6 +501,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth,");
@@ -498,9 +518,11 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, false, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         /*
          * givenMockedDevice("myVlan", "myVlan", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
          * NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, false, false, false);
+         * givenSettingsReapplyFailsFor("myVlan");
          */
         givenMockedDeviceList();
 
@@ -533,8 +555,9 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, false, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDevice("myVlan", "myVlan", NMDeviceType.NM_DEVICE_TYPE_VLAN, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
-                true, false, false);//
+                true, false, false);
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0,myVlan");
@@ -561,6 +584,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("lo", "lo", NMDeviceType.NM_DEVICE_TYPE_LOOPBACK, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("lo");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "lo,");
@@ -577,6 +601,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("lo", "lo", NMDeviceType.NM_DEVICE_TYPE_GENERIC, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("lo");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "lo,");
@@ -593,6 +618,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -612,6 +638,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -633,6 +660,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -658,6 +686,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -685,6 +714,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -713,6 +743,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -741,6 +772,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "1-5,");
@@ -765,6 +797,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("eth0", this.commandExecutorService);
@@ -779,6 +812,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("lo", "lo", NMDeviceType.NM_DEVICE_TYPE_LOOPBACK, NMDeviceState.NM_DEVICE_STATE_FAILED, true,
                 false, false);
+        givenSettingsReapplyFailsFor("lo");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("lo", this.commandExecutorService);
@@ -793,6 +827,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("unused0", "unused0", NMDeviceType.NM_DEVICE_TYPE_UNUSED1,
                 NMDeviceState.NM_DEVICE_STATE_FAILED, true, false, false);
+        givenSettingsReapplyFailsFor("unused0");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("unused0", this.commandExecutorService);
@@ -806,6 +841,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_FAILED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("wlan0", this.commandExecutorService);
@@ -820,6 +856,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED,
                 true, true, true);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("1-5", this.commandExecutorService);
@@ -835,6 +872,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED,
                 true, false, true);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("1-5", this.commandExecutorService);
@@ -850,6 +888,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED,
                 true, true, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
 
         whenGetInterfaceStatus("1-5", this.commandExecutorService);
@@ -866,6 +905,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, true, true);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         thenNoExceptionIsThrown();
@@ -878,6 +918,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, true, true);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0");
@@ -898,6 +939,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, true, true);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0");
@@ -924,6 +966,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, true, true);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0");
@@ -950,6 +993,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth0", "eth0", NMDeviceType.NM_DEVICE_TYPE_ETHERNET,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED, true, true, true);
+        givenSettingsReapplyFailsFor("eth0");
         givenMockedDeviceList();
 
         givenNetworkConfigMapWith("net.interfaces", "eth0");
@@ -976,6 +1020,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth1", "eth1", NMDeviceType.NM_DEVICE_TYPE_ETHERNET, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("eth1");
         givenMockedDeviceList();
 
         givenMockedAssociatedConnection("kura-eth1-connection", "uuid-1234", "eth1", "/connection/path/mock/0");
@@ -1005,6 +1050,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eth1", "eth1", NMDeviceType.NM_DEVICE_TYPE_ETHERNET, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("eth1");
         givenMockedDeviceList();
 
         givenMockedConnection("kura-eth1-connection", "uuid-1234", "wlan0", "/connection/path/mock/1");
@@ -1032,6 +1078,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         givenMockedConnection("kura-wlan0-connection", "uuid-1234", "wlan0", "/connection/path/mock/1");
@@ -1058,6 +1105,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         givenMockedAssociatedConnection("kura-wlan0-connection", "uuid-1234", "wlan0", "/connection/path/mock/0");
@@ -1086,6 +1134,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         whenGetInterfaceStatusWithRecompute("wlan0", this.commandExecutorService);
@@ -1102,6 +1151,7 @@ public class NMDbusConnectorTest {
         givenSystemService(true, 30);
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         givenWifiInterfaceConfiguration("SECURITY_WPA3");
@@ -1119,6 +1169,7 @@ public class NMDbusConnectorTest {
         givenSystemService(false, 30);
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         givenWifiInterfaceConfiguration("SECURITY_WPA3");
@@ -1136,6 +1187,7 @@ public class NMDbusConnectorTest {
         givenSystemService(true, 30);
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         givenWifiInterfaceConfiguration("SECURITY_WPA2_WPA3");
@@ -1153,6 +1205,7 @@ public class NMDbusConnectorTest {
         givenSystemService(false, 30);
         givenMockedDevice("wlan0", "wlan0", NMDeviceType.NM_DEVICE_TYPE_WIFI, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("wlan0");
         givenMockedDeviceList();
 
         givenWifiInterfaceConfiguration("SECURITY_WPA2_WPA3");
@@ -1169,6 +1222,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("eno1", "eno1", NMDeviceType.NM_DEVICE_TYPE_ETHERNET, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("eno1");
         givenMockedDeviceList();
         givenNetworkConfigMapWith("net.interfaces", "eno1");
         givenNetworkConfigMapWith("net.interface.1-6.config.dhcpClient4.enabled", true);
@@ -1186,6 +1240,7 @@ public class NMDbusConnectorTest {
         givenNMActivationFailed();
         givenMockedDevice("1-6", "wwan0", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED, true,
                 false, false);
+        givenSettingsReapplyFailsFor("1-6");
         givenMockedDeviceList();
         givenNetworkConfigMapWith("net.interfaces", "1-6");
         givenNetworkConfigMapWith("net.interface.1-6.config.resetTimeout", 2);
@@ -1206,6 +1261,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
+        givenSettingsReapplyFailsFor("1-5");
         givenMockedDeviceList();
         givenSystemService(false, 10);
 
@@ -1376,6 +1432,11 @@ public class NMDbusConnectorTest {
             givenModemMocksFor(deviceId, interfaceId, mockedProperties, hasBearers, hasSims);
         }
 
+    }
+
+    public void givenSettingsReapplyFailsFor(String interfaceId) {
+        doThrow(new DBusExecutionException("Reapply Configuration Failed!"))
+                    .when(this.mockDevices.get(interfaceId)).Reapply(any(), any(), any());
     }
 
     public void givenMockToPrepNetworkManagerToAllowDeviceToCreateNewConnection() throws DBusException {
