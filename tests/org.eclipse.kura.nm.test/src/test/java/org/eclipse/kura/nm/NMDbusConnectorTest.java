@@ -448,6 +448,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("eth0");
+        thenReapplyIsCalledFor("eth0");
         thenActivateConnectionIsCalledFor("eth0");
     }
 
@@ -677,6 +678,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("ttyACM17");
+        thenReapplyIsCalledFor("ttyACM17");
         thenActivateConnectionIsCalledFor("ttyACM17");
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE), false);
     }
@@ -703,6 +705,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("ttyACM17");
+        thenReapplyIsCalledFor("ttyACM17");
         thenActivateConnectionIsCalledFor("ttyACM17");
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE), false);
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED),
@@ -732,6 +735,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("ttyACM17");
+        thenReapplyIsCalledFor("ttyACM17");
         thenActivateConnectionIsCalledFor("ttyACM17");
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE), false);
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED),
@@ -761,6 +765,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("ttyACM17");
+        thenReapplyIsCalledFor("ttyACM17");
         thenActivateConnectionIsCalledFor("ttyACM17");
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE), false);
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW,
@@ -788,6 +793,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("ttyACM17");
+        thenReapplyIsCalledFor("ttyACM17");
         thenActivateConnectionIsCalledFor("ttyACM17");
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE), false);
     }
@@ -957,6 +963,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("eth0");
+        thenReapplyIsCalledFor("eth0");
         thenActivateConnectionIsCalledFor("eth0");
         thenConfigurationEnforcementIsActive(true);
     }
@@ -984,6 +991,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("eth0");
+        thenReapplyIsCalledFor("eth0");
         thenActivateConnectionIsCalledFor("eth0");
         thenConfigurationEnforcementIsActive(true);
     }
@@ -1160,6 +1168,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("wlan0");
+        thenReapplyIsCalledFor("wlan0");
         thenActivateConnectionIsCalledFor("wlan0");
     }
 
@@ -1178,6 +1187,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsNotCalledFor("wlan0");
+        thenReapplyIsNotCalledFor("wlan0");
         thenActivateConnectionIsNotCalledFor("wlan0");
     }
 
@@ -1196,6 +1206,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("wlan0");
+        thenReapplyIsCalledFor("wlan0");
         thenActivateConnectionIsCalledFor("wlan0");
     }
 
@@ -1214,6 +1225,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsNotCalledFor("wlan0");
+        thenReapplyIsNotCalledFor("wlan0");
         thenActivateConnectionIsNotCalledFor("wlan0");
     }
 
@@ -1280,6 +1292,7 @@ public class NMDbusConnectorTest {
 
         thenNoExceptionIsThrown();
         thenConnectionUpdateIsCalledFor("ttyACM17");
+        thenReapplyIsCalledFor("ttyACM17");
         thenActivateConnectionIsCalledFor("ttyACM17");
         thenLocationSetupWasCalledOnceWith(EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE), false);
     }
@@ -1911,6 +1924,10 @@ public class NMDbusConnectorTest {
 
     private void thenReapplyIsCalledFor(String netInterface) throws DBusException {
         verify(this.mockDevices.get(netInterface)).Reapply(any(), any(), any());
+    }
+
+    private void thenReapplyIsNotCalledFor(String netInterface) throws DBusException {
+        verify(this.mockDevices.get(netInterface), never()).Reapply(any(), any(), any());
     }
 
     private void thenActivateConnectionIsNotCalledFor(String netInterface) throws DBusException {
