@@ -1257,6 +1257,28 @@ public class NMDbusConnectorTest {
     }
 
     @Test
+    public void shouldStartModemTaskHandlerEvenIfReapplySucceeds() throws DBusException, IOException {
+        givenBasicMockedDbusConnector();
+        givenNMActivationFailed();
+        givenMockedDevice("1-6", "wwan0", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED, true,
+                false, false);
+        // Reapply will succeed by default
+        givenMockedDeviceList();
+        givenNetworkConfigMapWith("net.interfaces", "1-6");
+        givenNetworkConfigMapWith("net.interface.1-6.config.resetTimeout", 2);
+        givenNetworkConfigMapWith("net.interface.1-6.config.dhcpClient4.enabled", true);
+        givenNetworkConfigMapWith("net.interface.1-6.config.ip4.status", "netIPv4StatusEnabledWAN");
+        givenNetworkConfigMapWith("net.interface.1-6.config.persist", true);
+        givenNetworkConfigMapWith("net.interface.1-6.config.holdoff", 15);
+        givenNetworkConfigMapWith("net.interface.1-6.config.maxFail", 3);
+
+        whenApplyIsCalledWith(this.netConfig);
+
+        thenNoExceptionIsThrown();
+        thenModemTaskHandlerIsActive(true, "1-6");
+    }
+
+    @Test
     public void asyncApplyShouldWorkWithEnabledModem() throws DBusException, IOException {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
