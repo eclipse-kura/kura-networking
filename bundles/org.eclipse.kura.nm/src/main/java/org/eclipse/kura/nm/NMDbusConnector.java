@@ -587,41 +587,47 @@ public class NMDbusConnector {
         Optional<Connection> connection = this.networkManager.getAssociatedConnection(device);
         Map<String, Map<String, Variant<?>>> newConnectionSettings = NMSettingsConverter.buildSettings(properties,
                 connection, deviceId, interfaceName, deviceType, this.networkManager.getVersion());
-        
-        Map<String, Map<String, Variant<?>>> oldConnectionSettings = connection.isPresent() ? connection.get().GetSettings() : null;
-        
-        // Debug: print settings (remove in production)
-        logger.info("New connection settings for device {}: {}", deviceId, newConnectionSettings);
-        logger.info("Old connection settings for device {}: {}", deviceId, oldConnectionSettings);
-        logger.info("Settings equal: {}", NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings));
-        // End Debug
-        
-        if (Objects.isNull(oldConnectionSettings)
-                || !NMSettingsComparator.areSettingsEqual(newConnectionSettings, oldConnectionSettings)) {
 
-            DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
+        DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
                 NMDeviceState.NM_DEVICE_STATE_CONFIG, this.timeout);
 
-            if (connection.isPresent()) {
-                connection.get().Update(newConnectionSettings);
+        boolean skipActivation = false;
+        if (connection.isPresent()) {
+            // Compare old and new settings. Given that NetworkManager may remove paramters from the settings
+            // (e.g., removing 802.1x settings when not used), we need NM to pre-ingest the new settings
+            Map<String, Map<String, Variant<?>>> oldConnectionSettings = connection.get().GetSettings();
+            // Map<String, Map<String, Variant<?>>> oldConnectionSecrets = connection.get().GetSecrets();
+            connection.get().UpdateUnsaved(newConnectionSettings);
+            Map<String, Map<String, Variant<?>>> cmpConnectionSettings = connection.get().GetSettings();
+            // Map<String, Map<String, Variant<?>>> cmpConnectionSecrets = connection.get().GetSecrets();
+            
+            // TODO: Set these in debug
+            logger.info("New connection settings for device {}: {}", deviceId, cmpConnectionSettings);
+            logger.info("Old connection settings for device {}: {}", deviceId, oldConnectionSettings);
+
+            if (NMSettingsComparator.areSettingsEqual(cmpConnectionSettings, oldConnectionSettings)) {
+                logger.info("No changes in connection settings for device {}", deviceId);
+                skipActivation = true;
             } else {
-                Settings settings = this.dbusConnection.getRemoteObject(NM_BUS_NAME, NM_SETTINGS_BUS_PATH, Settings.class);
-                DBusPath createdConnectionPath = settings.AddConnection(newConnectionSettings);
-                Connection createdConnection = this.dbusConnection.getRemoteObject(NM_BUS_NAME,
-                        createdConnectionPath.getPath(), Connection.class);
-                connection = Optional.of(createdConnection);
+                logger.info("Updated connection settings for device {}", deviceId);
+                connection.get().Save();
             }
 
+        } else {
+            Settings settings = this.dbusConnection.getRemoteObject(NM_BUS_NAME, NM_SETTINGS_BUS_PATH, Settings.class);
+            DBusPath createdConnectionPath = settings.AddConnection(newConnectionSettings);
+            Connection createdConnection = this.dbusConnection.getRemoteObject(NM_BUS_NAME,
+                    createdConnectionPath.getPath(), Connection.class);
+            connection = Optional.of(createdConnection);
+        }
+
+        if (!skipActivation) {
             try {
                 this.networkManager.activateConnection(connection.get(), device);
                 dsLock.waitForSignal();
             } catch (DBusExecutionException e) {
                 logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
             }
-
-        } else {
-            logger.info("No changes detected in connection settings for device {}. Skipping update and activation.",
-                    deviceId);
         }
 
         if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
