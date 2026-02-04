@@ -1240,7 +1240,7 @@ public class NMDbusConnectorTest {
         givenNMActivationFailed();
         givenMockedDevice("1-6", "wwan0", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_FAILED, true,
                 false, false);
-        givenSettingsReapplyFailsFor("1-6");
+        givenSettingsReapplyFailsFor("wwan0");
         givenMockedDeviceList();
         givenNetworkConfigMapWith("net.interfaces", "1-6");
         givenNetworkConfigMapWith("net.interface.1-6.config.resetTimeout", 2);
@@ -1261,7 +1261,7 @@ public class NMDbusConnectorTest {
         givenBasicMockedDbusConnector();
         givenMockedDevice("1-5", "ttyACM17", NMDeviceType.NM_DEVICE_TYPE_MODEM, NMDeviceState.NM_DEVICE_STATE_ACTIVATED,
                 true, false, false);
-        givenSettingsReapplyFailsFor("1-5");
+        givenSettingsReapplyFailsFor("ttyACM17");
         givenMockedDeviceList();
         givenSystemService(false, 10);
 
