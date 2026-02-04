@@ -602,13 +602,7 @@ public class NMDbusConnector {
             connection = Optional.of(createdConnection);
         }
         
-        boolean isReapplySuccessful = false;
-        try {
-            device.Reapply(newConnectionSettings, new UInt64(0), new UInt32(0));
-            isReapplySuccessful = true;
-        } catch (DBusExecutionException e) {
-            logger.warn("Couldn't reapply settings to {} interface, caused by:", deviceId, e);
-        }
+        boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
 
         if(!isReapplySuccessful) {
             try {

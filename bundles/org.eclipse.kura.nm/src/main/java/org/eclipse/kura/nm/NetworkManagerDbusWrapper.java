@@ -28,6 +28,7 @@ import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.interfaces.Properties;
 import org.freedesktop.dbus.types.UInt32;
+import org.freedesktop.dbus.types.UInt64;
 import org.freedesktop.dbus.types.Variant;
 import org.freedesktop.networkmanager.Device;
 import org.freedesktop.networkmanager.Settings;
@@ -207,6 +208,18 @@ public class NetworkManagerDbusWrapper {
     protected void activateConnection(Connection connection, Device device) {
         this.networkManager.ActivateConnection(new DBusPath(connection.getObjectPath()),
                 new DBusPath(device.getObjectPath()), new DBusPath("/"));
+    }
+
+    protected boolean reapplySettings(Device device, Map<String, Map<String, Variant<?>>> settings) {
+        try {
+            device.Reapply(settings, new UInt64(0), new UInt32(0));
+            return true;
+        } catch (DBusExecutionException e) {
+            logger.error("Failed to reapply settings to device {}", device.getObjectPath(), e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while reapplying settings to device {}", device.getObjectPath(), e);
+        }
+        return false;
     }
 
     protected List<Properties> getAllAccessPoints(Wireless wirelessDevice) throws DBusException {
