@@ -15,6 +15,7 @@ package org.eclipse.kura.nm.configuration;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class NMSettingsComparatorTest {
 
     private Map<String, Map<String, Variant<?>>> newSettings = new HashMap<>();
     private Map<String, Map<String, Variant<?>>> oldSettings = new HashMap<>();
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void throwsWhenNewSettingsAreNull() {
         NMSettingsComparator.areSettingsEqual(null, oldSettings);
@@ -39,10 +40,31 @@ public class NMSettingsComparatorTest {
         newSettings.put("connection", new HashMap<>());
         newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
-        
+
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
+    public void returnsTrueWhenSettingsAreEqualWithByteArray() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        newSettings.put("802-11-wireless", new HashMap<>());
+        String newSSID = "MyWiFiSSID";
+        newSettings.get("802-11-wireless").put("ssid", new Variant<>(newSSID.getBytes(StandardCharsets.UTF_8)));
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        oldSettings.put("802-11-wireless", new HashMap<>());
+        String oldSSID = "MyWiFiSSID";
+        oldSettings.get("802-11-wireless").put("ssid", new Variant<>(oldSSID.getBytes(StandardCharsets.UTF_8)));
 
         assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
@@ -56,7 +78,7 @@ public class NMSettingsComparatorTest {
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
-        
+
         oldSettings.put("ipv4", new HashMap<>());
         oldSettings.get("ipv4").put("method", new Variant<String>("auto"));
 
@@ -78,7 +100,7 @@ public class NMSettingsComparatorTest {
         List<Map<String, Variant<?>>> newAddressData = Arrays.asList(newAddressEntry);
         newSettings.get("ipv4").put("address-data", new Variant<>(newAddressData, "aa{sv}"));
 
-        
+
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
@@ -95,12 +117,12 @@ public class NMSettingsComparatorTest {
         assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
 
-    
+
     @Test
     public void returnsTrueWhenBothSettingsAreEmpty() {
         assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
-    
+
     @Test
     public void returnsTrueWhenNewSettingsAreEmpty() {
         oldSettings.put("connection", new HashMap<>());
@@ -129,7 +151,7 @@ public class NMSettingsComparatorTest {
         newSettings.put("connection", new HashMap<>());
         newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
-        
+
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
@@ -137,6 +159,26 @@ public class NMSettingsComparatorTest {
         assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
 
+    @Test
+    public void returnsFalseWhenSettingsAreNotEqualWithByteArray() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        newSettings.put("802-11-wireless", new HashMap<>());
+        String newSSID = "MyWiFiSSID";
+        newSettings.get("802-11-wireless").put("ssid", new Variant<>(newSSID.getBytes(StandardCharsets.UTF_8)));
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        oldSettings.put("802-11-wireless", new HashMap<>());
+        String oldSSID = "MyOtherWiFiSSID";
+        oldSettings.get("802-11-wireless").put("ssid", new Variant<>(oldSSID.getBytes(StandardCharsets.UTF_8)));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
     @Test
     public void returnsFalseWhenSettingsAreNotEqualAndMapVariant() {
         newSettings.put("connection", new HashMap<>());
@@ -152,7 +194,7 @@ public class NMSettingsComparatorTest {
         List<Map<String, Variant<?>>> newAddressData = Arrays.asList(newAddressEntry);
         newSettings.get("ipv4").put("address-data", new Variant<>(newAddressData, "aa{sv}"));
 
-        
+
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
@@ -175,7 +217,7 @@ public class NMSettingsComparatorTest {
         newSettings.put("connection", new HashMap<>());
         newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
         newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
-        
+
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
@@ -194,7 +236,7 @@ public class NMSettingsComparatorTest {
 
         newSettings.put("ipv4", new HashMap<>());
         newSettings.get("ipv4").put("method", new Variant<String>("auto"));
-        
+
         oldSettings.put("connection", new HashMap<>());
         oldSettings.get("connection").put("id", new Variant<String>("My Ethernet"));
         oldSettings.get("connection").put("autoconnect-retries", new Variant<>(2));
