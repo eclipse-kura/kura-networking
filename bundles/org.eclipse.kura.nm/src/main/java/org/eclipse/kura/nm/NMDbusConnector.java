@@ -599,12 +599,16 @@ public class NMDbusConnector {
                     createdConnectionPath.getPath(), Connection.class);
             connection = Optional.of(createdConnection);
         }
+        
+        boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
 
-        try {
-            this.networkManager.activateConnection(connection.get(), device);
-            dsLock.waitForSignal();
-        } catch (DBusExecutionException e) {
-            logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
+        if(!isReapplySuccessful) {
+            try {
+                this.networkManager.activateConnection(connection.get(), device);
+                dsLock.waitForSignal();
+            } catch (DBusExecutionException e) {
+                logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
+            }
         }
 
         if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
