@@ -16,6 +16,7 @@ package org.eclipse.kura.nm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -595,17 +596,16 @@ public class NMDbusConnector {
         if (connection.isPresent()) {
             // Compare old and new settings. Given that NetworkManager may remove paramters from the settings
             // (e.g., removing 802.1x settings when not used), we need NM to pre-ingest the new settings
-            Map<String, Map<String, Variant<?>>> oldConnectionSettings = connection.get().GetSettings();
-            // Map<String, Map<String, Variant<?>>> oldConnectionSecrets = connection.get().GetSecrets();
+            Map<String, Map<String, Variant<?>>> oldConnectionSettings = getAllSettings(connection.get());
             connection.get().UpdateUnsaved(newConnectionSettings);
-            Map<String, Map<String, Variant<?>>> cmpConnectionSettings = connection.get().GetSettings();
-            // Map<String, Map<String, Variant<?>>> cmpConnectionSecrets = connection.get().GetSecrets();
-            
+            Map<String, Map<String, Variant<?>>> cmpConnectionSettings = getAllSettings(connection.get());
+
             // TODO: Set these in debug
             logger.info("New connection settings for device {}: {}", deviceId, cmpConnectionSettings);
+            logger.info("");
             logger.info("Old connection settings for device {}: {}", deviceId, oldConnectionSettings);
 
-            if (NMSettingsComparator.areSettingsEqual(cmpConnectionSettings, oldConnectionSettings)) {
+            if (NMSettingsComparator.areSettingsEqual(cmpConnectionSettings, oldConnectionSettings) ) {
                 logger.info("No changes in connection settings for device {}", deviceId);
                 skipActivation = true;
             } else {
@@ -642,6 +642,24 @@ public class NMDbusConnector {
             }
         }
 
+    }
+
+    private Map<String, Map<String, Variant<?>>> getAllSettings(Connection connection) {
+        Map<String, Map<String, Variant<?>>> allSettings = new HashMap<>();
+        allSettings.putAll(connection.GetSettings());
+
+        String[] settingKeys = {"802-11-wireless-security", "802-1x", "gsm", "cdma", "ppp"};
+        for (String settingKey : settingKeys) {
+            try {
+                Map<String, Map<String, Variant<?>>> secrets = connection.GetSecrets(settingKey);
+                // Merge the secrets into the allSettings map
+                allSettings.put(settingKey, secrets.get(settingKey));
+            } catch (DBusExecutionException e) {
+                // Ignore exception, it means that there are no secrets for this setting, which is fine
+            }
+        }
+
+        return allSettings;
     }
 
     private void createVirtualInterface(String deviceId, NetworkProperties properties, NMDeviceType deviceType)
