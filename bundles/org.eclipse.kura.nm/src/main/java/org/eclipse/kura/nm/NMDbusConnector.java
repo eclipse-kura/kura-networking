@@ -621,15 +621,15 @@ public class NMDbusConnector {
             connection = Optional.of(createdConnection);
         }
       
-        if (!skipActivation) {       
-            boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
-            if(!isReapplySuccessful) {
-                try {
-                    this.networkManager.activateConnection(connection.get(), device);
-                    dsLock.waitForSignal();
-                } catch (DBusExecutionException e) {
-                    logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
-                }
+        // Reapply settings anyway to let NM reconfigure the device if needed (e.g. Modem connection failures)
+        boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
+
+        if (!skipActivation || !isReapplySuccessful) {
+            try {
+                this.networkManager.activateConnection(connection.get(), device);
+                dsLock.waitForSignal();
+            } catch (DBusExecutionException e) {
+                logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
             }
         }
 
