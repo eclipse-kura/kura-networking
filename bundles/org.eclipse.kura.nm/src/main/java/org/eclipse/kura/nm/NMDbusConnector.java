@@ -620,13 +620,16 @@ public class NMDbusConnector {
                     createdConnectionPath.getPath(), Connection.class);
             connection = Optional.of(createdConnection);
         }
-
-        if (!skipActivation) {
-            try {
-                this.networkManager.activateConnection(connection.get(), device);
-                dsLock.waitForSignal();
-            } catch (DBusExecutionException e) {
-                logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
+      
+        if (!skipActivation) {       
+            boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
+            if(!isReapplySuccessful) {
+                try {
+                    this.networkManager.activateConnection(connection.get(), device);
+                    dsLock.waitForSignal();
+                } catch (DBusExecutionException e) {
+                    logger.warn("Couldn't complete activation of {} interface, caused by:", deviceId, e);
+                }
             }
         }
 
