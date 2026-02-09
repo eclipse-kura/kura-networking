@@ -572,7 +572,12 @@ public class NMDbusConnector {
     private void enableInterface(String deviceId, NetworkProperties properties, Optional<Device> device,
             NMDeviceType deviceType) throws DBusException {
         if (device.isPresent()) {
+            long start;
+            long stop;
+            start = System.currentTimeMillis();
             enableInterface(deviceId, properties, device.get(), deviceType);
+            stop = System.currentTimeMillis();
+            logger.info("Enabling interface {} took {} ms", deviceId, (stop - start));
         } else {
             createVirtualInterface(deviceId, properties, deviceType);
         }
@@ -596,9 +601,9 @@ public class NMDbusConnector {
         if (connection.isPresent()) {
             // Compare old and new settings. Given that NetworkManager may remove paramters from the settings
             // (e.g., removing 802.1x settings when not used), we need NM to pre-ingest the new settings
-            Map<String, Map<String, Variant<?>>> oldConnectionSettings = getAllSettings(connection.get());
+            Map<String, Map<String, Variant<?>>> oldConnectionSettings = getAllSettings(connection.get(), deviceType);
             connection.get().UpdateUnsaved(newConnectionSettings);
-            Map<String, Map<String, Variant<?>>> cmpConnectionSettings = getAllSettings(connection.get());
+            Map<String, Map<String, Variant<?>>> cmpConnectionSettings = getAllSettings(connection.get(), deviceType);
 
             // TODO: Set these in debug
             logger.info("New connection settings for device {}: {}", deviceId, cmpConnectionSettings);
@@ -647,11 +652,19 @@ public class NMDbusConnector {
 
     }
 
-    private Map<String, Map<String, Variant<?>>> getAllSettings(Connection connection) {
+    private Map<String, Map<String, Variant<?>>> getAllSettings(Connection connection, NMDeviceType deviceType) {
         Map<String, Map<String, Variant<?>>> allSettings = new HashMap<>();
         allSettings.putAll(connection.GetSettings());
 
-        String[] settingKeys = {"802-11-wireless-security", "802-1x", "gsm", "cdma", "ppp"};
+        String[] settingKeys;
+        if (deviceType.equals(NMDeviceType.NM_DEVICE_TYPE_WIFI)) {
+            settingKeys = new String[] {"802-11-wireless", "802-11-wireless-security", "802-1x"};
+        } else if (deviceType.equals(NMDeviceType.NM_DEVICE_TYPE_MODEM)) {
+            settingKeys = new String[] {"gsm", "cdma", "ppp"};
+        } else {
+            settingKeys = new String[]{};
+        }
+
         for (String settingKey : settingKeys) {
             try {
                 Map<String, Map<String, Variant<?>>> secrets = connection.GetSecrets(settingKey);
