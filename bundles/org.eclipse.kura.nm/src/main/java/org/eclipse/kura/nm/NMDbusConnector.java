@@ -672,7 +672,6 @@ public class NMDbusConnector {
         for (String settingKey : settingKeys) {
             try {
                 Map<String, Map<String, Variant<?>>> secrets = connection.GetSecrets(settingKey);
-                // Merge the secrets into the allSettings map
                 allSettings.put(settingKey, secrets.get(settingKey));
             } catch (DBusExecutionException e) {
                 // Ignore exception, it means that there are no secrets for this setting, which is fine
