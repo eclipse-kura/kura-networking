@@ -20,6 +20,10 @@ import org.freedesktop.dbus.types.Variant;
 
 public class NMSettingsComparator {
 
+    private NMSettingsComparator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /* This method compares two NM connection settings maps and determines if they are equal. This comparison
      * is asymmetric, meaning that if newConnectionSettings contains all the settings in oldConnectionSettings with the same
      * values, it is considered equal, even if oldConnectionSettings has additional settings.
