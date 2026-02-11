@@ -572,12 +572,7 @@ public class NMDbusConnector {
     private void enableInterface(String deviceId, NetworkProperties properties, Optional<Device> device,
             NMDeviceType deviceType) throws DBusException {
         if (device.isPresent()) {
-            long start;
-            long stop;
-            start = System.currentTimeMillis();
             enableInterface(deviceId, properties, device.get(), deviceType);
-            stop = System.currentTimeMillis();
-            logger.info("Enabling interface {} took {} ms", deviceId, (stop - start));
         } else {
             createVirtualInterface(deviceId, properties, deviceType);
         }
