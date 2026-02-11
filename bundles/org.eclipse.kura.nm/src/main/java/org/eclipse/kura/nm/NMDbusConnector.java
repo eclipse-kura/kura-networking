@@ -599,8 +599,9 @@ public class NMDbusConnector {
 
         boolean skipActivation = false;
         if (connection.isPresent()) {
-            // Compare old and new settings. Given that NetworkManager may remove paramters from the settings
-            // (e.g., removing 802.1x settings when not used), we need NM to pre-ingest the new settings
+            // Compare old and new settings. Given that NetworkManager may remove parameters
+            // from the settings if they are set to the default value (e.g., removing mtu
+            // settings when set to the default value), we need NM to pre-ingest the new settings
             Map<String, Map<String, Variant<?>>> oldConnectionSettings = getAllSettings(connection.get(), deviceType);
             connection.get().UpdateUnsaved(newConnectionSettings);
             Map<String, Map<String, Variant<?>>> cmpConnectionSettings = getAllSettings(connection.get(), deviceType);
