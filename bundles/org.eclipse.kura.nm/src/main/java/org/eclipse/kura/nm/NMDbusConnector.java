@@ -600,11 +600,6 @@ public class NMDbusConnector {
             connection.get().UpdateUnsaved(newConnectionSettings);
             Map<String, Map<String, Variant<?>>> cmpConnectionSettings = getAllSettings(connection.get(), deviceType);
 
-            // TODO: Set these in debug
-            logger.info("New connection settings for device {}: {}", deviceId, cmpConnectionSettings);
-            logger.info("");
-            logger.info("Old connection settings for device {}: {}", deviceId, oldConnectionSettings);
-
             if (NMSettingsComparator.areSettingsEqual(cmpConnectionSettings, oldConnectionSettings) ) {
                 logger.info("No changes in connection settings for device {}", deviceId);
             } else {
