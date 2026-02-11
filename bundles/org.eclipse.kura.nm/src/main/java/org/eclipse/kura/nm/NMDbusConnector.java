@@ -632,6 +632,7 @@ public class NMDbusConnector {
 
         if (!skipActivation || !isReapplySuccessful) {
             try {
+                logger.info("Activating connection for device {}", deviceId);
                 this.networkManager.activateConnection(connection.get(), device);
                 dsLock.waitForSignal();
             } catch (DBusExecutionException e) {
