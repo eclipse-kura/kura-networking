@@ -656,10 +656,13 @@ public class NMDbusConnector {
         Map<String, Map<String, Variant<?>>> allSettings = new HashMap<>();
         allSettings.putAll(connection.GetSettings());
 
-        // Note: when adding a new devie type among the supported ones (i.e.
-        // CONFIGURATION_SUPPORTED_DEVICE_TYPES) make sure to add the related settings
-        // keys here in order to properly retrieve secrets for comparison in
-        // enableInterface method
+        // Note: when adding a new device type among the supported ones make sure to add
+        // the related settings keys here in order to properly retrieve secrets for
+        // comparison in enableInterface method
+        if(!CONFIGURATION_SUPPORTED_DEVICE_TYPES.contains(deviceType)) {
+            throw new IllegalArgumentException(
+                    String.format("Device type %s not supported for secret settings retrieval", deviceType));
+        }
         String[] settingKeys;
         if (deviceType.equals(NMDeviceType.NM_DEVICE_TYPE_WIFI)) {
             settingKeys = new String[] {"802-11-wireless", "802-11-wireless-security", "802-1x"};
