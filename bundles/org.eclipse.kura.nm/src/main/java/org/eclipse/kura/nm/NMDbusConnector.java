@@ -597,7 +597,6 @@ public class NMDbusConnector {
         DeviceStateLock dsLock = new DeviceStateLock(this.dbusConnection, device.getObjectPath(),
                 NMDeviceState.NM_DEVICE_STATE_CONFIG, this.timeout);
 
-        boolean skipActivation = false;
         if (connection.isPresent()) {
             // Compare old and new settings. Given that NetworkManager may remove parameters
             // from the settings if they are set to the default value (e.g., removing mtu
@@ -613,7 +612,6 @@ public class NMDbusConnector {
 
             if (NMSettingsComparator.areSettingsEqual(cmpConnectionSettings, oldConnectionSettings) ) {
                 logger.info("No changes in connection settings for device {}", deviceId);
-                skipActivation = true;
             } else {
                 logger.info("Updated connection settings for device {}", deviceId);
                 connection.get().Save();
@@ -626,13 +624,13 @@ public class NMDbusConnector {
                     createdConnectionPath.getPath(), Connection.class);
             connection = Optional.of(createdConnection);
         }
-      
+
         // Reapply settings anyway to let NM reconfigure the device if needed (e.g. Modem connection failures)
         boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
 
-        if (!skipActivation || !isReapplySuccessful) {
+        if (!isReapplySuccessful) {
             try {
-                logger.info("Activating connection for device {}", deviceId);
+                logger.info("Reapply failed. Activating connection for device {}", deviceId);
                 this.networkManager.activateConnection(connection.get(), device);
                 dsLock.waitForSignal();
             } catch (DBusExecutionException e) {
