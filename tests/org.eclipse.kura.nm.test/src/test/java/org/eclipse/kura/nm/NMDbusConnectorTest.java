@@ -1948,7 +1948,7 @@ public class NMDbusConnectorTest {
     private void thenConnectionUpdateIsCalledFor(String netInterface) throws DBusException {
         Connection connect = this.dbusConnection.getRemoteObject("org.freedesktop.NetworkManager",
                 "/mock/device/" + netInterface, Connection.class);
-        verify(connect).Update(any());
+        verify(connect).UpdateUnsaved(any());
     }
 
     private void thenConnectionUpdateIsNotCalledFor(String netInterface) throws DBusException {
