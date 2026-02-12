@@ -1465,6 +1465,7 @@ public class NMDbusConnectorTest {
         if (hasAssociatedConnection) {
             this.mockConnection = mock(Connection.class, RETURNS_SMART_NULLS);
             when(this.mockConnection.GetSettings()).thenReturn(mockedDevice1ConnectionSetting);
+            when(this.mockConnection.GetSecrets(any())).thenThrow(new DBusExecutionException("No secrets available"));
 
             doReturn(this.mockConnection).when(this.dbusConnection).getRemoteObject("org.freedesktop.NetworkManager",
                     "/mock/device/" + interfaceId, Connection.class);
