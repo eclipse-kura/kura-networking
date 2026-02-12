@@ -24,64 +24,74 @@ public class NMSettingsComparator {
         throw new IllegalStateException("Utility class");
     }
 
-    /* This method compares two NM connection settings maps and determines if they are equal. This comparison
-     * is asymmetric, meaning that if newConnectionSettings contains all the settings in oldConnectionSettings with the same
-     * values, it is considered equal, even if oldConnectionSettings has additional settings.
+    /* This method compares two NM connection settings maps and determines if they are equal.
      *
      * @param newConnectionSettings The new connection settings to compare.
-     * @param oldConnectionSettings The old connection settings to compare against. Can be a superset of newConnectionSettings.
+     * @param oldConnectionSettings The old connection settings to compare against.
      * @return true if the settings are considered equal, false otherwise.
      */
     public static boolean areSettingsEqual(Map<String,Map<String,Variant<?>>> newConnectionSettings,
             Map<String,Map<String,Variant<?>>> oldConnectionSettings) {
 
-        if(Objects.isNull(newConnectionSettings)) {
-            throw new IllegalArgumentException("New connection settings cannot be null");
+        if(Objects.isNull(newConnectionSettings) || Objects.isNull(oldConnectionSettings)) {
+            throw new IllegalArgumentException("Connection settings cannot be null");
         }
 
-        if(Objects.isNull(oldConnectionSettings)) {
+        if (!newConnectionSettings.keySet().equals(oldConnectionSettings.keySet())) {
             return false;
         }
 
-        for (String settingKey : newConnectionSettings.keySet()) {
-            Map<String, Variant<?>> newSetting = newConnectionSettings.get(settingKey);
-            Map<String, Variant<?>> oldSetting = oldConnectionSettings.get(settingKey);
+        for (String topLevelKey : newConnectionSettings.keySet()) {
+            Map<String, Variant<?>> newNested = newConnectionSettings.get(topLevelKey);
+            Map<String, Variant<?>> oldNested = oldConnectionSettings.get(topLevelKey);
 
-            if (oldSetting == null) {
+            if (!areNestedMapsEqual(newNested, oldNested)) {
                 return false;
-            }
-
-            for (String propertyKey : newSetting.keySet()) {
-                Variant<?> newValue = newSetting.get(propertyKey);
-                Variant<?> oldValue = oldSetting.get(propertyKey);
-
-                if (!areVariantsEqual(newValue, oldValue)) {
-                    return false;
-                }
             }
         }
 
         return true;
     }
 
-    private static boolean areVariantsEqual(Variant<?> newValue, Variant<?> oldValue) {
+    private static boolean areNestedMapsEqual(Map<String, Variant<?>> newNested, Map<String, Variant<?>> oldNested) {
+        if (!newNested.keySet().equals(oldNested.keySet())) {
+            return false;
+        }
+
+        for (String nestedKey : newNested.keySet()) {
+            Variant<?> newVariant = newNested.get(nestedKey);
+            Variant<?> oldVariant = oldNested.get(nestedKey);
+
+            if (!areVariantsEqual(newVariant, oldVariant)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean areVariantsEqual(Variant<?> newVariant, Variant<?> oldVariant) {
+        if (newVariant == null && oldVariant == null) {
+            return true;
+        }
+        if (newVariant == null || oldVariant == null) {
+            return false;
+        }
+
+        Object newValue = newVariant.getValue();
+        Object oldValue = oldVariant.getValue();
+
         if (newValue == null && oldValue == null) {
             return true;
         }
-
         if (newValue == null || oldValue == null) {
             return false;
         }
 
-        Object newObject = newValue.getValue();
-        Object oldObject = oldValue.getValue();
-
-        // Special handling for byte arrays
-        if (newObject instanceof byte[] && oldObject instanceof byte[]) {
-            return Arrays.equals((byte[]) newObject, (byte[]) oldObject);
+        if (newValue instanceof byte[] newByteArray && oldValue instanceof byte[] oldByteArray) {
+            return Arrays.equals(newByteArray, oldByteArray);
         }
 
         return Objects.equals(newValue, oldValue);
     }
-
 }
