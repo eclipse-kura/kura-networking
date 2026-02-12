@@ -244,4 +244,54 @@ public class NMSettingsComparatorTest {
 
         assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
+
+    @Test
+    public void returnsTrueWhenSettingsAreEqualWithStringList() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+
+        newSettings.put("ipv4", new HashMap<>());
+        newSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        List<String> newDnsServers = Arrays.asList("8.8.8.8", "8.8.4.4");
+        newSettings.get("ipv4").put("dns", new Variant<>(newDnsServers, "as"));
+        newSettings.get("ipv4").put("ignore-auto-dns", new Variant<>(true));
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        List<String> oldDnsServers = Arrays.asList("8.8.8.8", "8.8.4.4");
+        oldSettings.get("ipv4").put("dns", new Variant<>(oldDnsServers, "as"));
+        oldSettings.get("ipv4").put("ignore-auto-dns", new Variant<>(true));
+
+        assertTrue(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
+    public void returnsFalseWhenSettingsAreNotEqualWithStringList() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+
+        newSettings.put("ipv4", new HashMap<>());
+        newSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        List<String> newDnsServers = Arrays.asList("8.8.8.8", "8.8.4.4");
+        newSettings.get("ipv4").put("dns", new Variant<>(newDnsServers, "as"));
+        newSettings.get("ipv4").put("ignore-auto-dns", new Variant<>(true));
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        List<String> oldDnsServers = Arrays.asList("1.1.1.1", "1.0.0.1");
+        oldSettings.get("ipv4").put("dns", new Variant<>(oldDnsServers, "as"));
+        oldSettings.get("ipv4").put("ignore-auto-dns", new Variant<>(true));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
 }
