@@ -29,6 +29,8 @@ public class NMSettingsComparator {
      * @param newConnectionSettings The new connection settings to compare.
      * @param oldConnectionSettings The old connection settings to compare against.
      * @return true if the settings are considered equal, false otherwise.
+     *
+     * @throws IllegalArgumentException if either of the connection settings maps is null.
      */
     public static boolean areSettingsEqual(Map<String,Map<String,Variant<?>>> newConnectionSettings,
             Map<String,Map<String,Variant<?>>> oldConnectionSettings) {
@@ -54,6 +56,12 @@ public class NMSettingsComparator {
     }
 
     private static boolean areNestedMapsEqual(Map<String, Variant<?>> newNested, Map<String, Variant<?>> oldNested) {
+        if(Objects.isNull(newNested) || Objects.isNull(oldNested)) {
+            // NM settings should never have null nested maps, they would simply be omitted
+            // from the top-level map.
+            throw new IllegalArgumentException("Nested maps cannot be null");
+        }
+
         if (!newNested.keySet().equals(oldNested.keySet())) {
             return false;
         }
