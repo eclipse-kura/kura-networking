@@ -66,11 +66,47 @@ public class NMSettingsComparatorTest {
         NMSettingsComparator.areSettingsEqual(newSettings, oldSettings);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void throwsWhenBothNestedMapAreNull() {
         newSettings.put("connection", null);
         oldSettings.put("connection", null);
+        NMSettingsComparator.areSettingsEqual(newSettings, oldSettings);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsWhenNewVariantIsNull() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", null);
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+        NMSettingsComparator.areSettingsEqual(newSettings, oldSettings);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsWhenOldVariantIsNull() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", new Variant<>(1));
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", null);
+
+        NMSettingsComparator.areSettingsEqual(newSettings, oldSettings);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsWhenBothVariantsAreNull() {
+        newSettings.put("connection", new HashMap<>());
+        newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        newSettings.get("connection").put("autoconnect-retries", null);
+
+        oldSettings.put("connection", new HashMap<>());
+        oldSettings.get("connection").put("id", new Variant<String>("My WiFi"));
+        oldSettings.get("connection").put("autoconnect-retries", null);
         NMSettingsComparator.areSettingsEqual(newSettings, oldSettings);
     }
 
