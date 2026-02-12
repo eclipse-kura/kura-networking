@@ -79,22 +79,14 @@ public class NMSettingsComparator {
     }
 
     private static boolean areVariantsEqual(Variant<?> newVariant, Variant<?> oldVariant) {
-        if (newVariant == null && oldVariant == null) {
-            return true;
-        }
-        if (newVariant == null || oldVariant == null) {
-            return false;
+        if (Objects.isNull(newVariant) || Objects.isNull(oldVariant)) {
+            // NM settings should never have null variants, they would simply be omitted
+            // from the nested map.
+            throw new IllegalArgumentException("Variants cannot be null");
         }
 
         Object newValue = newVariant.getValue();
         Object oldValue = oldVariant.getValue();
-
-        if (newValue == null && oldValue == null) {
-            return true;
-        }
-        if (newValue == null || oldValue == null) {
-            return false;
-        }
 
         if (newValue instanceof byte[] newByteArray && oldValue instanceof byte[] oldByteArray) {
             return Arrays.equals(newByteArray, oldByteArray);
