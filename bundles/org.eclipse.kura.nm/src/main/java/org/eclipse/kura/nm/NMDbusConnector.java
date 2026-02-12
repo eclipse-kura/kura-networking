@@ -618,9 +618,9 @@ public class NMDbusConnector {
         // Reapply settings anyway to let NM reconfigure the device if needed (e.g. Modem connection failures)
         boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
 
-        if (!isReapplySuccessful) {
+        if(!isReapplySuccessful) {
             try {
-                logger.info("Reapply failed. Activating connection for device {}", deviceId);
+                logger.info("Activating connection for device {}", deviceId);
                 this.networkManager.activateConnection(connection.get(), device);
                 dsLock.waitForSignal();
             } catch (DBusExecutionException e) {
