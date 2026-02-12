@@ -275,6 +275,23 @@ public class NMSettingsComparatorTest {
     }
 
     @Test
+    public void returnsFalseWhenSettingsIntersectionIsEmpty() {
+        newSettings.put("ipv4", new HashMap<>());
+        newSettings.get("ipv4").put("method", new Variant<String>("auto"));
+
+        oldSettings.put("ipv4", new HashMap<>());
+        oldSettings.get("ipv4").put("method", new Variant<String>("manual"));
+
+        Map<String, Variant<?>> oldAddressEntry = new HashMap<>();
+        oldAddressEntry.put("address", new Variant<>("172.16.1.2"));
+        oldAddressEntry.put("prefix", new Variant<>(new UInt32(24)));
+        List<Map<String, Variant<?>>> oldAddressData = Arrays.asList(oldAddressEntry);
+        oldSettings.get("ipv4").put("address-data", new Variant<>(oldAddressData, "aa{sv}"));
+
+        assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
+    }
+
+    @Test
     public void returnsTrueWhenSettingsAreEqualWithStringList() {
         newSettings.put("connection", new HashMap<>());
         newSettings.get("connection").put("id", new Variant<String>("My WiFi"));
