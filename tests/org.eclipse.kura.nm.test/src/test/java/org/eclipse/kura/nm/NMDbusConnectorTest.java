@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -1465,6 +1465,7 @@ public class NMDbusConnectorTest {
         if (hasAssociatedConnection) {
             this.mockConnection = mock(Connection.class, RETURNS_SMART_NULLS);
             when(this.mockConnection.GetSettings()).thenReturn(mockedDevice1ConnectionSetting);
+            when(this.mockConnection.GetSecrets(any())).thenThrow(new DBusExecutionException("No secrets available"));
 
             doReturn(this.mockConnection).when(this.dbusConnection).getRemoteObject("org.freedesktop.NetworkManager",
                     "/mock/device/" + interfaceId, Connection.class);
@@ -1948,7 +1949,7 @@ public class NMDbusConnectorTest {
     private void thenConnectionUpdateIsCalledFor(String netInterface) throws DBusException {
         Connection connect = this.dbusConnection.getRemoteObject("org.freedesktop.NetworkManager",
                 "/mock/device/" + netInterface, Connection.class);
-        verify(connect).Update(any());
+        verify(connect).UpdateUnsaved(any());
     }
 
     private void thenConnectionUpdateIsNotCalledFor(String netInterface) throws DBusException {
