@@ -46,6 +46,7 @@
         <keystore.type>JKS</keystore.type>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <build>
@@ -56,8 +57,7 @@
                     <artifactId>tycho-compiler-plugin</artifactId>
                     <version>${tycho-version}</version>
                     <configuration>
-                        <source>21</source>
-                        <target>21</target>
+                        <release>${maven.compiler.release}</release>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                         <requireJREPackageImports>true</requireJREPackageImports>
@@ -75,8 +75,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>21</source>
-                        <target>21</target>
+                        <release>${maven.compiler.release}</release>
                     </configuration>
                 </plugin>
 
