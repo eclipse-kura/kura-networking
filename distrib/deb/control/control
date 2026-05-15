@@ -1,10 +1,10 @@
 Package: [[package.name]]
-Version: [[version]]-[[package.revision]]
+Version: [[package.version]]-[[package.revision]]
 Section: admin
 Priority: optional
 Depends: kura-core (>= 6.0.0~), kura-core(<< 7.0.0~), network-manager | networkmanager, bind9 | bind, dnsmasq, isc-dhcp-client | dhcpcd, iw, iptables, modemmanager, python3-fail2ban | python-fail2ban | fail2ban
 Architecture: [[deb.architecture]]
-Maintainer: Eclipse Kura Developers <kura-dev@eclipse.org>
+Maintainer: [[deb.maintainer]]
 Description: [[summary]]
   [[long.description]]
-Homepage: https://eclipse-kura.github.io/kura
+Homepage: [[deb.docs]]
