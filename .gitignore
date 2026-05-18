@@ -3,7 +3,6 @@
 classes
 target
 RemoteSystemsTempFiles
-lib
 .metadata
 .recommenders
 .sonarlint
@@ -11,6 +10,10 @@ lib
 .project
 .settings
 .vscode
-hs_err_pid*.log
+OSGI-INF
+.flattened-pom.xml
 .tycho-consumer-pom.xml
-
+lib/
+generated/
+bin/
+.eclipse/
