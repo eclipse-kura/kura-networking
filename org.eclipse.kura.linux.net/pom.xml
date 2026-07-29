@@ -92,20 +92,20 @@
                         -includeresource: about_files=about_files/,\
                             about.html
                         -dsannotations-options: norequirements
-                        Export-Package: org.eclipse.kura.internal.board;x-internal:=true,\
-                            org.eclipse.kura.internal.linux.net.dns;x-internal:=true,\
-                            org.eclipse.kura.internal.linux.net.modem;x-internal:=true,\
-                            org.eclipse.kura.internal.linux.net.wifi;x-internal:=true,\
-                            org.eclipse.kura.linux.net,\
-                            org.eclipse.kura.linux.net.dhcp,\
-                            org.eclipse.kura.linux.net.dhcp.server,\
-                            org.eclipse.kura.linux.net.dns,\
-                            org.eclipse.kura.linux.net.iptables,\
-                            org.eclipse.kura.linux.net.modem,\
-                            org.eclipse.kura.linux.net.ppp,\
-                            org.eclipse.kura.linux.net.route,\
-                            org.eclipse.kura.linux.net.util,\
-                            org.eclipse.kura.linux.net.wifi
+                        Export-Package: org.eclipse.kura.internal.board;version="1.0.0";x-internal:=true,\
+                            org.eclipse.kura.internal.linux.net.dns;version="1.0.0";x-internal:=true,\
+                            org.eclipse.kura.internal.linux.net.modem;version="1.1.0";x-internal:=true,\
+                            org.eclipse.kura.internal.linux.net.wifi;version="1.0.0";x-internal:=true,\
+                            org.eclipse.kura.linux.net;version="1.1.0",\
+                            org.eclipse.kura.linux.net.dhcp;version="2.1.0",\
+                            org.eclipse.kura.linux.net.dhcp.server;version="1.0.0",\
+                            org.eclipse.kura.linux.net.dns;version="1.1.0",\
+                            org.eclipse.kura.linux.net.iptables;version="1.2.0",\
+                            org.eclipse.kura.linux.net.modem;version="1.2.0",\
+                            org.eclipse.kura.linux.net.ppp;version="1.1.0",\
+                            org.eclipse.kura.linux.net.route;version="1.0.1",\
+                            org.eclipse.kura.linux.net.util;version="1.1.0",\
+                            org.eclipse.kura.linux.net.wifi;version="1.1.0"
                         ]]></bnd>
                 </configuration>
             </plugin>

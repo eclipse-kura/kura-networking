@@ -75,7 +75,7 @@
                         Bundle-ActivationPolicy: lazy
                         -includeresource: about_files=about_files/,\
                             about.html
-                        Export-Package: org.eclipse.kura.network.status.provider.api;x-internal:=true
+                        Export-Package: org.eclipse.kura.network.status.provider.api;version="1.0.0";x-internal:=true
                         ]]></bnd>
                 </configuration>
             </plugin>
