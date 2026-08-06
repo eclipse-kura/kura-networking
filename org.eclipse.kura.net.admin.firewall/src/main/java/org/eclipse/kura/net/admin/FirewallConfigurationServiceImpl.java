@@ -29,8 +29,9 @@ import org.eclipse.kura.core.configuration.metatype.Tocd;
 import org.eclipse.kura.core.configuration.metatype.Tscalar;
 import org.eclipse.kura.core.net.FirewallConfiguration;
 import org.eclipse.kura.executor.PrivilegedExecutorService;
-import org.eclipse.kura.linux.net.iptables.AbstractLinuxFirewall;
-import org.eclipse.kura.linux.net.iptables.LinuxFirewall;
+import org.eclipse.kura.linux.net.nftables.AbstractLinuxFirewall;
+import org.eclipse.kura.linux.net.nftables.LinuxFirewall;
+import org.eclipse.kura.linux.net.nftables.jna.NftContext;
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.configuration.NetworkConfigurationMessages;
@@ -53,13 +54,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(name = "org.eclipse.kura.net.admin.FirewallConfigurationService", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { //
-        "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
-        "kura.ui.service.hide=true" //
-    }
-)
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = { //
+                "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
+                "kura.ui.service.hide=true" //
+        })
 public class FirewallConfigurationServiceImpl extends
         AbstractFirewallConfigurationServiceImpl<IP4Address, FirewallOpenPortConfigIP4Builder, FirewallPortForwardConfigIP4Builder>
         implements FirewallConfigurationService, SelfConfiguringComponent {
@@ -183,7 +183,7 @@ public class FirewallConfigurationServiceImpl extends
     @Override
     protected AbstractLinuxFirewall getLinuxFirewall() {
         if (this.firewall == null) {
-            this.firewall = LinuxFirewall.getInstance(this.executorService);
+            this.firewall = LinuxFirewall.getInstance(new NftContext());
         }
         return this.firewall;
     }

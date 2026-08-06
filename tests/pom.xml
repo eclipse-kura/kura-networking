@@ -204,6 +204,7 @@
     <modules>
         <module>org.eclipse.kura.core.net.test</module>
         <module>org.eclipse.kura.linux.net.test</module>
+        <module>org.eclipse.kura.linux.net.nftables.test</module>
         <module>org.eclipse.kura.net.admin.firewall.test</module>
         <module>org.eclipse.kura.net.configuration.test</module>
         <module>org.eclipse.kura.network.threat.manager.test</module>

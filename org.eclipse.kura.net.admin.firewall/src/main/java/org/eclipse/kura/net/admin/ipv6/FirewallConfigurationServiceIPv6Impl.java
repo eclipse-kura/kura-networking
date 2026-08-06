@@ -29,8 +29,9 @@ import org.eclipse.kura.core.configuration.metatype.Tscalar;
 import org.eclipse.kura.core.net.FirewallConfiguration;
 import org.eclipse.kura.core.net.FirewallConfigurationIPv6;
 import org.eclipse.kura.executor.PrivilegedExecutorService;
-import org.eclipse.kura.linux.net.iptables.AbstractLinuxFirewall;
-import org.eclipse.kura.linux.net.iptables.LinuxFirewallIPv6;
+import org.eclipse.kura.linux.net.nftables.AbstractLinuxFirewall;
+import org.eclipse.kura.linux.net.nftables.LinuxFirewallIPv6;
+import org.eclipse.kura.linux.net.nftables.jna.NftContext;
 import org.eclipse.kura.net.IP6Address;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.admin.AbstractFirewallConfigurationServiceImpl;
@@ -54,13 +55,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(name = "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { //
-        "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
-        "kura.ui.service.hide=true" //
-    }
-)
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = { //
+                "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
+                "kura.ui.service.hide=true" //
+        })
 public class FirewallConfigurationServiceIPv6Impl extends
         AbstractFirewallConfigurationServiceImpl<IP6Address, FirewallOpenPortConfigIP6Builder, FirewallPortForwardConfigIP6Builder>
         implements FirewallConfigurationServiceIPv6, SelfConfiguringComponent {
@@ -125,7 +125,7 @@ public class FirewallConfigurationServiceIPv6Impl extends
     @Override
     protected AbstractLinuxFirewall getLinuxFirewall() {
         if (this.firewall == null) {
-            this.firewall = LinuxFirewallIPv6.getInstance(this.executorService);
+            this.firewall = LinuxFirewallIPv6.getInstance(new NftContext());
         }
 
         return this.firewall;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  * 
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -26,10 +26,10 @@ import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.configuration.metatype.Tocd;
 import org.eclipse.kura.core.net.FirewallConfiguration;
 import org.eclipse.kura.executor.CommandExecutorService;
-import org.eclipse.kura.linux.net.iptables.AbstractLinuxFirewall;
-import org.eclipse.kura.linux.net.iptables.LocalRule;
-import org.eclipse.kura.linux.net.iptables.NATRule;
-import org.eclipse.kura.linux.net.iptables.PortForwardRule;
+import org.eclipse.kura.linux.net.nftables.AbstractLinuxFirewall;
+import org.eclipse.kura.linux.net.nftables.LocalRule;
+import org.eclipse.kura.linux.net.nftables.NATRule;
+import org.eclipse.kura.linux.net.nftables.PortForwardRule;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.NetProtocol;
 import org.eclipse.kura.net.NetworkPair;
@@ -45,8 +45,7 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>,
- Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
+public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>, Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractFirewallConfigurationServiceImpl.class);
 
@@ -63,12 +62,14 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
     }
 
     protected void activate(ComponentContext componentContext, Map<String, Object> properties) {
-        logger.info("Activating FirewallConfigurationService...");
+        long start = System.currentTimeMillis();
+        logger.info("Activating FirewallConfigurationService... {}", start);
 
         this.firewall = getLinuxFirewall();
         updated(properties);
 
-        logger.info("Activating FirewallConfigurationService... Done.");
+        long end = System.currentTimeMillis();
+        logger.info("Activating FirewallConfigurationService... Done. {} {}", end, end - start);
     }
 
     protected void deactivate(ComponentContext componentContext) {
@@ -77,6 +78,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
     }
 
     public synchronized void updated(Map<String, Object> properties) {
+        long start = System.currentTimeMillis();
+        logger.info("Updating FirewallConfigurationService... {}", start);
         if (logger.isDebugEnabled()) {
             logger.debug("updated()");
             for (Entry<String, Object> entry : properties.entrySet()) {
@@ -103,6 +106,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
         // raise the event because there was a change
         this.eventAdmin.postEvent(new FirewallConfigurationChangeEvent(properties));
+        long end = System.currentTimeMillis();
+        logger.info("Updating FirewallConfigurationService... Done. {} {}", end, end - start);
     }
 
     protected abstract FirewallConfiguration buildFirewallConfigurationFromProperties(Map<String, Object> properties);
@@ -326,7 +331,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<NATRule> getAutoNatRules() throws KuraException {
         return this.firewall.getAutoNatRules();
@@ -334,7 +339,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<LocalRule> getLocalRules() throws KuraException {
         return this.firewall.getLocalRules();
@@ -342,7 +347,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<NATRule> getNatRules() throws KuraException {
         return this.firewall.getNatRules();
@@ -350,7 +355,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<PortForwardRule> getPortForwardRules() throws KuraException {
         return this.firewall.getPortForwardRules();

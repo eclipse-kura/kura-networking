@@ -2,7 +2,7 @@ Package: [[package.name]]
 Version: [[package.version]]-[[package.revision]]
 Section: admin
 Priority: optional
-Depends: kura-core (>= 6.0.0~), kura-core(<< 7.0.0~), network-manager | networkmanager, bind9 | bind, dnsmasq, isc-dhcp-client | dhcpcd, iw, iptables, modemmanager, python3-fail2ban | python-fail2ban | fail2ban
+Depends: kura-core (>= 6.0.0~), kura-core(<< 7.0.0~), network-manager | networkmanager, bind9 | bind, dnsmasq, isc-dhcp-client | dhcpcd, iw, nftables, modemmanager, python3-fail2ban | python-fail2ban | fail2ban
 Architecture: [[deb.architecture]]
 Maintainer: [[deb.maintainer]]
 Description: [[summary]]

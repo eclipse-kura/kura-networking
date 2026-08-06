@@ -57,6 +57,7 @@
         <module>org.eclipse.kura.net.configuration</module>
         <module>org.eclipse.kura.core.net</module>
         <module>org.eclipse.kura.linux.net</module>
+        <module>org.eclipse.kura.linux.net.nftables</module>
         <module>org.eclipse.kura.linux.systemd.provider</module>
         <module>org.eclipse.kura.net.admin.firewall</module>
         <module>org.eclipse.kura.network.threat.manager</module>
@@ -145,6 +146,11 @@
                 <artifactId>jffi</artifactId>
                 <classifier>native</classifier>
                 <version>${jffi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>5.15.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
