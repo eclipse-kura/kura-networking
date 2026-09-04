@@ -586,6 +586,18 @@ public class NMDbusConnector {
         String interfaceName = this.networkManager.getDeviceInterface(device);
 
         Optional<Connection> connection = this.networkManager.getAssociatedConnection(device);
+        
+        // Manage GPS independently of device ip status
+        if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
+            Optional<Boolean> only3G = properties.getOpt(Boolean.class, "net.interface.%s.config.only3G",
+                    deviceId);
+
+            if(only3G.isPresent()) {
+                Optional<String> mmDbusPath = this.networkManager.getModemManagerDbusPath(device.getObjectPath());
+                this.modemManager.set3GOnly(mmDbusPath, only3G.get());
+            }
+        }
+        
         Map<String, Map<String, Variant<?>>> newConnectionSettings = NMSettingsConverter.buildSettings(properties,
                 connection, deviceId, interfaceName, deviceType, this.networkManager.getVersion());
 
