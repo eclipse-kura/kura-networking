@@ -252,15 +252,12 @@ public class ModemManagerDbusWrapper {
         }
 
         Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(), Modem.class);
-        
+
         if(enable) {
             modem.SetCurrentModes(new SetCurrentModesStruct(MMModemMode.MM_MODEM_MODE_3G.toUInt32(), MMModemMode.MM_MODEM_MODE_NONE.toUInt32()));
         } else {
             modem.SetCurrentModes(new SetCurrentModesStruct(MMModemMode.MM_MODEM_MODE_4G.toUInt32(), MMModemMode.MM_MODEM_MODE_NONE.toUInt32()));
         }
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set3GOnly'");
     }
 
 }
