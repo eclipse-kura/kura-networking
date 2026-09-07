@@ -588,7 +588,6 @@ public class NMDbusConnector {
         Optional<Connection> connection = this.networkManager.getAssociatedConnection(device);
         
         // Manage GPS independently of device ip status
-        boolean forceReactivate = false;
         if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
             Optional<Boolean> only3G = properties.getOpt(Boolean.class, "net.interface.%s.config.only3G",
                     deviceId);
@@ -597,7 +596,6 @@ public class NMDbusConnector {
                 logger.info("Only 3G: {}", only3G.get()); // Debug
                 Optional<String> mmDbusPath = this.networkManager.getModemManagerDbusPath(device.getObjectPath());
                 this.modemManager.set3GOnly(mmDbusPath, only3G.get());
-                forceReactivate = true; // TODO: set only when only3G changes
             }
         }
         
@@ -633,7 +631,7 @@ public class NMDbusConnector {
         // Reapply settings anyway to let NM reconfigure the device if needed (e.g. Modem connection failures)
         boolean isReapplySuccessful = this.networkManager.reapplySettings(device, newConnectionSettings);
 
-        if(!isReapplySuccessful || forceReactivate) {
+        if(!isReapplySuccessful) {
             try {
                 logger.info("Activating connection for device {}", deviceId);
                 this.networkManager.activateConnection(connection.get(), device);
