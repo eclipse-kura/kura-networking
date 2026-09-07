@@ -594,6 +594,7 @@ public class NMDbusConnector {
                     deviceId);
 
             if(only3G.isPresent()) {
+                logger.info("Only 3G: {}", only3G.get()); // Debug
                 Optional<String> mmDbusPath = this.networkManager.getModemManagerDbusPath(device.getObjectPath());
                 this.modemManager.set3GOnly(mmDbusPath, only3G.get());
                 forceReactivate = true; // TODO: set only when only3G changes
