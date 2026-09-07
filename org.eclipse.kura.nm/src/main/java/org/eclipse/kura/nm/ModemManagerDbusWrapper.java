@@ -19,7 +19,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.kura.net.status.modem.ModemMode;
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
+import org.eclipse.kura.nm.enums.MMModemMode;
 import org.eclipse.kura.nm.enums.MMModemState;
 import org.eclipse.kura.nm.status.SimProperties;
 import org.freedesktop.dbus.DBusPath;
@@ -29,6 +31,7 @@ import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.interfaces.Properties;
 import org.freedesktop.dbus.types.UInt32;
 import org.freedesktop.modemmanager1.Modem;
+import org.freedesktop.modemmanager1.SetCurrentModesStruct;
 import org.freedesktop.modemmanager1.modem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,6 +243,21 @@ public class ModemManagerDbusWrapper {
         }
         return bearerProperties;
 
+    }
+
+    public void set3GOnly(Optional<String> mmDbusPath, boolean enable) throws DBusException {
+        if (!mmDbusPath.isPresent()) {
+            logger.warn("Cannot retrieve MM.Modem from NM.Modem. Skipping GPS configuration.");
+            return;
+        }
+
+        Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(), Modem.class);
+
+        if(enable) {
+            modem.SetCurrentModes(new SetCurrentModesStruct(MMModemMode.MM_MODEM_MODE_3G.toUInt32(), MMModemMode.MM_MODEM_MODE_NONE.toUInt32()));
+        } else {
+            modem.SetCurrentModes(new SetCurrentModesStruct(MMModemMode.MM_MODEM_MODE_4G.toUInt32(), MMModemMode.MM_MODEM_MODE_NONE.toUInt32()));
+        }
     }
 
 }
