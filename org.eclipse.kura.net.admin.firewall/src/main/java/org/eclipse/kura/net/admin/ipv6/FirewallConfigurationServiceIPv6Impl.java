@@ -54,13 +54,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(name = "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { //
-        "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
-        "kura.ui.service.hide=true" //
-    }
-)
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = { //
+                "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
+                "kura.ui.service.hide=true" //
+        })
 public class FirewallConfigurationServiceIPv6Impl extends
         AbstractFirewallConfigurationServiceImpl<IP6Address, FirewallOpenPortConfigIP6Builder, FirewallPortForwardConfigIP6Builder>
         implements FirewallConfigurationServiceIPv6, SelfConfiguringComponent {
@@ -79,7 +78,10 @@ public class FirewallConfigurationServiceIPv6Impl extends
 
     @Activate
     public void activate(ComponentContext context, Map<String, Object> properties) {
+        long startUpdate = System.currentTimeMillis();
         super.activate(context, properties);
+        long endUpdate = System.currentTimeMillis();
+        logger.info("Firewall IPV6 activated in {}", endUpdate - startUpdate);
     }
 
     @Deactivate
@@ -89,7 +91,10 @@ public class FirewallConfigurationServiceIPv6Impl extends
 
     @Modified
     public void updated(Map<String, Object> properties) {
+        long startUpdate = System.currentTimeMillis();
         super.updated(properties);
+        long endUpdate = System.currentTimeMillis();
+        logger.info("Firewall IPV6 updated in {}", endUpdate - startUpdate);
     }
 
     @Override

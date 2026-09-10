@@ -45,8 +45,7 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>,
- Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
+public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>, Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractFirewallConfigurationServiceImpl.class);
 
@@ -326,7 +325,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<NATRule> getAutoNatRules() throws KuraException {
         return this.firewall.getAutoNatRules();
@@ -334,7 +333,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<LocalRule> getLocalRules() throws KuraException {
         return this.firewall.getLocalRules();
@@ -342,7 +341,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<NATRule> getNatRules() throws KuraException {
         return this.firewall.getNatRules();
@@ -350,7 +349,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<PortForwardRule> getPortForwardRules() throws KuraException {
         return this.firewall.getPortForwardRules();
