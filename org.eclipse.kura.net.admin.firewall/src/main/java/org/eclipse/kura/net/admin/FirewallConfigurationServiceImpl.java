@@ -53,13 +53,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(name = "org.eclipse.kura.net.admin.FirewallConfigurationService", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { //
-        "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
-        "kura.ui.service.hide=true" //
-    }
-)
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = { //
+                "service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
+                "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
+                "kura.ui.service.hide=true" //
+        })
 public class FirewallConfigurationServiceImpl extends
         AbstractFirewallConfigurationServiceImpl<IP4Address, FirewallOpenPortConfigIP4Builder, FirewallPortForwardConfigIP4Builder>
         implements FirewallConfigurationService, SelfConfiguringComponent {
