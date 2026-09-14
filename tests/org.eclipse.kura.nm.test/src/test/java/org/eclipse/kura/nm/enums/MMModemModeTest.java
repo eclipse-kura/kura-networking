@@ -289,4 +289,44 @@ public class MMModemModeTest {
             assertEquals(this.expectedIntValue, this.calculatedUInt32);
         }
     }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeStringToModemModeTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { new String("NONE"), MMModemMode.MM_MODEM_MODE_NONE });
+            params.add(new Object[] { new String("CS"), MMModemMode.MM_MODEM_MODE_CS });
+            params.add(new Object[] { new String("2G"), MMModemMode.MM_MODEM_MODE_2G });
+            params.add(new Object[] { new String("3G"), MMModemMode.MM_MODEM_MODE_3G });
+            params.add(new Object[] { new String("4G"), MMModemMode.MM_MODEM_MODE_4G });
+            params.add(new Object[] { new String("5G"), MMModemMode.MM_MODEM_MODE_5G });
+            params.add(new Object[] { new String("ANY"), MMModemMode.MM_MODEM_MODE_ANY });
+            return params;
+        }
+
+        private final String inputValue;
+        private final MMModemMode expectedModemMode;
+        private MMModemMode calculatedModemMode;
+
+        public MMModemModeStringToModemModeTest(String stringValue, MMModemMode modemMode) {
+            this.inputValue = stringValue;
+            this.expectedModemMode = modemMode;
+        }
+
+        @Test
+        public void shouldReturnCorrectModemMode() {
+            whenCalculatedModemMode();
+            thenCalculatedModemModeIsCorrect();
+        }
+
+        private void whenCalculatedModemMode() {
+            this.calculatedModemMode = MMModemMode.toMMModemMode(this.inputValue);
+        }
+
+        private void thenCalculatedModemModeIsCorrect() {
+            assertEquals(this.expectedModemMode, this.calculatedModemMode);
+        }
+    }
 }
