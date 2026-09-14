@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
+import org.eclipse.kura.nm.enums.MMModemMode;
 import org.eclipse.kura.nm.enums.MMModemState;
 import org.eclipse.kura.nm.status.SimProperties;
 import org.freedesktop.dbus.DBusPath;
@@ -29,6 +30,7 @@ import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.interfaces.Properties;
 import org.freedesktop.dbus.types.UInt32;
 import org.freedesktop.modemmanager1.Modem;
+import org.freedesktop.modemmanager1.SetCurrentModesStruct;
 import org.freedesktop.modemmanager1.modem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,4 +244,41 @@ public class ModemManagerDbusWrapper {
 
     }
 
+    public void setModemModes(Optional<String> mmDbusPath, Optional<List<String>> enabledModesOption,
+            Optional<String> preferredModeOption) throws DBusException {
+
+        if (enabledModesOption.isEmpty()) {
+            logger.debug("Enabled modes are missing. Skipping Modem Mode configuration.");
+            return;
+        }
+
+        // Retrieve modem device
+        if (!mmDbusPath.isPresent()) {
+            logger.warn("Cannot retrieve MM.Modem from NM.Modem. Skipping Modem Mode configuration.");
+            return;
+        }
+        Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(), Modem.class);
+
+        // Convert types
+        Set<MMModemMode> enabledModes = MMModemMode.toMMModemModeFromStringList(enabledModesOption.get());
+        MMModemMode preferredMode = preferredModeOption.isPresent()
+                ? MMModemMode.toMMModemMode(preferredModeOption.get())
+                : MMModemMode.MM_MODEM_MODE_NONE;
+
+        // Retrieve current modes
+        Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(),
+                Properties.class);
+        Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
+        Set<MMModemMode> currentEnabledModes = MMModemMode.toMMModemModeFromBitMask((UInt32) rawMode[0]);
+        MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
+
+        if (currentEnabledModes == enabledModes && currentPreferredMode == preferredMode) {
+            logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
+            return;
+        }
+
+        logger.info("Applying Modem Mode configuration.");
+        modem.SetCurrentModes(
+                new SetCurrentModesStruct(MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()));
+    }
 }
