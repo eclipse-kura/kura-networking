@@ -419,4 +419,50 @@ public class MMModemModeTest {
         }
 
     }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeToModemModeFromStringListErrorTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { Arrays.asList("ANY", "NONE") });
+            params.add(new Object[] { Arrays.asList("ANY", "2G") });
+            params.add(new Object[] { Arrays.asList("NONE", "2G") });
+            params.add(new Object[] { Arrays.asList("NONE", "CS", "2G", "3G", "4G") });
+            params.add(new Object[] { Arrays.asList("ANY", "CS", "2G", "3G", "4G") });
+            params.add(new Object[] { Arrays.asList("NONE", "CS", "2G", "3G", "4G", "5G", "ANY") });
+            params.add(new Object[] { Arrays.asList("6G") });
+            params.add(new Object[] { Arrays.asList("2G", "6G") });
+            params.add(new Object[] { Arrays.asList("") });
+            params.add(new Object[] { Arrays.asList("none", "cs") });
+            return params;
+        }
+
+        private final List<String> inputValue;
+        private Exception occurredException;
+
+        public MMModemModeToModemModeFromStringListErrorTest(List<String> inputValue) {
+            this.inputValue = inputValue;
+        }
+
+        @Test
+        public void shouldThrowException() {
+            whenCalculatedModemModes();
+            thenExceptionOccurred(IllegalArgumentException.class);
+        }
+
+        private void whenCalculatedModemModes() {
+            try {
+                MMModemMode.toMMModemModeFromStringList(this.inputValue);
+            } catch (Exception e) {
+                this.occurredException = e;
+            }
+        }
+
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedExceptionClass) {
+            assertNotNull(this.occurredException);
+            assertEquals(expectedExceptionClass, this.occurredException.getClass());
+        }
+    }
 }
