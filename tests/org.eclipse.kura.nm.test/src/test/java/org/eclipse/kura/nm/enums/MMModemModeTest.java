@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -372,5 +373,50 @@ public class MMModemModeTest {
             assertNotNull(this.occurredException);
             assertEquals(expectedExceptionClass, this.occurredException.getClass());
         }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeToModemModeFromStringListTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { Arrays.asList("NONE"), EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE) });
+            params.add(new Object[] { Arrays.asList("CS", "2G"),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G) });
+            params.add(new Object[] { Arrays.asList("2G", "3G"),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G) });
+            params.add(new Object[] { Arrays.asList("3G"), EnumSet.of(MMModemMode.MM_MODEM_MODE_3G) });
+            params.add(new Object[] { Arrays.asList("CS", "2G", "3G", "4G"),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
+                            MMModemMode.MM_MODEM_MODE_4G) });
+            params.add(new Object[] { Arrays.asList("ANY"), EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY) });
+            params.add(new Object[] { Arrays.asList(), EnumSet.noneOf(MMModemMode.class) });
+            return params;
+        }
+
+        private final List<String> inputValue;
+        private final Set<MMModemMode> expectedModemModes;
+        private Set<MMModemMode> calculatedModemModes;
+
+        public MMModemModeToModemModeFromStringListTest(List<String> inputValue, Set<MMModemMode> modemModes) {
+            this.inputValue = inputValue;
+            this.expectedModemModes = modemModes;
+        }
+
+        @Test
+        public void shouldReturnCorrectModemModes() {
+            whenCalculatedModemModes();
+            thenCalculatedModemModesIsCorrect();
+        }
+
+        private void whenCalculatedModemModes() {
+            this.calculatedModemModes = MMModemMode.toMMModemModeFromStringList(this.inputValue);
+        }
+
+        private void thenCalculatedModemModesIsCorrect() {
+            assertEquals(this.expectedModemModes, this.calculatedModemModes);
+        }
+
     }
 }
