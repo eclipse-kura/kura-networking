@@ -135,7 +135,7 @@ public enum MMModemMode {
 
         if (result.size() > 1 && (result.contains(MM_MODEM_MODE_ANY) || result.contains(MM_MODEM_MODE_NONE))) {
             throw new IllegalArgumentException(
-                    "Too many result passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
+                    "Too many modes passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
         }
 
         if (result.contains(MM_MODEM_MODE_ANY) && result.contains(MM_MODEM_MODE_NONE)) {
