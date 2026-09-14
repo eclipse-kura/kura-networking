@@ -138,11 +138,6 @@ public enum MMModemMode {
                     "Too many modes passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
         }
 
-        if (result.contains(MM_MODEM_MODE_ANY) && result.contains(MM_MODEM_MODE_NONE)) {
-            throw new IllegalArgumentException(
-                    "Mode set cannot contain both MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE");
-        }
-
         return result;
     }
 
@@ -154,11 +149,6 @@ public enum MMModemMode {
         if (modes.size() > 1 && (modes.contains(MM_MODEM_MODE_ANY) || modes.contains(MM_MODEM_MODE_NONE))) {
             throw new IllegalArgumentException(
                     "Too many modes passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
-        }
-
-        if (modes.contains(MM_MODEM_MODE_ANY) && modes.contains(MM_MODEM_MODE_NONE)) {
-            throw new IllegalArgumentException(
-                    "Mode set cannot contain both MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE");
         }
 
         long result = 0x00000000L;
