@@ -13,6 +13,7 @@
 package org.eclipse.kura.nm.enums;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -203,6 +204,50 @@ public class MMModemModeTest {
             assertEquals(this.expectedInt, this.calculatedInt);
         }
 
+    }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeToBitMaskFromModemModeSetTestErrors {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_NONE) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_2G) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_2G) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_CS,
+                    MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_CS,
+                    MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G) });
+            params.add(new Object[] { EnumSet.allOf(MMModemMode.class) });
+            return params;
+        }
+
+        private final Set<MMModemMode> inputValue;
+        private Exception occurredException;
+
+        public MMModemModeToBitMaskFromModemModeSetTestErrors(Set<MMModemMode> modemModes) {
+            this.inputValue = modemModes;
+        }
+
+        @Test
+        public void shouldThrowException() {
+            whenCalculatedBitMask();
+            thenExceptionOccurred(IllegalArgumentException.class);
+        }
+
+        private void whenCalculatedBitMask() {
+            try {
+                MMModemMode.toBitMask(this.inputValue);
+            } catch (Exception e) {
+                this.occurredException = e;
+            }
+        }
+
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedExceptionClass) {
+            assertNotNull(this.occurredException);
+            assertEquals(expectedExceptionClass, this.occurredException.getClass());
+        }
     }
 
     @RunWith(Parameterized.class)
