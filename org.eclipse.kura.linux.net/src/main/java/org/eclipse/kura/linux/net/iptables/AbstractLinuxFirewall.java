@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -66,11 +66,11 @@ public abstract class AbstractLinuxFirewall {
 
     protected abstract String getIpForwardFileName();
 
-    /*
+    /**
      * Add a Local rule to the firewall.
      * 
      * @deprecated since 1.2. Use {@link addLocalRules(List<LocalRule>
-     * newLocalRules)}
+     *             newLocalRules)}
      */
     @Deprecated
     @SuppressWarnings("checkstyle:parameterNumber")
@@ -103,17 +103,8 @@ public abstract class AbstractLinuxFirewall {
     public void addLocalRules(List<LocalRule> newLocalRules) throws KuraException {
         boolean doUpdate = false;
         for (LocalRule newLocalRule : newLocalRules) {
-            // make sure it is not already present
-            boolean addRule = true;
-            for (LocalRule localRule : this.localRules) {
-                if (newLocalRule.equals(localRule)) {
-                    addRule = false;
-                    break;
-                }
-            }
-            if (addRule) {
+            if (this.localRules.add(newLocalRule)) {
                 logger.info("Adding local rule to firewall configuration: {}", newLocalRule);
-                this.localRules.add(newLocalRule);
                 doUpdate = true;
             } else {
                 logger.warn("Not adding local rule that is already present: {}", newLocalRule);
@@ -124,11 +115,11 @@ public abstract class AbstractLinuxFirewall {
         }
     }
 
-    /*
+    /**
      * Add a Port Forward rule to the firewall.
      * 
      * @deprecated since 1.2. Use {@link addPortForwardRules(List<PortForwardRule>
-     * newPortForwardRules)}
+     *             newPortForwardRules)}
      */
     @Deprecated
     @SuppressWarnings("checkstyle:parameterNumber")
@@ -150,17 +141,8 @@ public abstract class AbstractLinuxFirewall {
     public void addPortForwardRules(List<PortForwardRule> newPortForwardRules) throws KuraException {
         boolean doUpdate = false;
         for (PortForwardRule newPortForwardRule : newPortForwardRules) {
-            // make sure it is not already present
-            boolean addRule = true;
-            for (PortForwardRule portForwardRule : this.portForwardRules) {
-                if (newPortForwardRule.equals(portForwardRule)) {
-                    addRule = false;
-                    break;
-                }
-            }
-            if (addRule) {
+            if (this.portForwardRules.add(newPortForwardRule)) {
                 logger.info("Adding port forward rule to firewall configuration: {}", newPortForwardRule);
-                this.portForwardRules.add(newPortForwardRule);
                 doUpdate = true;
             } else {
                 logger.warn("Not adding port forward rule that is already present: {}", newPortForwardRule);
@@ -171,7 +153,7 @@ public abstract class AbstractLinuxFirewall {
         }
     }
 
-    /*
+    /**
      * Add a Nat rule to the firewall.
      * 
      * @deprecated since 1.2. Use {@link addNatRules(List<NATRule> newNatRules))}
@@ -193,7 +175,7 @@ public abstract class AbstractLinuxFirewall {
         addAutoNatRules(natRuleList);
     }
 
-    /*
+    /**
      * Add a Nat Forward rule to the firewall.
      * 
      * @deprecated since 1.2. Use {@link addNatRules(List<NATRule> newNatRules)}
@@ -229,17 +211,8 @@ public abstract class AbstractLinuxFirewall {
     private void addNatRules(List<NATRule> newNatRules, Set<NATRule> rules) throws KuraException {
         boolean doUpdate = false;
         for (NATRule newNatRule : newNatRules) {
-            // make sure it is not already present
-            boolean addRule = true;
-            for (NATRule natRule : rules) {
-                if (newNatRule.equals(natRule)) {
-                    addRule = false;
-                    break;
-                }
-            }
-            if (addRule) {
+            if (rules.add(newNatRule)) {
                 logger.info("Adding auto NAT rule to firewall configuration: {}", newNatRule);
-                rules.add(newNatRule);
                 doUpdate = true;
             } else {
                 logger.warn("Not adding auto nat rule that is already present: {}", newNatRule);
@@ -248,6 +221,20 @@ public abstract class AbstractLinuxFirewall {
         if (doUpdate) {
             update();
         }
+    }
+
+    /**
+     * Replace the current firewall local, port forwarding and NAT rules
+     * with the given ones.
+     * 
+     * @since 3.0
+     */
+    public void replace(List<LocalRule> localRules, List<PortForwardRule> portForwardRules, List<NATRule> natRules)
+            throws KuraException {
+        this.localRules = new LinkedHashSet<>(localRules);
+        this.portForwardRules = new LinkedHashSet<>(portForwardRules);
+        this.natRules = new LinkedHashSet<>(natRules);
+        update();
     }
 
     public Set<LocalRule> getLocalRules() {
@@ -325,13 +312,14 @@ public abstract class AbstractLinuxFirewall {
     }
 
     public void unblockAllPorts() throws KuraException {
-        deleteAllRules();
+        throw new UnsupportedOperationException("Unblock all ports operation is currently not supported.");
     }
 
     private void deleteAllRules() throws KuraException {
-        deleteAllLocalRules();
-        deleteAllPortForwardRules();
-        deleteAllAutoNatRules();
+        this.localRules.clear();
+        this.portForwardRules.clear();
+        this.natRules.clear();
+        this.autoNatRules.clear();
         update();
     }
 
@@ -400,8 +388,8 @@ public abstract class AbstractLinuxFirewall {
     }
 
     private boolean hasIcmpRulesInAdditionalRules() {
-        return hasIcmpRules(this.additionalFilterRules) 
-                || hasIcmpRules(this.additionalNatRules) 
+        return hasIcmpRules(this.additionalFilterRules)
+                || hasIcmpRules(this.additionalNatRules)
                 || hasIcmpRules(this.additionalMangleRules);
     }
 
@@ -412,7 +400,8 @@ public abstract class AbstractLinuxFirewall {
         for (String rule : rules) {
             // Check for both icmp (IPv4) and ipv6-icmp (IPv6) rules
             if (rule.contains("-p icmp") || rule.contains("-p ipv6-icmp") || rule.contains("-p icmpv6")
-                    || rule.contains("--protocol icmp") || rule.contains("--protocol ipv6-icmp") || rule.contains("--protocol icmpv6")) {
+                    || rule.contains("--protocol icmp") || rule.contains("--protocol ipv6-icmp")
+                    || rule.contains("--protocol icmpv6")) {
                 return true;
             }
         }

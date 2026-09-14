@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2021, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -24,6 +24,7 @@ public class IptablesConfigConstants {
     protected static final String STAR_MANGLE = "*" + MANGLE;
     protected static final String COMMIT = "COMMIT";
     protected static final String IPTABLES_COMMAND = "iptables";
+    protected static final String IPTABLES_RESTORE_COMMAND = "iptables-restore";
     protected static final String FORWARD = "FORWARD";
     protected static final String INPUT = "INPUT";
     protected static final String OUTPUT = "OUTPUT";

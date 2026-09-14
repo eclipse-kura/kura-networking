@@ -57,6 +57,9 @@ import org.slf4j.LoggerFactory;
         immediate = true, //
         configurationPolicy = ConfigurationPolicy.OPTIONAL, //
         property = { //
+                // to fix weird behavior on ipv6 firewall. Remove before submitting the PR.
+                "service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
+                //
                 "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
                 "kura.ui.service.hide=true" //
         })

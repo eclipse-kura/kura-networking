@@ -21,6 +21,7 @@ public class IptablesConfigIPv6 extends IptablesConfig {
     private static final String FIREWALL_IPV6_CONFIG_FILE_NAME = "/etc/sysconfig/ip6tables";
     private static final String FIREWALL_IPV6_TMP_CONFIG_FILE_NAME = "/tmp/ip6tables";
     private static final String IPTABLES_IPV6_COMMAND = "ip6tables";
+    private static final String IPTABLES_RESTORE_IPV6_COMMAND = "ip6tables-restore";
     private static final String[] ALLOW_ICMP_IPV6 = {
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
@@ -92,6 +93,11 @@ public class IptablesConfigIPv6 extends IptablesConfig {
     @Override
     protected String getIptablesCommand() {
         return IPTABLES_IPV6_COMMAND;
+    }
+
+    @Override
+    protected String getIptablesRestoreCommand() {
+        return IPTABLES_RESTORE_IPV6_COMMAND;
     }
 
     @Override

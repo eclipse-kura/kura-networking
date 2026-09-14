@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -91,6 +92,10 @@ public class IptablesConfig extends IptablesConfigConstants {
 
     protected String getIptablesCommand() {
         return IPTABLES_COMMAND;
+    }
+
+    protected String getIptablesRestoreCommand() {
+        return IPTABLES_RESTORE_COMMAND;
     }
 
     protected String[] getAllowIcmp() {
@@ -191,6 +196,7 @@ public class IptablesConfig extends IptablesConfigConstants {
      * Apply a minimal configuration
      */
     public void applyBlockPolicy() throws KuraException {
+        clearAllKuraChains();
         try (FileOutputStream fos = new FileOutputStream(getFirewallConfigTmpFileName());
                 PrintWriter writer = new PrintWriter(fos)) {
             writer.println(STAR_NAT);
@@ -371,7 +377,7 @@ public class IptablesConfig extends IptablesConfigConstants {
     public void restore(String filename) {
         try {
             if (this.executorService != null) {
-                CommandStatus status = execute("iptables-restore " + filename);
+                CommandStatus status = execute(getIptablesRestoreCommand() + " -w -n " + filename);
                 if (!status.getExitStatus().isSuccessful()) {
                     logger.error("Failed to restore rules from {}", filename);
                 }
@@ -876,23 +882,39 @@ public class IptablesConfig extends IptablesConfigConstants {
      * and autoNatRules, force the polices for input and forward chains and apply
      * flooding protection rules if needed.
      */
-    public void applyRules() {
+    public void applyRules() throws KuraIOException {
         applyPolicies();
         createKuraChains();
-        applyLoopbackRules();
-        applyIncomingToOutcomingRules();
-        applyIcmpRules();
-        writeLocalRulesToFilterTable(null);
-        writePortForwardRulesToFilterTable(null);
-        writeAutoNatRulesToFilterTable(null);
-        writeNatRulesToFilterTable(null);
-        writePortForwardRulesToNatTable(null);
-        writeAutoNatRulesToNatTable(null);
-        writeNatRulesToNatTable(null);
-        writeAdditionalRulesToFilterTable(null);
-        writeAdditionalRulesToNatTable(null);
-        writeAdditionalRulesToMangleTable(null);
-        createKuraChainsReturnRules();
+        String configuration = generateStringConfiguration();
+        try (FileOutputStream fos = new FileOutputStream(getFirewallConfigTmpFileName());
+                PrintWriter writer = new PrintWriter(fos)) {
+            writer.print(configuration);
+        } catch (IOException e) {
+            throw new KuraIOException(e, "applyRules() :: failed to write firewall configuration to temporary file");
+        }
+        File configFile = new File(getFirewallConfigTmpFileName());
+        if (configFile.exists()) {
+            restore(getFirewallConfigTmpFileName());
+        }
+    }
+
+    private String generateStringConfiguration() {
+        StringWriter stringWriter = new StringWriter();
+        try (PrintWriter writer = new PrintWriter(stringWriter)) {
+            writer.println(STAR_FILTER);
+            saveFilterTable(writer);
+            writer.println(COMMIT);
+            writer.println(STAR_NAT);
+            saveNatTable(writer);
+            writer.println(COMMIT);
+            writer.println(STAR_MANGLE);
+            saveMangleTable(writer);
+            writer.println(COMMIT);
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug("Iptables configuration: {}", stringWriter);
+        }
+        return stringWriter.toString();
     }
 
     private void applyPolicies() {

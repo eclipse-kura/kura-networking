@@ -174,62 +174,10 @@ public class FirewallTestUtils {
         commandApplyList.add(new Command("iptables -C FORWARD -j forward-kura -t mangle".split(" ")));
         commandApplyList.add(new Command("iptables -C PREROUTING -j prerouting-kura -t mangle".split(" ")));
         commandApplyList.add(new Command("iptables -C POSTROUTING -j postrouting-kura -t mangle".split(" ")));
-        commandApplyList.add(new Command("iptables -A input-kura -j RETURN".split(" ")));
-        commandApplyList.add(new Command("iptables -A output-kura -j RETURN".split(" ")));
-        commandApplyList.add(new Command("iptables -A forward-kura -j RETURN".split(" ")));
-        commandApplyList.add(new Command("iptables -A forward-kura-pf -j RETURN".split(" ")));
-        commandApplyList.add(new Command("iptables -A forward-kura-ipf -j RETURN".split(" ")));
-        commandApplyList.add(new Command("iptables -A input-kura -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A output-kura -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A prerouting-kura -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A prerouting-kura-pf -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A postrouting-kura -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A postrouting-kura-pf -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A postrouting-kura-ipf -j RETURN -t nat".split(" ")));
-        commandApplyList.add(new Command("iptables -A input-kura -j RETURN -t mangle".split(" ")));
-        commandApplyList.add(new Command("iptables -A output-kura -j RETURN -t mangle".split(" ")));
-        commandApplyList.add(new Command("iptables -A forward-kura -j RETURN -t mangle".split(" ")));
-        commandApplyList.add(new Command("iptables -A prerouting-kura -j RETURN -t mangle".split(" ")));
-        commandApplyList.add(new Command("iptables -A postrouting-kura -j RETURN -t mangle".split(" ")));
-        commandApplyList.add(new Command("iptables -A input-kura -i lo -j ACCEPT -t filter".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -A input-kura -m state --state RELATED,ESTABLISHED -j ACCEPT -t filter".split(" ")));
-        // DO_NOT_ALLOW_ICMP rules are no longer added explicitly - the default DROP policy handles ICMP blocking
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -m conntrack --ctstate INVALID -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP"
-                        .split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP".split(" ")));
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP".split(" ")));
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP".split(" ")));
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP".split(" ")));
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP".split(" ")));
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP".split(" ")));
-        commandApplyList.add(
-                new Command("iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP".split(" ")));
-        commandApplyList.add(new Command(
-                "iptables -t mangle -A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP".split(" ")));
-        // ICMP DROP rule in mangle table removed - ICMP blocking is now handled by default DROP policy
-        commandApplyList.add(new Command("iptables -t mangle -A prerouting-kura -f -j DROP".split(" ")));
-        commandApplyList.add(new Command("iptables -t filter -A input-kura -p tcp -f -j DROP".split(" ")));
-        commandApplyList.add(new Command("iptables -t nat -A prerouting-kura -p tcp -f -j DROP".split(" ")));
+        // The loopback, ICMP, local/port-forward/NAT/additional and RETURN rules are no longer
+        // applied with one iptables invocation per rule: they are batched into a single
+        // iptables-restore call (see IptablesConfig#generateStringConfiguration()).
+        commandApplyList.add(new Command(new String[] { "iptables-restore", "-w", "-n" }));
         commandApplyList.stream().forEach(c -> c.setExecuteInAShell(true));
         commandApplyList.stream().forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
 
