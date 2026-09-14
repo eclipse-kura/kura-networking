@@ -14,6 +14,7 @@ package org.eclipse.kura.nm.enums;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -163,92 +164,85 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), new UInt32(0x00000000L) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), new UInt32(0x00000000L), null });
             params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G),
-                    new UInt32(0x00000003L) });
+                    new UInt32(0x00000003L), null });
             params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                    new UInt32(0x00000006L) });
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), new UInt32(0x00000004L) });
+                    new UInt32(0x00000006L), null });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), new UInt32(0x00000004L), null });
             params.add(new Object[] {
                     EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
                             MMModemMode.MM_MODEM_MODE_4G),
-                    new UInt32(0x0000000FL) });
+                    new UInt32(0x0000000FL), null });
             params.add(new Object[] {
                     EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
                             MMModemMode.MM_MODEM_MODE_4G),
-                    new UInt32(0x0000000EL) });
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), new UInt32(0xFFFFFFFFL) });
-            params.add(new Object[] { EnumSet.noneOf(MMModemMode.class), new UInt32(0x00000000L) });
+                    new UInt32(0x0000000EL), null });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), new UInt32(0xFFFFFFFFL), null });
+            params.add(new Object[] { EnumSet.noneOf(MMModemMode.class), new UInt32(0x00000000L), null });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_NONE), null,
+                    IllegalArgumentException.class });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_2G), null,
+                    IllegalArgumentException.class });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_2G), null,
+                    IllegalArgumentException.class });
+            params.add(new Object[] {
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_CS,
+                            MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G),
+                    null, IllegalArgumentException.class });
+            params.add(new Object[] {
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_CS,
+                            MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G),
+                    null, IllegalArgumentException.class });
+            params.add(new Object[] { EnumSet.allOf(MMModemMode.class), null, IllegalArgumentException.class });
             return params;
         }
 
         private final Set<MMModemMode> inputValue;
         private final UInt32 expectedInt;
+        private final Class<? extends Exception> expectedExceptionClass;
         private UInt32 calculatedInt;
-
-        public MMModemModeToBitMaskFromModemModeSetTest(Set<MMModemMode> modemModes, UInt32 intValue) {
-            this.expectedInt = intValue;
-            this.inputValue = modemModes;
-        }
-
-        @Test
-        public void shouldReturnCorrectModemModes() {
-            whenCalculatedModemModes();
-            thenCalculatedModemModesIsCorrect();
-        }
-
-        private void whenCalculatedModemModes() {
-            this.calculatedInt = MMModemMode.toBitMask(this.inputValue);
-        }
-
-        private void thenCalculatedModemModesIsCorrect() {
-            assertEquals(this.expectedInt, this.calculatedInt);
-        }
-
-    }
-
-    @RunWith(Parameterized.class)
-    public static class MMModemModeToBitMaskFromModemModeSetErrorTest {
-
-        @Parameters
-        public static Collection<Object[]> ModemModeParams() {
-            List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_NONE) });
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_2G) });
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_2G) });
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_CS,
-                    MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G) });
-            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_CS,
-                    MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G) });
-            params.add(new Object[] { EnumSet.allOf(MMModemMode.class) });
-            return params;
-        }
-
-        private final Set<MMModemMode> inputValue;
         private Exception occurredException;
 
-        public MMModemModeToBitMaskFromModemModeSetErrorTest(Set<MMModemMode> modemModes) {
+        public MMModemModeToBitMaskFromModemModeSetTest(Set<MMModemMode> modemModes, UInt32 intValue,
+                Class<? extends Exception> expectedExceptionClass) {
+            this.expectedInt = intValue;
             this.inputValue = modemModes;
+            this.expectedExceptionClass = expectedExceptionClass;
         }
 
         @Test
-        public void shouldThrowException() {
+        public void shouldReturnCorrectBitMaskOrThrowException() {
             whenCalculatedBitMask();
-            thenExceptionOccurred(IllegalArgumentException.class);
+            if (this.expectedExceptionClass != null) {
+                thenExceptionOccurred(this.expectedExceptionClass);
+            } else {
+                thenNoExceptionOccurred();
+                thenCalculatedBitMaskIsCorrect();
+            }
         }
 
         private void whenCalculatedBitMask() {
             try {
-                MMModemMode.toBitMask(this.inputValue);
+                this.calculatedInt = MMModemMode.toBitMask(this.inputValue);
             } catch (Exception e) {
                 this.occurredException = e;
             }
         }
 
-        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedExceptionClass) {
-            assertNotNull(this.occurredException);
-            assertEquals(expectedExceptionClass, this.occurredException.getClass());
+        private void thenCalculatedBitMaskIsCorrect() {
+            assertEquals(this.expectedInt, this.calculatedInt);
         }
+
+        private void thenNoExceptionOccurred() {
+            assertNull(this.occurredException);
+        }
+
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedException) {
+            assertNotNull(this.occurredException);
+            assertEquals(expectedException, this.occurredException.getClass());
+        }
+
     }
 
     @RunWith(Parameterized.class)
@@ -297,81 +291,67 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new String("NONE"), MMModemMode.MM_MODEM_MODE_NONE });
-            params.add(new Object[] { new String("CS"), MMModemMode.MM_MODEM_MODE_CS });
-            params.add(new Object[] { new String("2G"), MMModemMode.MM_MODEM_MODE_2G });
-            params.add(new Object[] { new String("3G"), MMModemMode.MM_MODEM_MODE_3G });
-            params.add(new Object[] { new String("4G"), MMModemMode.MM_MODEM_MODE_4G });
-            params.add(new Object[] { new String("5G"), MMModemMode.MM_MODEM_MODE_5G });
-            params.add(new Object[] { new String("ANY"), MMModemMode.MM_MODEM_MODE_ANY });
+            params.add(new Object[] { new String("NONE"), MMModemMode.MM_MODEM_MODE_NONE, null });
+            params.add(new Object[] { new String("CS"), MMModemMode.MM_MODEM_MODE_CS, null });
+            params.add(new Object[] { new String("2G"), MMModemMode.MM_MODEM_MODE_2G, null });
+            params.add(new Object[] { new String("3G"), MMModemMode.MM_MODEM_MODE_3G, null });
+            params.add(new Object[] { new String("4G"), MMModemMode.MM_MODEM_MODE_4G, null });
+            params.add(new Object[] { new String("5G"), MMModemMode.MM_MODEM_MODE_5G, null });
+            params.add(new Object[] { new String("ANY"), MMModemMode.MM_MODEM_MODE_ANY, null });
+            params.add(new Object[] { new String(""), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String(" "), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String("6G"), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String("none"), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String("Any"), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String(" 2G "), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String("MM_MODEM_MODE_2G"), null, IllegalArgumentException.class });
+            params.add(new Object[] { new String("NONE,CS"), null, IllegalArgumentException.class });
             return params;
         }
 
         private final String inputValue;
         private final MMModemMode expectedModemMode;
+        private final Class<? extends Exception> expectedExceptionClass;
         private MMModemMode calculatedModemMode;
-
-        public MMModemModeStringToModemModeTest(String stringValue, MMModemMode modemMode) {
-            this.inputValue = stringValue;
-            this.expectedModemMode = modemMode;
-        }
-
-        @Test
-        public void shouldReturnCorrectModemMode() {
-            whenCalculatedModemMode();
-            thenCalculatedModemModeIsCorrect();
-        }
-
-        private void whenCalculatedModemMode() {
-            this.calculatedModemMode = MMModemMode.toMMModemMode(this.inputValue);
-        }
-
-        private void thenCalculatedModemModeIsCorrect() {
-            assertEquals(this.expectedModemMode, this.calculatedModemMode);
-        }
-    }
-
-    @RunWith(Parameterized.class)
-    public static class MMModemModeStringToModemModeErrorTest {
-
-        @Parameters
-        public static Collection<Object[]> ModemModeParams() {
-            List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new String("") });
-            params.add(new Object[] { new String(" ") });
-            params.add(new Object[] { new String("6G") });
-            params.add(new Object[] { new String("none") });
-            params.add(new Object[] { new String("Any") });
-            params.add(new Object[] { new String(" 2G ") });
-            params.add(new Object[] { new String("MM_MODEM_MODE_2G") });
-            params.add(new Object[] { new String("NONE,CS") });
-            return params;
-        }
-
-        private final String inputValue;
         private Exception occurredException;
 
-        public MMModemModeStringToModemModeErrorTest(String stringValue) {
+        public MMModemModeStringToModemModeTest(String stringValue, MMModemMode modemMode,
+                Class<? extends Exception> expectedExceptionClass) {
             this.inputValue = stringValue;
+            this.expectedModemMode = modemMode;
+            this.expectedExceptionClass = expectedExceptionClass;
         }
 
         @Test
-        public void shouldThrowException() {
+        public void shouldReturnCorrectModemModeOrThrowException() {
             whenCalculatedModemMode();
-            thenExceptionOccurred(IllegalArgumentException.class);
+            if (this.expectedExceptionClass != null) {
+                thenExceptionOccurred(this.expectedExceptionClass);
+            } else {
+                thenNoExceptionOccurred();
+                thenCalculatedModemModeIsCorrect();
+            }
         }
 
         private void whenCalculatedModemMode() {
             try {
-                MMModemMode.toMMModemMode(this.inputValue);
+                this.calculatedModemMode = MMModemMode.toMMModemMode(this.inputValue);
             } catch (Exception e) {
                 this.occurredException = e;
             }
         }
 
-        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedExceptionClass) {
+        private void thenCalculatedModemModeIsCorrect() {
+            assertEquals(this.expectedModemMode, this.calculatedModemMode);
+        }
+
+        private void thenNoExceptionOccurred() {
+            assertNull(this.occurredException);
+        }
+
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedException) {
             assertNotNull(this.occurredException);
-            assertEquals(expectedExceptionClass, this.occurredException.getClass());
+            assertEquals(expectedException, this.occurredException.getClass());
         }
     }
 
@@ -381,89 +361,79 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { Arrays.asList("NONE"), EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE) });
+            params.add(new Object[] { Arrays.asList("NONE"), EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), null });
             params.add(new Object[] { Arrays.asList("CS", "2G"),
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G) });
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G), null });
             params.add(new Object[] { Arrays.asList("2G", "3G"),
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G) });
-            params.add(new Object[] { Arrays.asList("3G"), EnumSet.of(MMModemMode.MM_MODEM_MODE_3G) });
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), null });
+            params.add(new Object[] { Arrays.asList("3G"), EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), null });
             params.add(new Object[] { Arrays.asList("CS", "2G", "3G", "4G"),
                     EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
-                            MMModemMode.MM_MODEM_MODE_4G) });
-            params.add(new Object[] { Arrays.asList("ANY"), EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY) });
-            params.add(new Object[] { Arrays.asList(), EnumSet.noneOf(MMModemMode.class) });
+                            MMModemMode.MM_MODEM_MODE_4G),
+                    null });
+            params.add(new Object[] { Arrays.asList("ANY"), EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), null });
+            params.add(new Object[] { Arrays.asList(), EnumSet.noneOf(MMModemMode.class), null });
+            params.add(new Object[] { Arrays.asList("ANY", "NONE"), null, IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("ANY", "2G"), null, IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("NONE", "2G"), null, IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("NONE", "CS", "2G", "3G", "4G"), null,
+                    IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("ANY", "CS", "2G", "3G", "4G"), null,
+                    IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("NONE", "CS", "2G", "3G", "4G", "5G", "ANY"), null,
+                    IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("6G"), null, IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("2G", "6G"), null, IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList(""), null, IllegalArgumentException.class });
+            params.add(new Object[] { Arrays.asList("none", "cs"), null, IllegalArgumentException.class });
             return params;
         }
 
         private final List<String> inputValue;
         private final Set<MMModemMode> expectedModemModes;
+        private final Class<? extends Exception> expectedExceptionClass;
         private Set<MMModemMode> calculatedModemModes;
+        private Exception occurredException;
 
-        public MMModemModeToModemModeFromStringListTest(List<String> inputValue, Set<MMModemMode> modemModes) {
+        public MMModemModeToModemModeFromStringListTest(List<String> inputValue, Set<MMModemMode> modemModes,
+                Class<? extends Exception> expectedExceptionClass) {
             this.inputValue = inputValue;
             this.expectedModemModes = modemModes;
+            this.expectedExceptionClass = expectedExceptionClass;
         }
 
         @Test
-        public void shouldReturnCorrectModemModes() {
+        public void shouldReturnCorrectModemModesOrThrowException() {
             whenCalculatedModemModes();
-            thenCalculatedModemModesIsCorrect();
+            if (this.expectedExceptionClass != null) {
+                thenExceptionOccurred(this.expectedExceptionClass);
+            } else {
+                thenNoExceptionOccurred();
+                thenCalculatedModemModesIsCorrect();
+            }
         }
 
         private void whenCalculatedModemModes() {
-            this.calculatedModemModes = MMModemMode.toMMModemModeFromStringList(this.inputValue);
+            try {
+                this.calculatedModemModes = MMModemMode.toMMModemModeFromStringList(this.inputValue);
+            } catch (Exception e) {
+                this.occurredException = e;
+            }
         }
 
         private void thenCalculatedModemModesIsCorrect() {
             assertEquals(this.expectedModemModes, this.calculatedModemModes);
         }
 
-    }
-
-    @RunWith(Parameterized.class)
-    public static class MMModemModeToModemModeFromStringListErrorTest {
-
-        @Parameters
-        public static Collection<Object[]> ModemModeParams() {
-            List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { Arrays.asList("ANY", "NONE") });
-            params.add(new Object[] { Arrays.asList("ANY", "2G") });
-            params.add(new Object[] { Arrays.asList("NONE", "2G") });
-            params.add(new Object[] { Arrays.asList("NONE", "CS", "2G", "3G", "4G") });
-            params.add(new Object[] { Arrays.asList("ANY", "CS", "2G", "3G", "4G") });
-            params.add(new Object[] { Arrays.asList("NONE", "CS", "2G", "3G", "4G", "5G", "ANY") });
-            params.add(new Object[] { Arrays.asList("6G") });
-            params.add(new Object[] { Arrays.asList("2G", "6G") });
-            params.add(new Object[] { Arrays.asList("") });
-            params.add(new Object[] { Arrays.asList("none", "cs") });
-            return params;
+        private void thenNoExceptionOccurred() {
+            assertNull(this.occurredException);
         }
 
-        private final List<String> inputValue;
-        private Exception occurredException;
-
-        public MMModemModeToModemModeFromStringListErrorTest(List<String> inputValue) {
-            this.inputValue = inputValue;
-        }
-
-        @Test
-        public void shouldThrowException() {
-            whenCalculatedModemModes();
-            thenExceptionOccurred(IllegalArgumentException.class);
-        }
-
-        private void whenCalculatedModemModes() {
-            try {
-                MMModemMode.toMMModemModeFromStringList(this.inputValue);
-            } catch (Exception e) {
-                this.occurredException = e;
-            }
-        }
-
-        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedExceptionClass) {
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedException) {
             assertNotNull(this.occurredException);
-            assertEquals(expectedExceptionClass, this.occurredException.getClass());
+            assertEquals(expectedException, this.occurredException.getClass());
         }
+
     }
 
     @RunWith(Parameterized.class)
