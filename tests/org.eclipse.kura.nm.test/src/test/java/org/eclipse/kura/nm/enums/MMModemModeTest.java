@@ -329,4 +329,48 @@ public class MMModemModeTest {
             assertEquals(this.expectedModemMode, this.calculatedModemMode);
         }
     }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeStringToModemModeErrorTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { new String("") });
+            params.add(new Object[] { new String(" ") });
+            params.add(new Object[] { new String("6G") });
+            params.add(new Object[] { new String("none") });
+            params.add(new Object[] { new String("Any") });
+            params.add(new Object[] { new String(" 2G ") });
+            params.add(new Object[] { new String("MM_MODEM_MODE_2G") });
+            params.add(new Object[] { new String("NONE,CS") });
+            return params;
+        }
+
+        private final String inputValue;
+        private Exception occurredException;
+
+        public MMModemModeStringToModemModeErrorTest(String stringValue) {
+            this.inputValue = stringValue;
+        }
+
+        @Test
+        public void shouldThrowException() {
+            whenCalculatedModemMode();
+            thenExceptionOccurred(IllegalArgumentException.class);
+        }
+
+        private void whenCalculatedModemMode() {
+            try {
+                MMModemMode.toMMModemMode(this.inputValue);
+            } catch (Exception e) {
+                this.occurredException = e;
+            }
+        }
+
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedExceptionClass) {
+            assertNotNull(this.occurredException);
+            assertEquals(expectedExceptionClass, this.occurredException.getClass());
+        }
+    }
 }
