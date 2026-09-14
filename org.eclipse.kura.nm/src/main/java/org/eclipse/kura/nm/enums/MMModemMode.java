@@ -63,6 +63,27 @@ public enum MMModemMode {
         }
     }
 
+    public static MMModemMode toMMModemMode(String type) {
+        switch (type) {
+        case "NONE":
+            return MMModemMode.MM_MODEM_MODE_NONE;
+        case "CS":
+            return MMModemMode.MM_MODEM_MODE_CS;
+        case "2G":
+            return MMModemMode.MM_MODEM_MODE_2G;
+        case "3G":
+            return MMModemMode.MM_MODEM_MODE_3G;
+        case "4G":
+            return MMModemMode.MM_MODEM_MODE_4G;
+        case "5G":
+            return MMModemMode.MM_MODEM_MODE_5G;
+        case "ANY":
+            return MMModemMode.MM_MODEM_MODE_ANY;
+        default:
+            throw new IllegalArgumentException(String.format("Unrecognized MMModemMode: %s", type));
+        }
+    }
+
     public static ModemMode toModemMode(UInt32 type) {
         switch (type.intValue()) {
         case 0x00000000:
