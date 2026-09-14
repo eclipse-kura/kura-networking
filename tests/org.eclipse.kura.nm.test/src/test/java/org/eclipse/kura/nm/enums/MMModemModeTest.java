@@ -156,6 +156,56 @@ public class MMModemModeTest {
     }
 
     @RunWith(Parameterized.class)
+    public static class MMModemModeToBitMaskFromModemModeSetTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), new UInt32(0x00000000L) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G),
+                    new UInt32(0x00000003L) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
+                    new UInt32(0x00000006L) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), new UInt32(0x00000004L) });
+            params.add(new Object[] {
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
+                            MMModemMode.MM_MODEM_MODE_4G),
+                    new UInt32(0x0000000FL) });
+            params.add(new Object[] {
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
+                            MMModemMode.MM_MODEM_MODE_4G),
+                    new UInt32(0x0000000EL) });
+            params.add(new Object[] { EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), new UInt32(0xFFFFFFFFL) });
+            params.add(new Object[] { EnumSet.noneOf(MMModemMode.class), new UInt32(0x00000000L) });
+            return params;
+        }
+
+        private final Set<MMModemMode> inputValue;
+        private final UInt32 expectedInt;
+        private UInt32 calculatedInt;
+
+        public MMModemModeToBitMaskFromModemModeSetTest(Set<MMModemMode> modemModes, UInt32 intValue) {
+            this.expectedInt = intValue;
+            this.inputValue = modemModes;
+        }
+
+        @Test
+        public void shouldReturnCorrectModemModes() {
+            whenCalculatedModemModes();
+            thenCalculatedModemModesIsCorrect();
+        }
+
+        private void whenCalculatedModemModes() {
+            this.calculatedInt = MMModemMode.toBitMask(this.inputValue);
+        }
+
+        private void thenCalculatedModemModesIsCorrect() {
+            assertEquals(this.expectedInt, this.calculatedInt);
+        }
+
+    }
+
+    @RunWith(Parameterized.class)
     public static class MMModemModeToUInt32Test {
 
         @Parameters
