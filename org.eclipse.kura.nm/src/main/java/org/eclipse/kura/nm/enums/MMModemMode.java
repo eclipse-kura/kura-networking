@@ -13,6 +13,7 @@
 package org.eclipse.kura.nm.enums;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.kura.net.status.modem.ModemMode;
@@ -126,12 +127,31 @@ public enum MMModemMode {
         return modemModes;
     }
 
+    public static Set<MMModemMode> toMMModemModeFromStringList(List<String> modes) {
+        EnumSet<MMModemMode> result = EnumSet.noneOf(MMModemMode.class);
+        for (String mode : modes) {
+            result.add(MMModemMode.toMMModemMode(mode));
+        }
+
+        if (result.size() > 1 && (result.contains(MM_MODEM_MODE_ANY) || result.contains(MM_MODEM_MODE_NONE))) {
+            throw new IllegalArgumentException(
+                    "Too many result passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
+        }
+
+        if (result.contains(MM_MODEM_MODE_ANY) && result.contains(MM_MODEM_MODE_NONE)) {
+            throw new IllegalArgumentException(
+                    "Mode set cannot contain both MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE");
+        }
+
+        return result;
+    }
+
     public static UInt32 toBitMask(Set<MMModemMode> modes) {
         if (modes.isEmpty()) {
             return MM_MODEM_MODE_NONE.toUInt32();
         }
 
-        if (modes.size() != 1 && (modes.contains(MM_MODEM_MODE_ANY) || modes.contains(MM_MODEM_MODE_NONE))) {
+        if (modes.size() > 1 && (modes.contains(MM_MODEM_MODE_ANY) || modes.contains(MM_MODEM_MODE_NONE))) {
             throw new IllegalArgumentException(
                     "Too many modes passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
         }
