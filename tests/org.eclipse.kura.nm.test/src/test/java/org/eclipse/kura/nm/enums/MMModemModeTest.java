@@ -207,7 +207,7 @@ public class MMModemModeTest {
     }
 
     @RunWith(Parameterized.class)
-    public static class MMModemModeToBitMaskFromModemModeSetTestErrors {
+    public static class MMModemModeToBitMaskFromModemModeSetErrorTest {
 
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
@@ -226,7 +226,7 @@ public class MMModemModeTest {
         private final Set<MMModemMode> inputValue;
         private Exception occurredException;
 
-        public MMModemModeToBitMaskFromModemModeSetTestErrors(Set<MMModemMode> modemModes) {
+        public MMModemModeToBitMaskFromModemModeSetErrorTest(Set<MMModemMode> modemModes) {
             this.inputValue = modemModes;
         }
 
