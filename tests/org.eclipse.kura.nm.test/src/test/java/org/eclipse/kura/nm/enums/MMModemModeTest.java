@@ -465,4 +465,49 @@ public class MMModemModeTest {
             assertEquals(expectedExceptionClass, this.occurredException.getClass());
         }
     }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeToMMModemModeFromBitMaskTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { new UInt32(0x00000000L), EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE) });
+            params.add(new Object[] { new UInt32(0x00000003L),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G) });
+            params.add(new Object[] { new UInt32(0x00000006L),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G) });
+            params.add(new Object[] { new UInt32(0x00000004L), EnumSet.of(MMModemMode.MM_MODEM_MODE_3G) });
+            params.add(new Object[] { new UInt32(0x0000000FL),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
+                            MMModemMode.MM_MODEM_MODE_4G) });
+            params.add(new Object[] { new UInt32(0xFFFFFFFFL), EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY) });
+            params.add(new Object[] { new UInt32(0x12345600L), EnumSet.noneOf(ModemMode.class) });
+            return params;
+        }
+
+        private final UInt32 inputIntValue;
+        private final Set<MMModemMode> expectedModemModes;
+        private Set<MMModemMode> calculatedModemModes;
+
+        public MMModemModeToMMModemModeFromBitMaskTest(UInt32 intValue, Set<MMModemMode> modemModes) {
+            this.inputIntValue = intValue;
+            this.expectedModemModes = modemModes;
+        }
+
+        @Test
+        public void shouldReturnCorrectModemModes() {
+            whenCalculatedModemModes();
+            thenCalculatedModemModesIsCorrect();
+        }
+
+        private void whenCalculatedModemModes() {
+            this.calculatedModemModes = MMModemMode.toMMModemModeFromBitMask(this.inputIntValue);
+        }
+
+        private void thenCalculatedModemModesIsCorrect() {
+            assertEquals(this.expectedModemModes, this.calculatedModemModes);
+        }
+
+    }
 }
