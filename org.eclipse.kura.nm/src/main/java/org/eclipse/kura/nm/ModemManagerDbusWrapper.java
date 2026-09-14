@@ -261,6 +261,7 @@ public class ModemManagerDbusWrapper {
 
         // Convert types
         Set<MMModemMode> enabledModes = MMModemMode.toMMModemModeFromStringList(enabledModesOption.get());
+        // Missing preferred mode means that "NONE" is preferred
         MMModemMode preferredMode = preferredModeOption.isPresent()
                 ? MMModemMode.toMMModemMode(preferredModeOption.get())
                 : MMModemMode.MM_MODEM_MODE_NONE;
