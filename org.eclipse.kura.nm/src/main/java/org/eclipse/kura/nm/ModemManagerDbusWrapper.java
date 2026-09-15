@@ -273,7 +273,7 @@ public class ModemManagerDbusWrapper {
         Set<MMModemMode> currentEnabledModes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
         MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
 
-        if (currentEnabledModes == enabledModes && currentPreferredMode == preferredMode) {
+        if (currentEnabledModes.equals(enabledModes) && currentPreferredMode.equals(preferredMode)) {
             logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
             return;
         }
