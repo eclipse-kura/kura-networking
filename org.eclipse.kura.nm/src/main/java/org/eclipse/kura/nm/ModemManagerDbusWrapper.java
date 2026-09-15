@@ -284,7 +284,11 @@ public class ModemManagerDbusWrapper {
         }
 
         logger.info("Applying Modem Mode configuration.");
-        modem.SetCurrentModes(
-                new SetCurrentModesStruct(MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()));
+        try {
+            modem.SetCurrentModes(
+                    new SetCurrentModesStruct(MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()));
+        } catch (DBusExecutionException ex) {
+            logger.warn("Mode Mode configuraiton failed. Caused by: ", ex);
+        }
     }
 }
