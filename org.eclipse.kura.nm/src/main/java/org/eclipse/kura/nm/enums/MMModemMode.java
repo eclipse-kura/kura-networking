@@ -64,7 +64,7 @@ public enum MMModemMode {
         }
     }
 
-    public static MMModemMode toMMModemMode(String type) {
+    public static MMModemMode fromString(String type) {
         switch (type) {
         case "NONE":
             return MMModemMode.MM_MODEM_MODE_NONE;
@@ -127,10 +127,10 @@ public enum MMModemMode {
         return modemModes;
     }
 
-    public static Set<MMModemMode> toMMModemModeFromStringList(List<String> modes) {
+    public static Set<MMModemMode> fromStringList(List<String> modes) {
         EnumSet<MMModemMode> result = EnumSet.noneOf(MMModemMode.class);
         for (String mode : modes) {
-            result.add(MMModemMode.toMMModemMode(mode));
+            result.add(MMModemMode.fromString(mode));
         }
 
         if (result.size() > 1 && (result.contains(MM_MODEM_MODE_ANY) || result.contains(MM_MODEM_MODE_NONE))) {
@@ -166,7 +166,7 @@ public enum MMModemMode {
         return new UInt32(result);
     }
 
-    public static Set<MMModemMode> toMMModemModeFromBitMask(UInt32 bitMask) {
+    public static Set<MMModemMode> fromBitMask(UInt32 bitMask) {
         long bitMaskValue = bitMask.longValue();
         if (bitMaskValue == 0x00000000L) {
             return EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE);

@@ -335,7 +335,7 @@ public class MMModemModeTest {
 
         private void whenCalculatedModemMode() {
             try {
-                this.calculatedModemMode = MMModemMode.toMMModemMode(this.inputValue);
+                this.calculatedModemMode = MMModemMode.fromString(this.inputValue);
             } catch (Exception e) {
                 this.occurredException = e;
             }
@@ -415,7 +415,7 @@ public class MMModemModeTest {
 
         private void whenCalculatedModemModes() {
             try {
-                this.calculatedModemModes = MMModemMode.toMMModemModeFromStringList(this.inputValue);
+                this.calculatedModemModes = MMModemMode.fromStringList(this.inputValue);
             } catch (Exception e) {
                 this.occurredException = e;
             }
@@ -472,7 +472,7 @@ public class MMModemModeTest {
         }
 
         private void whenCalculatedModemModes() {
-            this.calculatedModemModes = MMModemMode.toMMModemModeFromBitMask(this.inputIntValue);
+            this.calculatedModemModes = MMModemMode.fromBitMask(this.inputIntValue);
         }
 
         private void thenCalculatedModemModesIsCorrect() {

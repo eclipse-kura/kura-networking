@@ -260,17 +260,17 @@ public class ModemManagerDbusWrapper {
         Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(), Modem.class);
 
         // Convert types
-        Set<MMModemMode> enabledModes = MMModemMode.toMMModemModeFromStringList(enabledModesOption.get());
+        Set<MMModemMode> enabledModes = MMModemMode.fromStringList(enabledModesOption.get());
         // Missing preferred mode means that "NONE" is preferred
         MMModemMode preferredMode = preferredModeOption.isPresent()
-                ? MMModemMode.toMMModemMode(preferredModeOption.get())
+                ? MMModemMode.fromString(preferredModeOption.get())
                 : MMModemMode.MM_MODEM_MODE_NONE;
 
         // Retrieve current modes
         Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(),
                 Properties.class);
         Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
-        Set<MMModemMode> currentEnabledModes = MMModemMode.toMMModemModeFromBitMask((UInt32) rawMode[0]);
+        Set<MMModemMode> currentEnabledModes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
         MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
 
         if (currentEnabledModes == enabledModes && currentPreferredMode == preferredMode) {
