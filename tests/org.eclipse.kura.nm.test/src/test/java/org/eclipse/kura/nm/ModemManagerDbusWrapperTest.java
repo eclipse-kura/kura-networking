@@ -128,8 +128,7 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.emptyList()),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.emptyList()), Optional.empty());
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x00000000L, 0x00000000L);
@@ -407,8 +406,8 @@ public class ModemManagerDbusWrapperTest {
     }
 
     private void thenModesWereSetTo(long expectedEnabledModesBitMask, long expectedPreferredMode) {
-        verify(this.mockedModem, times(1)).SetCurrentModes(new SetCurrentModesStruct(
-                new UInt32(expectedEnabledModesBitMask), new UInt32(expectedPreferredMode)));
+        verify(this.mockedModem, times(1)).SetCurrentModes(
+                new SetCurrentModesStruct(new UInt32(expectedEnabledModesBitMask), new UInt32(expectedPreferredMode)));
     }
 
     private void thenModesWereNotSet() {
