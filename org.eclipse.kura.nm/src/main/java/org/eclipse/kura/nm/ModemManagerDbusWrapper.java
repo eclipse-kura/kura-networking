@@ -278,6 +278,11 @@ public class ModemManagerDbusWrapper {
             return;
         }
 
+        if (enabledModes.contains(MMModemMode.MM_MODEM_MODE_ANY)) {
+            logger.warn(
+                    "Use of ANY is discouraged. Some devices support the value but do not report it to be set, leading to unnecessary configuration overwrites. Prefer the use of explicit modes");
+        }
+
         logger.info("Applying Modem Mode configuration.");
         modem.SetCurrentModes(
                 new SetCurrentModesStruct(MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()));
