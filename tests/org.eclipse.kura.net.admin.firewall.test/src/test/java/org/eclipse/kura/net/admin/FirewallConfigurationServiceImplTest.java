@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2017, 2026 Eurotech and/or its affiliates and others
  * 
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -17,6 +17,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,6 +53,7 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4.FirewallOpenPortC
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP;
 import org.eclipse.kura.net.firewall.RuleType;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.event.EventAdmin;
@@ -112,12 +115,7 @@ public class FirewallConfigurationServiceImplTest {
 
         svc.activate(componentContext, properties);
 
-        verify(lfMock).deleteAllLocalRules();
-        verify(lfMock).addLocalRules(localRules);
-        verify(lfMock).deleteAllPortForwardRules();
-        verify(lfMock).addPortForwardRules(portForwardRules);
-        verify(lfMock).deleteAllNatRules();
-        verify(lfMock).addNatRules(natRules);
+        verify(lfMock).replace(localRules, portForwardRules, natRules);
     }
 
     @Test
@@ -338,10 +336,8 @@ public class FirewallConfigurationServiceImplTest {
     }
 
     @Test
-    public void testUpdateFailureHandler() {
-        // test updated() that fails everywhere
-
-        boolean[] called = { false, false, false };
+    public void testUpdateFailureHandler() throws KuraException {
+        // test updated() that fails while applying the firewall configuration
 
         Map<String, Object> properties = new HashMap<>();
 
@@ -352,48 +348,34 @@ public class FirewallConfigurationServiceImplTest {
 
         properties.put("firewall.port.forwarding", "wlan0,eth0,10.10.1.15,tcp,1234,2345,true,10.10.1.0/24,,,#");
 
+        LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
+        doThrow(new KuraException(KuraErrorCode.CONFIGURATION_ERROR)).when(linuxFirewall).replace(anyList(),
+                anyList(), anyList());
         FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
 
             @Override
-            protected void deleteAllLocalRules() throws KuraException {
-                called[0] = true;
-
-                throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR);
-            }
-
-            @Override
-            protected void deleteAllPortForwardRules() throws KuraException {
-                called[1] = true;
-
-                throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR);
-            }
-
-            @Override
-            protected void deleteAllNatRules() throws KuraException {
-                called[2] = true;
-
-                throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR);
+            protected AbstractLinuxFirewall getLinuxFirewall() {
+                return linuxFirewall;
             }
         };
 
         EventAdmin eventAdminMock = mock(EventAdmin.class);
         svc.setEventAdmin(eventAdminMock);
 
+        svc.activate(null, properties);
         svc.updated(properties);
 
-        verify(eventAdminMock, times(1)).postEvent(any());
-
-        for (int i = 0; i < called.length; i++) {
-            assertTrue("Expected call " + i, called[i]);
-        }
+        // updated() is invoked once by activate() and once explicitly: both times replace() fails
+        // and the exception is caught and logged, so the event is still posted both times.
+        verify(linuxFirewall, times(2)).replace(anyList(), anyList(), anyList());
+        verify(eventAdminMock, times(2)).postEvent(any());
     }
 
     @Test
-    public void testUpdateHandler() {
+    @SuppressWarnings("unchecked")
+    public void testUpdateHandler() throws KuraException {
         // test updated() that actually applies new configuration from properties
 
-        boolean[] called = { false, false, false, false, false, false };
-
         Map<String, Object> properties = new HashMap<>();
 
         properties.put("firewall.open.ports",
@@ -403,116 +385,89 @@ public class FirewallConfigurationServiceImplTest {
 
         properties.put("firewall.port.forwarding", "wlan0,eth0,10.10.1.15,tcp,1234,2345,true,10.10.1.0/24,,,#");
 
-        FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
-
-            @Override
-            protected void addLocalRules(ArrayList<LocalRule> localRules) throws KuraException {
-                assertEquals(2, localRules.size());
-
-                LocalRule localRule = localRules.get(0);
-                assertEquals("eth0", localRule.getPermittedInterfaceName());
-                assertNull(localRule.getPermittedMAC());
-                assertEquals("10.10.1.0", localRule.getPermittedNetwork().getIpAddress().getHostAddress());
-                assertEquals(24, localRule.getPermittedNetwork().getPrefix());
-                assertEquals(1300, localRule.getPort());
-                assertNull(localRule.getPortRange());
-                assertEquals("tcp", localRule.getProtocol());
-                assertNull(localRule.getSourcePortRange());
-                assertEquals("wlan0", localRule.getUnpermittedInterfaceName());
-
-                localRule = localRules.get(1);
-                assertEquals("eth0", localRule.getPermittedInterfaceName());
-                assertNull(localRule.getPermittedMAC());
-                assertEquals("10.10.1.0", localRule.getPermittedNetwork().getIpAddress().getHostAddress());
-                assertEquals(24, localRule.getPermittedNetwork().getPrefix());
-                assertEquals(-1, localRule.getPort());
-                assertEquals("1100:1200", localRule.getPortRange());
-                assertEquals("tcp", localRule.getProtocol());
-                assertNull(localRule.getSourcePortRange());
-                assertEquals("wlan0", localRule.getUnpermittedInterfaceName());
-
-                called[0] = true;
-            }
-
-            @Override
-            protected void addNatRules(ArrayList<NATRule> natRules) throws KuraException {
-                assertEquals(1, natRules.size());
-
-                NATRule nat = natRules.get(0);
-                assertEquals("10.10.1.0/24", nat.getDestination());
-                assertEquals("eth0", nat.getDestinationInterface());
-                assertEquals("tcp", nat.getProtocol());
-                assertNull(nat.getSource());
-                assertEquals("wlan0", nat.getSourceInterface());
-
-                called[1] = true;
-            }
-
-            @Override
-            protected void addPortForwardRules(ArrayList<PortForwardRule> portForwardRules) throws KuraException {
-                assertEquals(1, portForwardRules.size());
-
-                PortForwardRule fwd = portForwardRules.get(0);
-                assertEquals("10.10.1.15", fwd.getAddress());
-                assertEquals("wlan0", fwd.getInboundIface());
-                assertEquals(1234, fwd.getInPort());
-                assertEquals("eth0", fwd.getOutboundIface());
-                assertEquals(2345, fwd.getOutPort());
-                assertNull(fwd.getPermittedMAC());
-                assertEquals("10.10.1.0", fwd.getPermittedNetwork());
-                assertEquals(24, fwd.getPermittedNetworkMask());
-                assertEquals("tcp", fwd.getProtocol());
-                assertNull(fwd.getSourcePortRange());
-
-                called[2] = true;
-            }
-
-            @Override
-            protected void deleteAllLocalRules() throws KuraException {
-                called[3] = true;
-            }
-
-            @Override
-            protected void deleteAllPortForwardRules() throws KuraException {
-                called[4] = true;
-            }
-
-            @Override
-            protected void deleteAllNatRules() throws KuraException {
-                called[5] = true;
-            }
-        };
-
-        EventAdmin eventAdminMock = mock(EventAdmin.class);
-        svc.setEventAdmin(eventAdminMock);
-
-        svc.updated(properties);
-
-        verify(eventAdminMock, times(1)).postEvent(any());
-
-        for (int i = 0; i < called.length; i++) {
-            assertTrue("Expected call " + i, called[i]);
-        }
-    }
-
-    @Test
-    public void testSetFirewallOpenPortConfiguration() throws KuraException, UnknownHostException {
         LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
         FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
 
             @Override
-            protected void deleteAllLocalRules() throws KuraException {
-                // do nothing
+            protected AbstractLinuxFirewall getLinuxFirewall() {
+                return linuxFirewall;
             }
+        };
 
-            @Override
-            protected void addLocalRules(ArrayList<LocalRule> localRules) throws KuraException {
-                assertEquals(1, localRules.size());
+        EventAdmin eventAdminMock = mock(EventAdmin.class);
+        svc.setEventAdmin(eventAdminMock);
 
-                LocalRule rule = localRules.get(0);
-                assertEquals("0.0.0.0", rule.getPermittedNetwork().getIpAddress().getHostAddress());
-                assertEquals(0, rule.getPermittedNetwork().getPrefix());
-            }
+        svc.activate(null, properties);
+        svc.updated(properties);
+
+        // updated() is invoked once by activate() and once explicitly, always with the same
+        // properties, so both invocations of replace() carry equivalent rule lists.
+        ArgumentCaptor<List<LocalRule>> localRulesCaptor = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<PortForwardRule>> portForwardRulesCaptor = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<NATRule>> natRulesCaptor = ArgumentCaptor.forClass(List.class);
+        verify(linuxFirewall, times(2)).replace(localRulesCaptor.capture(), portForwardRulesCaptor.capture(),
+                natRulesCaptor.capture());
+
+        List<LocalRule> localRules = localRulesCaptor.getValue();
+        assertEquals(2, localRules.size());
+
+        LocalRule localRule = localRules.get(0);
+        assertEquals("eth0", localRule.getPermittedInterfaceName());
+        assertNull(localRule.getPermittedMAC());
+        assertEquals("10.10.1.0", localRule.getPermittedNetwork().getIpAddress().getHostAddress());
+        assertEquals(24, localRule.getPermittedNetwork().getPrefix());
+        assertEquals(1300, localRule.getPort());
+        assertNull(localRule.getPortRange());
+        assertEquals("tcp", localRule.getProtocol());
+        assertNull(localRule.getSourcePortRange());
+        assertEquals("wlan0", localRule.getUnpermittedInterfaceName());
+
+        localRule = localRules.get(1);
+        assertEquals("eth0", localRule.getPermittedInterfaceName());
+        assertNull(localRule.getPermittedMAC());
+        assertEquals("10.10.1.0", localRule.getPermittedNetwork().getIpAddress().getHostAddress());
+        assertEquals(24, localRule.getPermittedNetwork().getPrefix());
+        assertEquals(-1, localRule.getPort());
+        assertEquals("1100:1200", localRule.getPortRange());
+        assertEquals("tcp", localRule.getProtocol());
+        assertNull(localRule.getSourcePortRange());
+        assertEquals("wlan0", localRule.getUnpermittedInterfaceName());
+
+        List<NATRule> natRules = natRulesCaptor.getValue();
+        assertEquals(1, natRules.size());
+
+        NATRule nat = natRules.get(0);
+        assertEquals("10.10.1.0/24", nat.getDestination());
+        assertEquals("eth0", nat.getDestinationInterface());
+        assertEquals("tcp", nat.getProtocol());
+        assertNull(nat.getSource());
+        assertEquals("wlan0", nat.getSourceInterface());
+
+        List<PortForwardRule> portForwardRules = portForwardRulesCaptor.getValue();
+        assertEquals(1, portForwardRules.size());
+
+        PortForwardRule fwd = portForwardRules.get(0);
+        assertEquals("10.10.1.15", fwd.getAddress());
+        assertEquals("wlan0", fwd.getInboundIface());
+        assertEquals(1234, fwd.getInPort());
+        assertEquals("eth0", fwd.getOutboundIface());
+        assertEquals(2345, fwd.getOutPort());
+        assertNull(fwd.getPermittedMAC());
+        assertEquals("10.10.1.0", fwd.getPermittedNetwork());
+        assertEquals(24, fwd.getPermittedNetworkMask());
+        assertEquals("tcp", fwd.getProtocol());
+        assertNull(fwd.getSourcePortRange());
+
+        verify(eventAdminMock, times(2)).postEvent(any());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSetFirewallOpenPortConfiguration() throws KuraException, UnknownHostException {
+        LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
+        when(linuxFirewall.getPortForwardRules()).thenReturn(new HashSet<>());
+        when(linuxFirewall.getNatRules()).thenReturn(new HashSet<>());
+        FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
 
             @Override
             protected AbstractLinuxFirewall getLinuxFirewall() {
@@ -525,8 +480,23 @@ public class FirewallConfigurationServiceImplTest {
         builder.withPort(1234).withProtocol(NetProtocol.tcp);
         firewallConfiguration.add(builder.build());
 
+        EventAdmin eventAdminMock = mock(EventAdmin.class);
+        svc.setEventAdmin(eventAdminMock);
+        svc.activate(null, new HashMap<>());
         svc.setFirewallOpenPortConfiguration(firewallConfiguration);
 
+        // activate() triggers one replace() call from updated(properties) with the (empty) activation
+        // properties, and setFirewallOpenPortConfiguration() triggers a second one carrying the local
+        // rule built from firewallConfiguration; the captor's getValue() is this last invocation.
+        ArgumentCaptor<List<LocalRule>> localRulesCaptor = ArgumentCaptor.forClass(List.class);
+        verify(linuxFirewall, times(2)).replace(localRulesCaptor.capture(), anyList(), anyList());
+
+        List<LocalRule> localRules = localRulesCaptor.getValue();
+        assertEquals(1, localRules.size());
+
+        LocalRule rule = localRules.get(0);
+        assertEquals("0.0.0.0", rule.getPermittedNetwork().getIpAddress().getHostAddress());
+        assertEquals(0, rule.getPermittedNetwork().getPrefix());
     }
 
 }

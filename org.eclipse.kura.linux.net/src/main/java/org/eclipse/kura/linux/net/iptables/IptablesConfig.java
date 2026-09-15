@@ -882,19 +882,20 @@ public class IptablesConfig extends IptablesConfigConstants {
      * and autoNatRules, force the polices for input and forward chains and apply
      * flooding protection rules if needed.
      */
-    public void applyRules() throws KuraIOException {
+    public void applyRules() {
         applyPolicies();
         createKuraChains();
         String configuration = generateStringConfiguration();
         try (FileOutputStream fos = new FileOutputStream(getFirewallConfigTmpFileName());
                 PrintWriter writer = new PrintWriter(fos)) {
             writer.print(configuration);
+
+            File configFile = new File(getFirewallConfigTmpFileName());
+            if (configFile.exists()) {
+                restore(getFirewallConfigTmpFileName());
+            }
         } catch (IOException e) {
-            throw new KuraIOException(e, "applyRules() :: failed to write firewall configuration to temporary file");
-        }
-        File configFile = new File(getFirewallConfigTmpFileName());
-        if (configFile.exists()) {
-            restore(getFirewallConfigTmpFileName());
+            logger.error("applyRules() :: failed to write firewall configuration to temporary file", e);
         }
     }
 

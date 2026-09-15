@@ -300,6 +300,30 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         return natRules;
     }
 
+    protected void addLocalRules(ArrayList<LocalRule> localRules) throws KuraException {
+        this.firewall.addLocalRules(localRules);
+    }
+
+    protected void addNatRules(ArrayList<NATRule> natRules) throws KuraException {
+        this.firewall.addNatRules(natRules);
+    }
+
+    protected void addPortForwardRules(ArrayList<PortForwardRule> portForwardRules) throws KuraException {
+        this.firewall.addPortForwardRules(portForwardRules);
+    }
+
+    protected void deleteAllLocalRules() throws KuraException {
+        this.firewall.deleteAllLocalRules();
+    }
+
+    protected void deleteAllNatRules() throws KuraException {
+        this.firewall.deleteAllNatRules();
+    }
+
+    protected void deleteAllPortForwardRules() throws KuraException {
+        this.firewall.deleteAllPortForwardRules();
+    }
+
     /**
      * @throws KuraException
      *                       Overriding classes may throw this exception

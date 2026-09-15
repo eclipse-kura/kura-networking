@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2020, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -393,8 +393,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         String[] notAllowIcmp = config.getNotAllowIcmp();
         assertNotNull("getNotAllowIcmp should not return null", notAllowIcmp);
-        // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking ICMP
-        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0, notAllowIcmp.length);
+        // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking
+        // ICMP
+        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0,
+                notAllowIcmp.length);
     }
 
     @Test(expected = KuraIOException.class)
@@ -412,8 +414,9 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
     @Test(expected = KuraIOException.class)
     public void testApplyBlockPolicyIOException() throws KuraException {
+        setUpMock();
         // Create a config that will cause an IOException when writing to file
-        IptablesConfig config = new IptablesConfig(mock(CommandExecutorService.class)) {
+        IptablesConfig config = new IptablesConfig(executorServiceMock) {
             @Override
             public String getFirewallConfigTmpFileName() {
                 return "/invalid/path/that/does/not/exist/iptables.tmp";
@@ -435,10 +438,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         } catch (Exception e) {
             methodCompleted = false;
         }
-        
+
         // Verify that the method completed successfully without exceptions
         assertTrue("clearAllKuraChains() should complete successfully when executor service is null", methodCompleted);
-        
+
         // Additional assertion: verify that the config object is still in a valid state
         assertNotNull("Config object should remain valid after clearAllKuraChains call", config);
     }
@@ -593,7 +596,9 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         if (tempFile.exists()) {
             try (Stream<String> lines = Files.lines(tempFile.toPath())) {
                 boolean foundIcmpRule = lines.anyMatch(line -> line.contains("icmp"));
-                assertFalse("Should not contain explicit ICMP rules when ICMP is disallowed (default DROP policy handles blocking)", foundIcmpRule);
+                assertFalse(
+                        "Should not contain explicit ICMP rules when ICMP is disallowed (default DROP policy handles blocking)",
+                        foundIcmpRule);
             }
             Files.deleteIfExists(tempFile.toPath());
         }
@@ -670,8 +675,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         assertNotNull("getNotAllowIcmp should not return null", config.getNotAllowIcmp());
 
         assertTrue("getAllowIcmp should return non-empty array", config.getAllowIcmp().length > 0);
-        // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking ICMP
-        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0, config.getNotAllowIcmp().length);
+        // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking
+        // ICMP
+        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0,
+                config.getNotAllowIcmp().length);
     }
 
     @Test
@@ -713,18 +720,18 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void clearAllKuraChainsFailureTest() {
         setUpMock();
-        
+
         // Create failure status to simulate command execution failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
-        
+
         // Mock any command execution to return failure status
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Test that clearAllKuraChains method executes and triggers error logging
         IptablesConfig iptablesConfigWithMock = new IptablesConfig(executorServiceMock);
         iptablesConfigWithMock.clearAllKuraChains();
-        
+
         // Verify that execute was called multiple times (once for each flush command)
         verify(executorServiceMock, atLeast(7)).execute(any(Command.class));
     }
@@ -732,18 +739,18 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void saveFailureTest() {
         setUpMock();
-        
+
         // Create failure status to simulate iptables-save command failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
-        
+
         // Mock save command to return failure
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Test that save method executes and triggers error logging
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.save();
-        
+
         // Verify that execute was called for the save command
         verify(executorServiceMock, times(1)).execute(any(Command.class));
     }
@@ -751,18 +758,18 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void saveWithFilenameFailureTest() {
         setUpMock();
-        
+
         // Create failure status to simulate iptables-save command failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
-        
+
         // Mock save command to return failure
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Test that save method with filename executes and triggers error logging
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.save("/tmp/test-iptables");
-        
+
         // Verify that execute was called for the save command
         verify(executorServiceMock, times(1)).execute(any(Command.class));
     }
@@ -770,22 +777,22 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void restoreFailureTest() throws IOException {
         setUpMock();
-        
+
         // Create failure status to simulate iptables-restore command failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
-        
+
         // Mock restore command to return failure
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Create a temporary file for the test
         File tempFile = File.createTempFile("test-iptables", ".tmp");
         tempFile.deleteOnExit();
-        
+
         // Test that restore method executes and triggers error logging
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.restore(tempFile.getAbsolutePath());
-        
+
         // Verify that execute was called for the restore command
         verify(executorServiceMock, times(1)).execute(any(Command.class));
     }
@@ -793,21 +800,22 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void restoreFileDeleteFailureTest() throws IOException {
         setUpMock();
-        
+
         // Create success status for the restore command
-        CommandStatus successStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus successStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(0));
-        
+
         // Mock restore command to return success
         when(executorServiceMock.execute(any(Command.class))).thenReturn(successStatus);
-        
+
         // Use a non-existent directory path to trigger file deletion IOException
         String invalidPath = "/non/existent/directory/test-file";
-        
-        // Test that restore method executes and triggers file deletion error logging (line 389)
+
+        // Test that restore method executes and triggers file deletion error logging
+        // (line 389)
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         iptablesConfig.restore(invalidPath);
-        
+
         // Verify that execute was called for the restore command
         verify(executorServiceMock, times(1)).execute(any(Command.class));
     }
@@ -815,21 +823,22 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void applyRulesWithLocalRulesFailureTest() {
         setUpMock();
-        
+
         // Create failure status for any command execution
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Create IptablesConfig with local rules
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<LocalRule> localRules = new HashSet<>();
         localRules.add(new LocalRule(0, null, null, null, null, null, null));
         iptablesConfig.setLocalRules(localRules);
-        
-        // This will call writeLocalRulesToFilterTable(null) which triggers command execution
+
+        // This will call writeLocalRulesToFilterTable(null) which triggers command
+        // execution
         iptablesConfig.applyRules();
-        
+
         // Verify that commands were executed
         verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
     }
@@ -837,26 +846,28 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void applyRulesWithNatRulesFailureTest() {
         setUpMock();
-        
+
         // Create failure status for any command execution
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Create IptablesConfig with NAT rules
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<NATRule> natRules = new HashSet<>();
         try {
-            NATRule natRule = new NATRule("eth0", "eth1", "tcp", "192.168.1.0/24", "0.0.0.0/0", true, RuleType.IP_FORWARDING);
+            NATRule natRule = new NATRule("eth0", "eth1", "tcp", "192.168.1.0/24", "0.0.0.0/0", true,
+                    RuleType.IP_FORWARDING);
             natRules.add(natRule);
             iptablesConfig.setNatRules(natRules);
         } catch (Exception e) {
             // Skip if rule creation fails, focus on the mock setup
         }
-        
-        // This will call writeNatRulesToFilterTable(null) which triggers command execution
+
+        // This will call writeNatRulesToFilterTable(null) which triggers command
+        // execution
         iptablesConfig.applyRules();
-        
+
         // Verify that commands were executed
         verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
     }
@@ -864,12 +875,12 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void applyRulesWithAutoNatRulesFailureTest() {
         setUpMock();
-        
+
         // Create failure status for any command execution
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), 
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
                 new LinuxExitStatus(1));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
-        
+
         // Create IptablesConfig with auto NAT rules
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<NATRule> autoNatRules = new HashSet<>();
@@ -880,16 +891,17 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         } catch (Exception e) {
             // Skip if rule creation fails, focus on the mock setup
         }
-        
-        // This will call writeAutoNatRulesToFilterTable(null) which triggers command execution
+
+        // This will call writeAutoNatRulesToFilterTable(null) which triggers command
+        // execution
         iptablesConfig.applyRules();
-        
-        // Verify that commands were executed  
+
+        // Verify that commands were executed
         verify(executorServiceMock, atLeast(1)).execute(any(Command.class));
     }
 
     // Tests merged from IptablesConfigCoverageTest to consolidate test coverage
-    
+
     private static class IptablesConfigWithBadTmpPath extends IptablesConfig {
         IptablesConfigWithBadTmpPath() {
             super();
@@ -924,10 +936,12 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         // Ensure DEBUG logs are enabled via src/test/resources/log4j.properties
         setUpMock();
         IptablesConfig cfg = new IptablesConfig(executorServiceMock);
-        // This will call execute(...) multiple times; with DEBUG enabled, lines 359-361 are executed.
+        // This will call execute(...) multiple times; with DEBUG enabled, lines 359-361
+        // are executed.
         cfg.clearAllKuraChains();
-        
-        // Verify that execute was called multiple times (at least once for each flush command)
+
+        // Verify that execute was called multiple times (at least once for each flush
+        // command)
         verify(executorServiceMock, atLeast(7)).execute(any(Command.class));
     }
 
@@ -935,9 +949,11 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     public void restore_shouldCatchIOException_onDeleteIfExistsFailure() throws Exception {
         setUpMock();
 
-        // Prepare a non-empty temporary directory so Files.deleteIfExists throws DirectoryNotEmptyException
+        // Prepare a non-empty temporary directory so Files.deleteIfExists throws
+        // DirectoryNotEmptyException
         File tempDir = File.createTempFile("iptables-config-test", "dir");
-        // Turn it into a directory: delete the file and create a directory with the same name
+        // Turn it into a directory: delete the file and create a directory with the
+        // same name
         tempDir.delete();
         tempDir.mkdir();
         File inner = new File(tempDir, "inner.txt");
@@ -947,7 +963,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         IptablesConfig cfg = new IptablesConfig(executorServiceMock);
         // Stub restore command success explicitly to be safe
-        Command cmd = new Command(new String[] { "iptables-restore", tempDir.getAbsolutePath() });
+        Command cmd = new Command(new String[] { "iptables-restore", "-w", "-n", tempDir.getAbsolutePath() });
         cmd.setExecuteInAShell(true);
         CommandStatus ok = new CommandStatus(cmd, new LinuxExitStatus(0));
         org.mockito.Mockito.when(executorServiceMock.execute(cmd)).thenReturn(ok);

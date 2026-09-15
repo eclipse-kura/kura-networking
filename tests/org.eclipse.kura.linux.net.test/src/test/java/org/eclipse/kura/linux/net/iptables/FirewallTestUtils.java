@@ -58,11 +58,12 @@ public class FirewallTestUtils {
     protected static void setUpMock() {
         executorServiceMock = mock(CommandExecutorService.class);
         IptablesConfig iptablesConfig = new IptablesConfig();
-        commandRestore = new Command(new String[] { "iptables-restore", iptablesConfig.getFirewallConfigFileName() });
+        commandRestore = new Command(
+                new String[] { "iptables-restore", "-w", "-n", iptablesConfig.getFirewallConfigFileName() });
         commandRestore.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandRestore)).thenReturn(successStatus);
         commandRestoreTmp = new Command(
-                new String[] { "iptables-restore", iptablesConfig.getFirewallConfigTmpFileName() });
+                new String[] { "iptables-restore", "-w", "-n", iptablesConfig.getFirewallConfigTmpFileName() });
         commandRestoreTmp.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandRestoreTmp)).thenReturn(successStatus);
         commandSave = new Command(new String[] { "iptables-save", ">", iptablesConfig.getFirewallConfigFileName() });
@@ -139,6 +140,7 @@ public class FirewallTestUtils {
         commandIcmpAccept2.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandIcmpAccept2)).thenReturn(successStatus);
         commandApplyList = new ArrayList<>();
+        commandApplyList.add(commandRestoreTmp);
         commandApplyList.add(new Command("iptables -P INPUT DROP".split(" ")));
         commandApplyList.add(new Command("iptables -P FORWARD DROP".split(" ")));
         commandApplyList.add(new Command("iptables -N input-kura -t filter".split(" ")));
@@ -176,8 +178,8 @@ public class FirewallTestUtils {
         commandApplyList.add(new Command("iptables -C POSTROUTING -j postrouting-kura -t mangle".split(" ")));
         // The loopback, ICMP, local/port-forward/NAT/additional and RETURN rules are no longer
         // applied with one iptables invocation per rule: they are batched into a single
-        // iptables-restore call (see IptablesConfig#generateStringConfiguration()).
-        commandApplyList.add(new Command(new String[] { "iptables-restore", "-w", "-n" }));
+        // iptables-restore call (see IptablesConfig#generateStringConfiguration()) and applied via
+        // commandRestoreTmp, already added at the top of this list.
         commandApplyList.stream().forEach(c -> c.setExecuteInAShell(true));
         commandApplyList.stream().forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
 
