@@ -288,7 +288,7 @@ public class ModemManagerDbusWrapper {
             modem.SetCurrentModes(
                     new SetCurrentModesStruct(MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()));
         } catch (DBusExecutionException ex) {
-            logger.warn("Mode Mode configuraiton failed. Caused by: ", ex);
+            logger.warn("Mode Mode configuration failed. Caused by: ", ex);
         }
     }
 }
