@@ -437,7 +437,7 @@ public class MMModemModeTest {
             });
             params.add(new Object[] {
                     Arrays.asList(),
-                    EnumSet.noneOf(MMModemMode.class),
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE),
                     null
             });
             params.add(new Object[] {

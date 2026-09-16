@@ -128,6 +128,10 @@ public enum MMModemMode {
     }
 
     public static Set<MMModemMode> fromStringList(List<String> modes) {
+        if (modes.isEmpty()) {
+            return EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE);
+        }
+
         EnumSet<MMModemMode> result = EnumSet.noneOf(MMModemMode.class);
         for (String mode : modes) {
             result.add(MMModemMode.fromString(mode));
