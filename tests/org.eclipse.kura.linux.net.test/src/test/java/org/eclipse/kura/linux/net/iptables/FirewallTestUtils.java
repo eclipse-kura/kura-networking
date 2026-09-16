@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2020, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -176,9 +176,11 @@ public class FirewallTestUtils {
         commandApplyList.add(new Command("iptables -C FORWARD -j forward-kura -t mangle".split(" ")));
         commandApplyList.add(new Command("iptables -C PREROUTING -j prerouting-kura -t mangle".split(" ")));
         commandApplyList.add(new Command("iptables -C POSTROUTING -j postrouting-kura -t mangle".split(" ")));
-        // The loopback, ICMP, local/port-forward/NAT/additional and RETURN rules are no longer
+        // The loopback, ICMP, local/port-forward/NAT/additional and RETURN rules are no
+        // longer
         // applied with one iptables invocation per rule: they are batched into a single
-        // iptables-restore call (see IptablesConfig#generateStringConfiguration()) and applied via
+        // iptables-restore call (see IptablesConfig#generateStringConfiguration()) and
+        // applied via
         // commandRestoreTmp, already added at the top of this list.
         commandApplyList.stream().forEach(c -> c.setExecuteInAShell(true));
         commandApplyList.stream().forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
