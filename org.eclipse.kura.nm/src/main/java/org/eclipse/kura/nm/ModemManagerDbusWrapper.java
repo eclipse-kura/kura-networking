@@ -14,6 +14,7 @@ package org.eclipse.kura.nm;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
 import org.eclipse.kura.nm.enums.MMModemMode;
+import org.eclipse.kura.nm.enums.MMModemModePair;
 import org.eclipse.kura.nm.enums.MMModemState;
 import org.eclipse.kura.nm.status.SimProperties;
 import org.freedesktop.dbus.DBusPath;
@@ -244,6 +246,24 @@ public class ModemManagerDbusWrapper {
 
     }
 
+    public Set<MMModemModePair> getSupportedModemModes(Properties modemProperties) {
+        Set<MMModemModePair> supportedModes = new HashSet<>();
+        try {
+            List<Object[]> rawModes = modemProperties.Get(MM_MODEM_NAME, "SupportedModes");
+            rawModes.forEach(rawMode -> {
+                if (rawMode.length >= 2) {
+                    Set<MMModemMode> modes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
+                    MMModemMode preferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
+                    supportedModes.add(new MMModemModePair(modes, preferredMode));
+                }
+            });
+        } catch (DBusExecutionException e) {
+            logger.warn("Cannot retrieve MM.Modem.SupportedModes for {}. Caused by: ", modemProperties.getObjectPath(),
+                    e);
+        }
+        return supportedModes;
+    }
+
     public void setModemModes(Optional<String> mmDbusPath, Optional<List<String>> enabledModesOption,
             Optional<String> preferredModeOption) throws DBusException {
 
@@ -289,6 +309,14 @@ public class ModemManagerDbusWrapper {
             }
         } else {
             logger.warn("Cannot retrieve MM.Modem.CurrentModes. Applying new settings anyway.");
+        }
+
+        // Retrieve supported modes
+        Set<MMModemModePair> supportedModes = getSupportedModemModes(modemProperties);
+        MMModemModePair desiredModePair = new MMModemModePair(MMenabledModes, MMpreferredMode);
+        if (!supportedModes.contains(desiredModePair)) {
+            logger.warn("Cannot set modem mode {}/{} not supported for {}", MMenabledModes, MMpreferredMode,
+                    modemProperties.getObjectPath());
         }
 
         logger.info("Applying Modem Mode configuration. Enabled: {}, Preferred: {}", enabledModes, preferredMode);
