@@ -26,6 +26,7 @@ import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.configuration.metatype.Tocd;
 import org.eclipse.kura.core.net.FirewallConfiguration;
 import org.eclipse.kura.executor.CommandExecutorService;
+import org.eclipse.kura.executor.PrivilegedExecutorService;
 import org.eclipse.kura.linux.net.iptables.AbstractLinuxFirewall;
 import org.eclipse.kura.linux.net.iptables.LocalRule;
 import org.eclipse.kura.linux.net.iptables.NATRule;
@@ -41,6 +42,9 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP.FirewallOpenPortCo
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP.FirewallPortForwardConfigIPBuilder;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,25 +61,34 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         this.eventAdmin = eventAdmin;
     }
 
-    public void setExecutorService(CommandExecutorService executorService) {
+    public void setExecutorService(PrivilegedExecutorService executorService) {
         this.executorService = executorService;
     }
 
-    protected void activate(ComponentContext componentContext, Map<String, Object> properties) {
-        logger.info("Activating FirewallConfigurationService...");
+    @Activate
+    public void activate(ComponentContext componentContext, Map<String, Object> properties) {
+        long startActivate = System.currentTimeMillis();
+        String kuraServicePid = (String) componentContext.getProperties().get("kura.service.pid");
+        logger.info("Activating {}...", kuraServicePid);
 
         this.firewall = getLinuxFirewall();
         updated(properties);
 
-        logger.info("Activating FirewallConfigurationService... Done.");
+        logger.info("Activating {}... Done.", kuraServicePid);
+        long endActivate = System.currentTimeMillis();
+        logger.info("Firewall activated in {}", endActivate - startActivate);
     }
 
-    protected void deactivate(ComponentContext componentContext) {
-        logger.info("Deactivating FirewallConfigurationService...");
-        logger.info("Deactivating FirewallConfigurationService... Done.");
+    @Deactivate
+    public void deactivate(ComponentContext componentContext) {
+        String kuraServicePid = (String) componentContext.getProperties().get("kura.service.pid");
+        logger.info("Deactivating {}...", kuraServicePid);
+        logger.info("Deactivating {}... Done.", kuraServicePid);
     }
 
+    @Modified
     public synchronized void updated(Map<String, Object> properties) {
+        long startUpdate = System.currentTimeMillis();
         if (logger.isDebugEnabled()) {
             logger.debug("updated()");
             for (Entry<String, Object> entry : properties.entrySet()) {
@@ -97,6 +110,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
         // raise the event because there was a change
         this.eventAdmin.postEvent(new FirewallConfigurationChangeEvent(properties));
+        long endUpdate = System.currentTimeMillis();
+        logger.info("Firewall updated in {}", endUpdate - startUpdate);
     }
 
     protected abstract FirewallConfiguration buildFirewallConfigurationFromProperties(Map<String, Object> properties);

@@ -39,12 +39,8 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4;
 import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4.FirewallOpenPortConfigIP4Builder;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP4;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP4.FirewallPortForwardConfigIP4Builder;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -73,27 +69,6 @@ public class FirewallConfigurationServiceImpl extends
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setExecutorService(PrivilegedExecutorService executorService) {
         super.setExecutorService(executorService);
-    }
-
-    @Activate
-    public void activate(ComponentContext context, Map<String, Object> properties) {
-        long startUpdate = System.currentTimeMillis();
-        super.activate(context, properties);
-        long endUpdate = System.currentTimeMillis();
-        logger.info("Firewall activated in {}", endUpdate - startUpdate);
-    }
-
-    @Deactivate
-    public void deactivate(ComponentContext context) {
-        super.deactivate(context);
-    }
-
-    @Modified
-    public void updated(Map<String, Object> properties) {
-        long startUpdate = System.currentTimeMillis();
-        super.updated(properties);
-        long endUpdate = System.currentTimeMillis();
-        logger.info("Firewall updated in {}", endUpdate - startUpdate);
     }
 
     @Override

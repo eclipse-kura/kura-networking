@@ -40,12 +40,8 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP6;
 import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP6.FirewallOpenPortConfigIP6Builder;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP6;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP6.FirewallPortForwardConfigIP6Builder;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -77,27 +73,6 @@ public class FirewallConfigurationServiceIPv6Impl extends
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setExecutorService(PrivilegedExecutorService executorService) {
         super.setExecutorService(executorService);
-    }
-
-    @Activate
-    public void activate(ComponentContext context, Map<String, Object> properties) {
-        long startUpdate = System.currentTimeMillis();
-        super.activate(context, properties);
-        long endUpdate = System.currentTimeMillis();
-        logger.info("Firewall IPV6 activated in {}", endUpdate - startUpdate);
-    }
-
-    @Deactivate
-    public void deactivate(ComponentContext context) {
-        super.deactivate(context);
-    }
-
-    @Modified
-    public void updated(Map<String, Object> properties) {
-        long startUpdate = System.currentTimeMillis();
-        super.updated(properties);
-        long endUpdate = System.currentTimeMillis();
-        logger.info("Firewall IPV6 updated in {}", endUpdate - startUpdate);
     }
 
     @Override
