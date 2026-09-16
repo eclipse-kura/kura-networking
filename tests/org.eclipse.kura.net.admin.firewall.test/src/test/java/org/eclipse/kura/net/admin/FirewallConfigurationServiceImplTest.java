@@ -53,6 +53,8 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP;
 import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4;
 import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4.FirewallOpenPortConfigIP4Builder;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP;
+import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP4;
+import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP4.FirewallPortForwardConfigIP4Builder;
 import org.eclipse.kura.net.firewall.RuleType;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
@@ -436,23 +438,18 @@ public class FirewallConfigurationServiceImplTest {
     @Test
     public void testSetFirewallOpenPortConfiguration() throws KuraException, UnknownHostException {
         LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
-        when(linuxFirewall.getPortForwardRules()).thenReturn(new HashSet<>());
-        when(linuxFirewall.getNatRules()).thenReturn(new HashSet<>());
+
+        List<PortForwardRule> existingPortForwardRules = new ArrayList<>();
+        existingPortForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
+                .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
+                .permittedNetwork("10.10.1.0").permittedNetworkMask(24));
+        List<NATRule> existingNatRules = new ArrayList<>();
+        existingNatRules.add(new NATRule("eth0", "eth1", "tcp", null, "10.10.1.0/24", true, RuleType.IP_FORWARDING));
+
+        when(linuxFirewall.getPortForwardRules()).thenReturn(new HashSet<>(existingPortForwardRules));
+        when(linuxFirewall.getNatRules()).thenReturn(new HashSet<>(existingNatRules));
+
         FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
-
-            @Override
-            protected void deleteAllLocalRules() throws KuraException {
-                // do nothing
-            }
-
-            @Override
-            protected void addLocalRules(ArrayList<LocalRule> localRules) throws KuraException {
-                assertEquals(1, localRules.size());
-
-                LocalRule rule = localRules.get(0);
-                assertEquals("0.0.0.0", rule.getPermittedNetwork().getIpAddress().getHostAddress());
-                assertEquals(0, rule.getPermittedNetwork().getPrefix());
-            }
 
             @Override
             protected AbstractLinuxFirewall getLinuxFirewall() {
@@ -475,6 +472,107 @@ public class FirewallConfigurationServiceImplTest {
         svc.activate(componentContext, new HashMap<>());
         svc.setFirewallOpenPortConfiguration(firewallConfiguration);
 
+        List<LocalRule> expectedLocalRules = new ArrayList<>();
+        expectedLocalRules.add(new LocalRule(1234, "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), null, null, null,
+                null));
+
+        verify(linuxFirewall).replace(expectedLocalRules, existingPortForwardRules, existingNatRules);
+    }
+
+    @Test
+    public void testSetFirewallPortForwardingConfiguration() throws KuraException, UnknownHostException {
+        LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
+
+        List<LocalRule> existingLocalRules = new ArrayList<>();
+        existingLocalRules.add(new LocalRule(22, "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), "eth0", null, null,
+                null));
+        List<NATRule> existingNatRules = new ArrayList<>();
+        existingNatRules.add(new NATRule("eth0", "eth1", "tcp", null, "10.10.1.0/24", true, RuleType.IP_FORWARDING));
+
+        when(linuxFirewall.getLocalRules()).thenReturn(new HashSet<>(existingLocalRules));
+        when(linuxFirewall.getNatRules()).thenReturn(new HashSet<>(existingNatRules));
+
+        FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
+
+            @Override
+            protected AbstractLinuxFirewall getLinuxFirewall() {
+                return linuxFirewall;
+            }
+        };
+
+        FirewallPortForwardConfigIP4Builder pfBuilder = FirewallPortForwardConfigIP4.builder();
+        pfBuilder.withInboundIface("eth0").withOutboundIface("eth1")
+                .withAddress((IP4Address) IPAddress.parseHostAddress("172.16.0.1")).withProtocol(NetProtocol.tcp)
+                .withInPort(3040).withOutPort(4050).withMasquerade(true).withPermittedNetwork(
+                        new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("172.16.0.100"), (short) 32));
+        List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration = new ArrayList<>();
+        firewallConfiguration.add(pfBuilder.build());
+
+        EventAdmin eventAdminMock = mock(EventAdmin.class);
+        svc.setEventAdmin(eventAdminMock);
+
+        ComponentContext componentContext = mock(ComponentContext.class);
+        Dictionary<String, Object> ccProperties = new Hashtable<>();
+        ccProperties.put("kura.service.pid", "myFirewall");
+        when(componentContext.getProperties()).thenReturn(ccProperties);
+        svc.activate(componentContext, new HashMap<>());
+        svc.setFirewallPortForwardingConfiguration(firewallConfiguration);
+
+        List<PortForwardRule> expectedPortForwardRules = new ArrayList<>();
+        expectedPortForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
+                .address("172.16.0.1").protocol("tcp").inPort(3040).outPort(4050).masquerade(true)
+                .permittedNetwork("172.16.0.100").permittedNetworkMask(32));
+
+        verify(linuxFirewall).replace(existingLocalRules, expectedPortForwardRules, existingNatRules);
+    }
+
+    @Test
+    public void testSetFirewallNatConfiguration() throws KuraException, UnknownHostException {
+        LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
+
+        List<LocalRule> existingLocalRules = new ArrayList<>();
+        existingLocalRules.add(new LocalRule(22, "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), "eth0", null, null,
+                null));
+        List<PortForwardRule> existingPortForwardRules = new ArrayList<>();
+        existingPortForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
+                .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
+                .permittedNetwork("10.10.1.0").permittedNetworkMask(24));
+
+        when(linuxFirewall.getLocalRules()).thenReturn(new HashSet<>(existingLocalRules));
+        when(linuxFirewall.getPortForwardRules()).thenReturn(new HashSet<>(existingPortForwardRules));
+
+        FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
+
+            @Override
+            protected AbstractLinuxFirewall getLinuxFirewall() {
+                return linuxFirewall;
+            }
+        };
+
+        List<FirewallNatConfig> natConfigs = new ArrayList<>();
+        natConfigs.add(
+                new FirewallNatConfig("eth0", "eth1", "tcp", "172.16.0.1/32", "172.16.0.2/32", true,
+                        RuleType.IP_FORWARDING));
+
+        EventAdmin eventAdminMock = mock(EventAdmin.class);
+        svc.setEventAdmin(eventAdminMock);
+
+        ComponentContext componentContext = mock(ComponentContext.class);
+        Dictionary<String, Object> ccProperties = new Hashtable<>();
+        ccProperties.put("kura.service.pid", "myFirewall");
+        when(componentContext.getProperties()).thenReturn(ccProperties);
+        svc.activate(componentContext, new HashMap<>());
+        svc.setFirewallNatConfiguration(natConfigs);
+
+        List<NATRule> expectedNatRules = new ArrayList<>();
+        expectedNatRules
+                .add(new NATRule("eth0", "eth1", "tcp", "172.16.0.1/32", "172.16.0.2/32", true,
+                        RuleType.IP_FORWARDING));
+
+        verify(linuxFirewall).replace(existingLocalRules, existingPortForwardRules, expectedNatRules);
     }
 
 }
