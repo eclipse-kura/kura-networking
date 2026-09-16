@@ -130,7 +130,7 @@ public class KuraModemModeTest {
             params.add(new Object[] { //
                     Arrays.asList("CS", "2G", "3G", "4G"), //
                     EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G,
-                         KuraModemMode.KURA_MODEM_MODE_3G, KuraModemMode.KURA_MODEM_MODE_4G), //
+                            KuraModemMode.KURA_MODEM_MODE_3G, KuraModemMode.KURA_MODEM_MODE_4G), //
                     null //
             });
             params.add(new Object[] { //
