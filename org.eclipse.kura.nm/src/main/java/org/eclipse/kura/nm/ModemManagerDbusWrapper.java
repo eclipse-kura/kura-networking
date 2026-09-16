@@ -273,17 +273,13 @@ public class ModemManagerDbusWrapper {
 
         Set<MMModemMode> MMenabledModes = EnumSet.noneOf(MMModemMode.class);
         enabledModes.forEach(value -> MMenabledModes.add(value.toMMModemMode()));
-        MMModemMode MMpreferredMode = preferredMode.toMMModemMode();
+        SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(MMModemMode.toBitMask(MMenabledModes),
+                preferredMode.toMMModemMode().toUInt32());
 
         // Retrieve current modes
-        Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(),
-                Properties.class);
-        Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
-        if (rawMode.length >= 2) {
-            Set<MMModemMode> currentEnabledModes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
-            MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
-
-            if (currentEnabledModes.equals(MMenabledModes) && currentPreferredMode.equals(MMpreferredMode)) {
+        Optional<SetCurrentModesStruct> currentModes = getCurrentModemModes(mmDbusPath.get());
+        if (currentModes.isPresent()) {
+            if (currentModes.get().equals(desiredModes)) {
                 logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
                 return;
             }
@@ -293,10 +289,23 @@ public class ModemManagerDbusWrapper {
 
         logger.info("Applying Modem Mode configuration. Enabled: {}, Preferred: {}", enabledModes, preferredMode);
         try {
-            modem.SetCurrentModes(
-                    new SetCurrentModesStruct(MMModemMode.toBitMask(MMenabledModes), MMpreferredMode.toUInt32()));
+            modem.SetCurrentModes(desiredModes);
         } catch (DBusExecutionException ex) {
-            logger.warn("Mode Mode configuration failed. Caused by: ", ex);
+            logger.warn("Modem Mode configuration failed. Caused by: ", ex);
         }
+    }
+
+    private Optional<SetCurrentModesStruct> getCurrentModemModes(String mmDbusPath) {
+        try {
+            Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath, Properties.class);
+            Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
+            if (rawMode.length >= 2) {
+                return Optional.of(new SetCurrentModesStruct((UInt32) rawMode[0], (UInt32) rawMode[1]));
+            }
+            logger.warn("Unexpected MM.Modem.CurrentModes value for {}.", mmDbusPath);
+        } catch (DBusException | DBusExecutionException | ClassCastException e) {
+            logger.warn("Cannot retrieve MM.Modem.CurrentModes for {}. Caused by:", mmDbusPath, e);
+        }
+        return Optional.empty();
     }
 }
