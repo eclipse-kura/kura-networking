@@ -336,8 +336,8 @@ public class ModemManagerDbusWrapperTest {
         whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
                 Optional.of("4G"));
 
-        thenExceptionOccurred(DBusException.class);
-        thenModesWereNotSet();
+        thenExceptionDidNotOccur();
+        thenModesWereSetTo(0x0000000CL, 0x00000008L);
     }
 
     /*
