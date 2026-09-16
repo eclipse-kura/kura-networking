@@ -11,6 +11,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.kura.nm.enums.MMModemMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -230,8 +231,60 @@ public class KuraModemModeTest {
 
     }
 
-    @Test
-    public void testToMMModemMode() {
+    @RunWith(Parameterized.class)
+    public static class KuraModemModeToMMModemModeTest {
 
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_NONE });
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_CS });
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_2G });
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_3G });
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_4G, MMModemMode.MM_MODEM_MODE_4G });
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_5G, MMModemMode.MM_MODEM_MODE_5G });
+            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_ANY });
+            return params;
+        }
+
+        private final KuraModemMode inputValue;
+        private final MMModemMode expectedModemMode;
+        private MMModemMode calculatedModemMode;
+        private Exception occurredException;
+
+        public KuraModemModeToMMModemModeTest(KuraModemMode inputValue, MMModemMode expectedModemMode) {
+            this.inputValue = inputValue;
+            this.expectedModemMode = expectedModemMode;
+        }
+
+        @Test
+        public void shouldReturnCorrectMMModemMode() {
+            whenCalculatedMMModemMode();
+            thenNoExceptionOccurred();
+            thenCalculatedMMModemModeIsCorrect();
+        }
+
+        private void whenCalculatedMMModemMode() {
+            try {
+                this.calculatedModemMode = this.inputValue.toMMModemMode();
+            } catch (Exception e) {
+                this.occurredException = e;
+            }
+        }
+
+        private void thenCalculatedMMModemModeIsCorrect() {
+            assertEquals(this.expectedModemMode, this.calculatedModemMode);
+        }
+
+        private void thenNoExceptionOccurred() {
+            assertNull(this.occurredException);
+        }
+    }
+
+    @Test
+    public void everyKuraModemModeShouldMapToAnMMModemMode() {
+        for (KuraModemMode mode : KuraModemMode.values()) {
+            assertNotNull(mode.toMMModemMode());
+        }
     }
 }
