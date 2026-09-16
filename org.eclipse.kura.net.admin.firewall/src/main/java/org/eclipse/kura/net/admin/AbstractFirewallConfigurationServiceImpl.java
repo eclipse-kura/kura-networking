@@ -26,7 +26,6 @@ import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.configuration.metatype.Tocd;
 import org.eclipse.kura.core.net.FirewallConfiguration;
 import org.eclipse.kura.executor.CommandExecutorService;
-import org.eclipse.kura.executor.PrivilegedExecutorService;
 import org.eclipse.kura.linux.net.iptables.AbstractLinuxFirewall;
 import org.eclipse.kura.linux.net.iptables.LocalRule;
 import org.eclipse.kura.linux.net.iptables.NATRule;
@@ -57,17 +56,16 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
     protected AbstractLinuxFirewall firewall;
     protected CommandExecutorService executorService;
 
-    public void setEventAdmin(EventAdmin eventAdmin) {
+    public void setEventAdminInternal(EventAdmin eventAdmin) {
         this.eventAdmin = eventAdmin;
     }
 
-    public void setExecutorService(PrivilegedExecutorService executorService) {
+    public void setExecutorServiceInternal(CommandExecutorService executorService) {
         this.executorService = executorService;
     }
 
     @Activate
     public void activate(ComponentContext componentContext, Map<String, Object> properties) {
-        long startActivate = System.currentTimeMillis();
         String kuraServicePid = (String) componentContext.getProperties().get("kura.service.pid");
         logger.info("Activating {}...", kuraServicePid);
 
@@ -75,8 +73,6 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         updated(properties);
 
         logger.info("Activating {}... Done.", kuraServicePid);
-        long endActivate = System.currentTimeMillis();
-        logger.info("Firewall activated in {}", endActivate - startActivate);
     }
 
     @Deactivate
@@ -88,7 +84,6 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     @Modified
     public synchronized void updated(Map<String, Object> properties) {
-        long startUpdate = System.currentTimeMillis();
         if (logger.isDebugEnabled()) {
             logger.debug("updated()");
             for (Entry<String, Object> entry : properties.entrySet()) {
@@ -110,8 +105,6 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
         // raise the event because there was a change
         this.eventAdmin.postEvent(new FirewallConfigurationChangeEvent(properties));
-        long endUpdate = System.currentTimeMillis();
-        logger.info("Firewall updated in {}", endUpdate - startUpdate);
     }
 
     protected abstract FirewallConfiguration buildFirewallConfigurationFromProperties(Map<String, Object> properties);

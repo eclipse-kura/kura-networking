@@ -53,9 +53,6 @@ import org.slf4j.LoggerFactory;
         immediate = true, //
         configurationPolicy = ConfigurationPolicy.OPTIONAL, //
         property = { //
-                // to fix weird behavior on ipv6 firewall. Remove before submitting the PR.
-                "service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
-                //
                 "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
                 "kura.ui.service.hide=true" //
         })
@@ -67,12 +64,12 @@ public class FirewallConfigurationServiceIPv6Impl extends
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setEventAdmin(EventAdmin eventAdmin) {
-        super.setEventAdmin(eventAdmin);
+        super.setEventAdminInternal(eventAdmin);
     }
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setExecutorService(PrivilegedExecutorService executorService) {
-        super.setExecutorService(executorService);
+        super.setExecutorServiceInternal(executorService);
     }
 
     @Override

@@ -63,12 +63,12 @@ public class FirewallConfigurationServiceImpl extends
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setEventAdmin(EventAdmin eventAdmin) {
-        super.setEventAdmin(eventAdmin);
+        super.setEventAdminInternal(eventAdmin);
     }
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setExecutorService(PrivilegedExecutorService executorService) {
-        super.setExecutorService(executorService);
+        super.setExecutorServiceInternal(executorService);
     }
 
     @Override
