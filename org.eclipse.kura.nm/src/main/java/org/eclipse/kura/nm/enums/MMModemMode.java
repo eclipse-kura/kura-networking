@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.enums;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.kura.net.status.modem.ModemMode;

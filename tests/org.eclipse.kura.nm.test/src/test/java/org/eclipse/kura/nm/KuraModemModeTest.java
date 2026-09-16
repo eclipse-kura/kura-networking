@@ -107,91 +107,91 @@ public class KuraModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] {
-                    Arrays.asList("NONE"),
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE),
-                    null
+            params.add(new Object[] { //
+                    Arrays.asList("NONE"), //
+                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList("CS", "2G"),
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G),
-                    null
+            params.add(new Object[] { //
+                    Arrays.asList("CS", "2G"), //
+                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList("2G", "3G"),
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_2G, KuraModemMode.KURA_MODEM_MODE_3G),
-                    null
+            params.add(new Object[] { //
+                    Arrays.asList("2G", "3G"), //
+                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_2G, KuraModemMode.KURA_MODEM_MODE_3G), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList("3G"),
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_3G),
-                    null
+            params.add(new Object[] { //
+                    Arrays.asList("3G"), //
+                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_3G), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList("CS", "2G", "3G", "4G"),
+            params.add(new Object[] { //
+                    Arrays.asList("CS", "2G", "3G", "4G"), //
                     EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G,
-                         KuraModemMode.KURA_MODEM_MODE_3G, KuraModemMode.KURA_MODEM_MODE_4G),
-                    null
+                         KuraModemMode.KURA_MODEM_MODE_3G, KuraModemMode.KURA_MODEM_MODE_4G), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList("ANY"),
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_ANY),
-                    null
+            params.add(new Object[] { //
+                    Arrays.asList("ANY"), //
+                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_ANY), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList(),
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE),
-                    null
+            params.add(new Object[] { //
+                    Arrays.asList(), //
+                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE), //
+                    null //
             });
-            params.add(new Object[] {
-                    Arrays.asList("ANY", "NONE"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("ANY", "NONE"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("ANY", "2G"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("ANY", "2G"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("NONE", "2G"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("NONE", "2G"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("NONE", "CS", "2G", "3G", "4G"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("NONE", "CS", "2G", "3G", "4G"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("ANY", "CS", "2G", "3G", "4G"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("ANY", "CS", "2G", "3G", "4G"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("NONE", "CS", "2G", "3G", "4G", "5G", "ANY"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("NONE", "CS", "2G", "3G", "4G", "5G", "ANY"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("6G"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("6G"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("2G", "6G"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("2G", "6G"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList(""),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList(""), //
+                    null, //
+                    IllegalArgumentException.class //
             });
-            params.add(new Object[] {
-                    Arrays.asList("none", "cs"),
-                    null,
-                    IllegalArgumentException.class
+            params.add(new Object[] { //
+                    Arrays.asList("none", "cs"), //
+                    null, //
+                    IllegalArgumentException.class //
             });
             return params;
         }
