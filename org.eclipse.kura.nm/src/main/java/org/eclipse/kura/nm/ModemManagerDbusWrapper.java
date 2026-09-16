@@ -266,21 +266,25 @@ public class ModemManagerDbusWrapper {
                 ? MMModemMode.fromString(preferredModeOption.get())
                 : MMModemMode.MM_MODEM_MODE_NONE;
 
+        if (enabledModes.contains(MMModemMode.MM_MODEM_MODE_ANY)) {
+            logger.warn(
+                    "Use of ANY is discouraged. Some devices support the value but do not report it to be set, leading to unnecessary configuration overwrites. Prefer the use of explicit modes");
+        }
+
         // Retrieve current modes
         Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(),
                 Properties.class);
         Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
-        Set<MMModemMode> currentEnabledModes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
-        MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
+        if(rawMode.length >= 2) {
+            Set<MMModemMode> currentEnabledModes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
+            MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
 
-        if (currentEnabledModes.equals(enabledModes) && currentPreferredMode.equals(preferredMode)) {
-            logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
-            return;
-        }
-
-        if (enabledModes.contains(MMModemMode.MM_MODEM_MODE_ANY)) {
-            logger.warn(
-                    "Use of ANY is discouraged. Some devices support the value but do not report it to be set, leading to unnecessary configuration overwrites. Prefer the use of explicit modes");
+            if (currentEnabledModes.equals(enabledModes) && currentPreferredMode.equals(preferredMode)) {
+                logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
+                return;
+            }
+        } else {
+            logger.warn("Cannot retrieve MM.Modem.CurrentModes. Applying new settings anyway.");
         }
 
         logger.info("Applying Modem Mode configuration. Enabled: {}, Preferred: {}", enabledModes, preferredMode);
