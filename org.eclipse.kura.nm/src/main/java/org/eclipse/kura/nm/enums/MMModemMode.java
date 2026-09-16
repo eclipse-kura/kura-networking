@@ -64,27 +64,6 @@ public enum MMModemMode {
         }
     }
 
-    public static MMModemMode fromString(String type) {
-        switch (type) {
-        case "NONE":
-            return MMModemMode.MM_MODEM_MODE_NONE;
-        case "CS":
-            return MMModemMode.MM_MODEM_MODE_CS;
-        case "2G":
-            return MMModemMode.MM_MODEM_MODE_2G;
-        case "3G":
-            return MMModemMode.MM_MODEM_MODE_3G;
-        case "4G":
-            return MMModemMode.MM_MODEM_MODE_4G;
-        case "5G":
-            return MMModemMode.MM_MODEM_MODE_5G;
-        case "ANY":
-            return MMModemMode.MM_MODEM_MODE_ANY;
-        default:
-            throw new IllegalArgumentException(String.format("Unrecognized MMModemMode: %s", type));
-        }
-    }
-
     public static ModemMode toModemMode(UInt32 type) {
         switch (type.intValue()) {
         case 0x00000000:
@@ -125,24 +104,6 @@ public enum MMModemMode {
             }
         }
         return modemModes;
-    }
-
-    public static Set<MMModemMode> fromStringList(List<String> modes) {
-        if (modes.isEmpty()) {
-            return EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE);
-        }
-
-        EnumSet<MMModemMode> result = EnumSet.noneOf(MMModemMode.class);
-        for (String mode : modes) {
-            result.add(MMModemMode.fromString(mode));
-        }
-
-        if (result.size() > 1 && (result.contains(MM_MODEM_MODE_ANY) || result.contains(MM_MODEM_MODE_NONE))) {
-            throw new IllegalArgumentException(
-                    "Too many modes passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
-        }
-
-        return result;
     }
 
     public static UInt32 toBitMask(Set<MMModemMode> modes) {
