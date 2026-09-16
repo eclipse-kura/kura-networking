@@ -260,26 +260,30 @@ public class ModemManagerDbusWrapper {
         Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(), Modem.class);
 
         // Convert types
-        Set<MMModemMode> enabledModes = MMModemMode.fromStringList(enabledModesOption.get());
+        Set<KuraModemMode> enabledModes = KuraModemMode.fromStringList(enabledModesOption.get());
         // Missing preferred mode means that "NONE" is preferred
-        MMModemMode preferredMode = preferredModeOption.isPresent()
-                ? MMModemMode.fromString(preferredModeOption.get())
-                : MMModemMode.MM_MODEM_MODE_NONE;
+        KuraModemMode preferredMode = preferredModeOption.isPresent()
+                ? KuraModemMode.fromString(preferredModeOption.get())
+                : KuraModemMode.KURA_MODEM_MODE_NONE;
 
-        if (enabledModes.contains(MMModemMode.MM_MODEM_MODE_ANY)) {
+        if (enabledModes.contains(KuraModemMode.KURA_MODEM_MODE_ANY)) {
             logger.warn(
                     "Use of ANY is discouraged. Some devices support the value but do not report it to be set, leading to unnecessary configuration overwrites. Prefer the use of explicit modes");
         }
+
+        Set<MMModemMode> MMenabledModes = EnumSet.noneOf(MMModemMode.class);
+        enabledModes.forEach(value -> MMenabledModes.add(value.toMMModemMode()));
+        MMModemMode MMpreferredMode = preferredMode.toMMModemMode();
 
         // Retrieve current modes
         Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(),
                 Properties.class);
         Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
-        if(rawMode.length >= 2) {
+        if (rawMode.length >= 2) {
             Set<MMModemMode> currentEnabledModes = MMModemMode.fromBitMask((UInt32) rawMode[0]);
             MMModemMode currentPreferredMode = MMModemMode.toMMModemMode((UInt32) rawMode[1]);
 
-            if (currentEnabledModes.equals(enabledModes) && currentPreferredMode.equals(preferredMode)) {
+            if (currentEnabledModes.equals(MMenabledModes) && currentPreferredMode.equals(MMpreferredMode)) {
                 logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
                 return;
             }
@@ -290,7 +294,7 @@ public class ModemManagerDbusWrapper {
         logger.info("Applying Modem Mode configuration. Enabled: {}, Preferred: {}", enabledModes, preferredMode);
         try {
             modem.SetCurrentModes(
-                    new SetCurrentModesStruct(MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()));
+                    new SetCurrentModesStruct(MMModemMode.toBitMask(MMenabledModes), MMpreferredMode.toUInt32()));
         } catch (DBusExecutionException ex) {
             logger.warn("Mode Mode configuration failed. Caused by: ", ex);
         }
