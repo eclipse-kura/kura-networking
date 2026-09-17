@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -161,7 +161,7 @@ public class DnsServerMonitor {
 
     private void addToAllowedNetworksIfPassDnsEnabled(Set<NetworkPair<IP4Address>> allowedNetworks,
             NetConfig netConfig) {
-        if (isPassDnsEnabled(netConfig)) {
+        if (isDhcpServerAndPassDnsEnabled(netConfig)) {
 
             DhcpServerConfig dhcpServerConfig = (DhcpServerConfig) netConfig;
             IPAddress routerAddress = dhcpServerConfig.getRouterAddress();
@@ -196,8 +196,9 @@ public class DnsServerMonitor {
                 .equals(NetInterfaceStatus.netIPv4StatusEnabledLAN);
     }
 
-    public boolean isPassDnsEnabled(NetConfig netConfig) {
-        return netConfig instanceof DhcpServerConfig && ((DhcpServerConfig) netConfig).isPassDns();
+    public boolean isDhcpServerAndPassDnsEnabled(NetConfig netConfig) {
+        return (netConfig instanceof DhcpServerConfig dhcpServerConfig) && dhcpServerConfig.isEnabled()
+                && dhcpServerConfig.isPassDns();
     }
 
     private Set<IP4Address> getForwarders(Set<IPAddress> dnsServers) {
@@ -205,9 +206,9 @@ public class DnsServerMonitor {
 
         if (dnsServers != null && !dnsServers.isEmpty()) {
             for (IPAddress dnsServerTmp : dnsServers) {
-                if (dnsServerTmp instanceof IP4Address) {
-                    logger.debug("Found DNS Server: {}", dnsServerTmp.getHostAddress());
-                    forwarders.add((IP4Address) dnsServerTmp);
+                if (dnsServerTmp instanceof IP4Address dnsServerTmpIP4) {
+                    logger.debug("Found DNS Server: {}", dnsServerTmpIP4.getHostAddress());
+                    forwarders.add(dnsServerTmpIP4);
                 } else {
                     logger.debug("Skipping DNS Server: {} IPv6 addresses not supported", dnsServerTmp.getHostAddress());
                 }
