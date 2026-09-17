@@ -88,7 +88,7 @@ public class DnsServerMonitorTest {
     @Test
     public void isDhcpServerAndPassDnsEnabledShouldReturnTrueWhenDhcpServerEnabledAndPassDnsEnabled() {
         givenDnsServerMonitorInstance();
-        giveDhcpServerConfig(true, true);
+        givenDhcpServerConfig(true, true);
 
         assertTrue(this.monitor.isDhcpServerAndPassDnsEnabled(this.dhcpServerConfigMock));
     }
@@ -96,7 +96,7 @@ public class DnsServerMonitorTest {
     @Test
     public void isDhcpServerAndPassDnsEnabledShouldReturnFalseWhenDhcpServerDisabled() {
         givenDnsServerMonitorInstance();
-        giveDhcpServerConfig(false, true);
+        givenDhcpServerConfig(false, true);
 
         assertFalse(this.monitor.isDhcpServerAndPassDnsEnabled(this.dhcpServerConfigMock));
     }
@@ -104,7 +104,7 @@ public class DnsServerMonitorTest {
     @Test
     public void isDhcpServerAndPassDnsEnabledShouldReturnFalseWhenPassDnsDisabled() {
         givenDnsServerMonitorInstance();
-        giveDhcpServerConfig(true, false);
+        givenDhcpServerConfig(true, false);
 
         assertFalse(this.monitor.isDhcpServerAndPassDnsEnabled(this.dhcpServerConfigMock));
     }
@@ -206,7 +206,7 @@ public class DnsServerMonitorTest {
         this.networkProperties = new NetworkProperties(properties);
     }
 
-    private void giveDhcpServerConfig(boolean isEnabled, boolean isPassDns) {
+    private void givenDhcpServerConfig(boolean isEnabled, boolean isPassDns) {
         this.dhcpServerConfigMock = mock(DhcpServerConfig.class);
         when(dhcpServerConfigMock.isEnabled()).thenReturn(isEnabled);
         when(dhcpServerConfigMock.isPassDns()).thenReturn(isPassDns);
