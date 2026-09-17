@@ -360,7 +360,7 @@ public class MMModemModeTest {
             });
             params.add(new Object[] { //
                     new UInt32(0x12345600L), //
-                    EnumSet.noneOf(ModemMode.class) //
+                    EnumSet.noneOf(MMModemMode.class) //
             });
             return params;
         }
