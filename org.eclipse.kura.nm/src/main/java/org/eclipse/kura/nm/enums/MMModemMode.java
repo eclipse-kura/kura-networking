@@ -129,25 +129,4 @@ public enum MMModemMode {
 
         return new UInt32(result);
     }
-
-    public static Set<MMModemMode> fromBitMask(UInt32 bitMask) {
-        long bitMaskValue = bitMask.longValue();
-        if (bitMaskValue == 0x00000000L) {
-            return EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE);
-        }
-        if (bitMaskValue == 0xFFFFFFFFL) {
-            return EnumSet.of(MM_MODEM_MODE_ANY);
-        }
-
-        EnumSet<MMModemMode> modemModes = EnumSet.noneOf(MMModemMode.class);
-        for (MMModemMode mode : MMModemMode.values()) {
-            if (mode == MM_MODEM_MODE_NONE || mode == MM_MODEM_MODE_ANY) {
-                continue;
-            }
-            if ((bitMaskValue & mode.getValue()) == mode.getValue()) {
-                modemModes.add(toMMModemMode(mode.toUInt32()));
-            }
-        }
-        return modemModes;
-    }
 }
