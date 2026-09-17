@@ -339,6 +339,15 @@ public class NetworkPropertiesTest {
     }
 
     @Test
+    public void getStringListShouldWorkWithSingleComma() {
+        givenMapWith("testKey1", ",");
+        givenNetworkPropertiesBuiltWith(this.properties);
+        whenGetStringListIsCalledWith("testKey1");
+        thenNoExceptionsOccured();
+        thenStringListResultEquals(Collections.emptyList());
+    }
+
+    @Test
     public void getOptStringListShouldWorkWithSimpleMap() {
         givenMapWith("testKey-comma-seperated", "commaSeparated1,commaSeparated2,commaSeparated3");
         givenNetworkPropertiesBuiltWith(this.properties);
@@ -373,6 +382,15 @@ public class NetworkPropertiesTest {
         whenGetOptStringListIsCalledWith("testKey1");
         thenNoExceptionsOccured();
         thenOptionalResultEquals(Optional.of(Arrays.asList("testString1")));
+    }
+
+    @Test
+    public void getOptStringListShouldWorkWithSingleComma() {
+        givenMapWith("testKey1", ",");
+        givenNetworkPropertiesBuiltWith(this.properties);
+        whenGetOptStringListIsCalledWith("testKey1");
+        thenNoExceptionsOccured();
+        thenOptionalResultEquals(Optional.empty());
     }
 
     @Test

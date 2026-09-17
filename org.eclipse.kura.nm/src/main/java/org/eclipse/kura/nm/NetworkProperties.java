@@ -131,6 +131,10 @@ public class NetworkProperties {
         comma.splitAsStream(commaSeparatedString.get()).filter(s -> !s.trim().isEmpty()).map(String::trim)
                 .forEach(stringList::add);
 
+        if (stringList.isEmpty()) {
+            return Optional.empty();
+        }
+
         return Optional.of(stringList);
     }
 }
