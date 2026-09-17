@@ -340,6 +340,34 @@ public class ModemManagerDbusWrapperTest {
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
     }
 
+    @Test
+    public void setModemModesShouldApplyConfigurationIfCurrentModesAreMissing() throws DBusException {
+        givenMockedModem();
+        givenMockedModemProperties();
+        givenMockedCurrentModesReturning(null);
+        givenModemManagerDbusWrapper();
+
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
+                Optional.of("4G"));
+
+        thenExceptionDidNotOccur();
+        thenModesWereSetTo(0x0000000CL, 0x00000008L);
+    }
+
+    @Test
+    public void setModemModesShouldApplyConfigurationIfCurrentModesAreIncomplete() throws DBusException {
+        givenMockedModem();
+        givenMockedModemProperties();
+        givenMockedCurrentModesReturning(new Object[] { new UInt32(0x0000000CL) });
+        givenModemManagerDbusWrapper();
+
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
+                Optional.of("4G"));
+
+        thenExceptionDidNotOccur();
+        thenModesWereSetTo(0x0000000CL, 0x00000008L);
+    }
+
     /*
      * Given
      */
@@ -355,8 +383,12 @@ public class ModemManagerDbusWrapperTest {
     }
 
     private void givenMockedCurrentModes(Set<MMModemMode> enabledModes, MMModemMode preferredMode) {
-        when(this.mockedModemProperties.Get(MM_MODEM_NAME, "CurrentModes"))
-                .thenReturn(new Object[] { MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32() });
+        givenMockedCurrentModesReturning(
+                new Object[] { MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32() });
+    }
+
+    private void givenMockedCurrentModesReturning(Object[] rawCurrentModes) {
+        when(this.mockedModemProperties.Get(MM_MODEM_NAME, "CurrentModes")).thenReturn(rawCurrentModes);
     }
 
     private void givenMockedModemWillThrowOnSetCurrentModes() {

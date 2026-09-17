@@ -299,7 +299,7 @@ public class ModemManagerDbusWrapper {
         try {
             Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath, Properties.class);
             Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
-            if (rawMode.length >= 2) {
+            if (rawMode != null && rawMode.length >= 2) {
                 return Optional.of(new SetCurrentModesStruct((UInt32) rawMode[0], (UInt32) rawMode[1]));
             }
             logger.warn("Unexpected MM.Modem.CurrentModes value for {}.", mmDbusPath);
