@@ -271,9 +271,9 @@ public class ModemManagerDbusWrapper {
                     "Use of ANY is discouraged. Some devices support the value but do not report it to be set, leading to unnecessary configuration overwrites. Prefer the use of explicit modes");
         }
 
-        Set<MMModemMode> MMenabledModes = EnumSet.noneOf(MMModemMode.class);
-        enabledModes.forEach(value -> MMenabledModes.add(value.toMMModemMode()));
-        SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(MMModemMode.toBitMask(MMenabledModes),
+        Set<MMModemMode> enabledMMModemModes = EnumSet.noneOf(MMModemMode.class);
+        enabledModes.forEach(value -> enabledMMModemModes.add(value.toMMModemMode()));
+        SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(MMModemMode.toBitMask(enabledMMModemModes),
                 preferredMode.toMMModemMode().toUInt32());
 
         // Retrieve current modes
