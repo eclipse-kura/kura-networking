@@ -59,7 +59,7 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldDoNothingIfEnabledModesAreMissing() throws DBusException {
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.empty(), Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.empty(), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenNoDbusInteractionOccurred();
@@ -69,7 +69,7 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldDoNothingIfModemPathIsMissing() throws DBusException {
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.empty(), Optional.of(Arrays.asList("3G", "4G")), Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.empty(), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenNoDbusInteractionOccurred();
@@ -83,8 +83,8 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
-                Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
+                Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -98,8 +98,8 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("5G")),
-                Optional.of("5G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("MODE_5G")),
+                Optional.of("MODE_5G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x00000010L, 0x00000010L);
@@ -113,7 +113,7 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("2G", "3G")),
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
                 Optional.empty());
 
         thenExceptionDidNotOccur();
@@ -157,8 +157,8 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("2G", "3G")),
-                Optional.of("2G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
+                Optional.of("MODE_2G"));
 
         thenExceptionDidNotOccur();
         thenModesWereNotSet();
@@ -172,8 +172,8 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "2G")),
-                Optional.of("2G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_2G")),
+                Optional.of("MODE_2G"));
 
         thenExceptionDidNotOccur();
         thenModesWereNotSet();
@@ -188,7 +188,7 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_NONE);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("2G", "3G")),
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
                 Optional.empty());
 
         thenExceptionDidNotOccur();
@@ -217,8 +217,8 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("2G", "3G")),
-                Optional.of("3G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
+                Optional.of("MODE_3G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x00000006L, 0x00000004L);
@@ -232,8 +232,8 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("2G", "3G", "4G")),
-                Optional.of("2G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G", "MODE_4G")),
+                Optional.of("MODE_2G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000EL, 0x00000002L);
@@ -262,7 +262,7 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("4G")),
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("MODE_4G")),
                 Optional.of("LTE"));
 
         thenExceptionOccurred(IllegalArgumentException.class);
@@ -277,7 +277,7 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("ANY", "4G")),
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("ANY", "MODE_4G")),
                 Optional.empty());
 
         thenExceptionOccurred(IllegalArgumentException.class);
@@ -292,7 +292,7 @@ public class ModemManagerDbusWrapperTest {
                 MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("NONE", "4G")),
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("NONE", "MODE_4G")),
                 Optional.empty());
 
         thenExceptionOccurred(IllegalArgumentException.class);
@@ -308,8 +308,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedModemWillThrowOnSetCurrentModes();
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
-                Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
+                Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -320,8 +320,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedDbusConnectionWillThrowWhenRetrieving(Modem.class);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
-                Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
+                Optional.of("MODE_4G"));
 
         thenExceptionOccurred(DBusException.class);
         thenModesWereNotSet();
@@ -333,8 +333,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedDbusConnectionWillThrowWhenRetrieving(Properties.class);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
-                Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
+                Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -347,8 +347,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedCurrentModesReturning(null);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
-                Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
+                Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -361,8 +361,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedCurrentModesReturning(new Object[] { new UInt32(0x0000000CL) });
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("3G", "4G")),
-                Optional.of("4G"));
+        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
+                Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);

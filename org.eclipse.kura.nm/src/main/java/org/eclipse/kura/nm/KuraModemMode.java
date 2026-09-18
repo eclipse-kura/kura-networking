@@ -22,10 +22,10 @@ public enum KuraModemMode {
 
     KURA_MODEM_MODE_NONE("NONE"),
     KURA_MODEM_MODE_CS("CS"),
-    KURA_MODEM_MODE_2G("2G"),
-    KURA_MODEM_MODE_3G("3G"),
-    KURA_MODEM_MODE_4G("4G"),
-    KURA_MODEM_MODE_5G("5G"),
+    KURA_MODEM_MODE_2G("MODE_2G"),
+    KURA_MODEM_MODE_3G("MODE_3G"),
+    KURA_MODEM_MODE_4G("MODE_4G"),
+    KURA_MODEM_MODE_5G("MODE_5G"),
     KURA_MODEM_MODE_ANY("ANY");
 
     private final String value;
