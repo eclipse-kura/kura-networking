@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -21,6 +21,7 @@ public class IptablesConfigIPv6 extends IptablesConfig {
     private static final String FIREWALL_IPV6_CONFIG_FILE_NAME = "/etc/sysconfig/ip6tables";
     private static final String FIREWALL_IPV6_TMP_CONFIG_FILE_NAME = "/tmp/ip6tables";
     private static final String IPTABLES_IPV6_COMMAND = "ip6tables";
+    private static final String IPTABLES_RESTORE_IPV6_COMMAND = "ip6tables-restore";
     private static final String[] ALLOW_ICMP_IPV6 = {
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
@@ -35,11 +36,13 @@ public class IptablesConfigIPv6 extends IptablesConfig {
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT",
-            // Multicast Listener Discovery - essential for IPv6 multicast (mDNS, DHCPv6, etc.)
+            // Multicast Listener Discovery - essential for IPv6 multicast (mDNS, DHCPv6,
+            // etc.)
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 130 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 131 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 132 -j ACCEPT",
-            // Critical Neighbor/Router Discovery - no source restriction for IPv6 connectivity
+            // Critical Neighbor/Router Discovery - no source restriction for IPv6
+            // connectivity
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 133 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 134 -j ACCEPT",
             "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 135 -j ACCEPT",
@@ -92,6 +95,11 @@ public class IptablesConfigIPv6 extends IptablesConfig {
     @Override
     protected String getIptablesCommand() {
         return IPTABLES_IPV6_COMMAND;
+    }
+
+    @Override
+    protected String getIptablesRestoreCommand() {
+        return IPTABLES_RESTORE_IPV6_COMMAND;
     }
 
     @Override

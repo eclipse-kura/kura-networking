@@ -105,6 +105,30 @@ public class LinuxFirewallTest extends FirewallTestUtils {
     }
 
     @Test
+    public void addLocalRulesRejectsDuplicateRuleTest() throws KuraException, UnknownHostException {
+        setUpMock();
+        LinuxFirewall linuxFirewall = LinuxFirewall.getInstance(executorServiceMock);
+        LocalRule localRule = new LocalRule(5499, "tcp",
+                new NetworkPair<IP4Address>(IP4Address.getDefaultAddress(), (short) 0), "eth0", null,
+                "00:11:22:33:44:55:66", "10100:10200");
+        try {
+            linuxFirewall.addLocalRules(Arrays.asList(localRule));
+        } catch (KuraIOException e) {
+            // do nothing...
+        }
+
+        int sizeAfterFirstAdd = linuxFirewall.getLocalRules().size();
+
+        try {
+            linuxFirewall.addLocalRules(Arrays.asList(localRule));
+        } catch (KuraIOException e) {
+            // do nothing...
+        }
+
+        assertEquals(sizeAfterFirstAdd, linuxFirewall.getLocalRules().size());
+    }
+
+    @Test
     public void addPortForwardSourceRangeTest() throws KuraException {
         setUpMock();
         LinuxFirewall linuxFirewall = LinuxFirewall.getInstance(executorServiceMock);

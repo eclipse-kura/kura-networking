@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  * 
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -51,6 +51,7 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
     private boolean hasIcmpAcceptRules;
     private int criticalRulesWithoutSourceRestriction;
     private boolean allowIcmp;
+    private String iptablesRestoreCommand;
 
     // Expected IPv6 ICMP rules from IptablesConfigIPv6.ALLOW_ICMP_IPV6
     private static final String[] EXPECTED_IPV6_ICMP_RULES = {
@@ -184,6 +185,15 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         thenMulticastListenerDiscoveryIsSupported();
     }
 
+    @Test
+    public void shouldGetIp6TablesRestoreCommand() {
+        givenDefaultIptablesConfig();
+
+        whenIptablesRestoreCommandIsRetrieved();
+
+        thenIptablesRestoreCommandIs("ip6tables-restore");
+    }
+
     // Given methods
     private void givenIptablesConfigWithIcmpAllowed(boolean allowIcmp) {
         this.allowIcmp = allowIcmp;
@@ -217,6 +227,10 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         } catch (Exception e) {
             this.occurredException = e;
         }
+    }
+
+    private void whenIptablesRestoreCommandIsRetrieved() {
+        this.iptablesRestoreCommand = this.iptablesConfig.getIptablesRestoreCommand();
     }
 
     // Then methods
@@ -441,5 +455,9 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
             writer.write("-A forward-kura -j RETURN\n");
             writer.write("COMMIT\n");
         }
+    }
+
+    private void thenIptablesRestoreCommandIs(String command) {
+        assertEquals(command, this.iptablesRestoreCommand);
     }
 }

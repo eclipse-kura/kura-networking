@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  * 
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -41,12 +41,14 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP.FirewallOpenPortCo
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP.FirewallPortForwardConfigIPBuilder;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>,
- Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
+public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>, Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractFirewallConfigurationServiceImpl.class);
 
@@ -54,28 +56,33 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
     protected AbstractLinuxFirewall firewall;
     protected CommandExecutorService executorService;
 
-    public void setEventAdmin(EventAdmin eventAdmin) {
+    public void setEventAdminInternal(EventAdmin eventAdmin) {
         this.eventAdmin = eventAdmin;
     }
 
-    public void setExecutorService(CommandExecutorService executorService) {
+    public void setExecutorServiceInternal(CommandExecutorService executorService) {
         this.executorService = executorService;
     }
 
-    protected void activate(ComponentContext componentContext, Map<String, Object> properties) {
-        logger.info("Activating FirewallConfigurationService...");
+    @Activate
+    public void activate(ComponentContext componentContext, Map<String, Object> properties) {
+        String kuraServicePid = (String) componentContext.getProperties().get("kura.service.pid");
+        logger.info("Activating {}...", kuraServicePid);
 
         this.firewall = getLinuxFirewall();
         updated(properties);
 
-        logger.info("Activating FirewallConfigurationService... Done.");
+        logger.info("Activating {}... Done.", kuraServicePid);
     }
 
-    protected void deactivate(ComponentContext componentContext) {
-        logger.info("Deactivating FirewallConfigurationService...");
-        logger.info("Deactivating FirewallConfigurationService... Done.");
+    @Deactivate
+    public void deactivate(ComponentContext componentContext) {
+        String kuraServicePid = (String) componentContext.getProperties().get("kura.service.pid");
+        logger.info("Deactivating {}...", kuraServicePid);
+        logger.info("Deactivating {}... Done.", kuraServicePid);
     }
 
+    @Modified
     public synchronized void updated(Map<String, Object> properties) {
         if (logger.isDebugEnabled()) {
             logger.debug("updated()");
@@ -85,20 +92,15 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         }
 
         FirewallConfiguration firewallConfiguration = buildFirewallConfigurationFromProperties(properties);
+        List<LocalRule> localRules = buildLocalRuleList(firewallConfiguration.getOpenPortConfigs());
+        List<PortForwardRule> portForwardRules = buildPortForwardRuleList(
+                firewallConfiguration.getPortForwardConfigs());
+        List<NATRule> natRules = buildNATRuleList(firewallConfiguration.getNatConfigs());
+
         try {
-            setFirewallOpenPortConfiguration(firewallConfiguration.getOpenPortConfigs());
+            this.firewall.replace(localRules, portForwardRules, natRules);
         } catch (KuraException e) {
-            logger.error("Failed to set Firewall Open Ports Configuration", e);
-        }
-        try {
-            setFirewallPortForwardingConfiguration(firewallConfiguration.getPortForwardConfigs());
-        } catch (KuraException e) {
-            logger.error("Failed to set Firewall Port Forwarding Configuration", e);
-        }
-        try {
-            setFirewallNatConfiguration(firewallConfiguration.getNatConfigs());
-        } catch (KuraException e) {
-            logger.error("Failed to set Firewall NAT Configuration", e);
+            logger.error("Failed to update the firewall configuration.", e);
         }
 
         // raise the event because there was a change
@@ -209,10 +211,36 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     public void setFirewallOpenPortConfiguration(
             List<FirewallOpenPortConfigIP<? extends IPAddress>> firewallConfiguration) throws KuraException {
+        this.firewall.replace(buildLocalRuleList(firewallConfiguration),
+                new ArrayList<>(this.firewall.getPortForwardRules()),
+                new ArrayList<>(this.firewall.getNatRules()));
+    }
 
-        logger.debug("setFirewallOpenPortConfiguration() :: Deleting local rules");
-        deleteAllLocalRules();
+    public void setFirewallPortForwardingConfiguration(
+            List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration) throws KuraException {
+        this.firewall.replace(new ArrayList<>(this.firewall.getLocalRules()),
+                buildPortForwardRuleList(firewallConfiguration),
+                new ArrayList<>(this.firewall.getNatRules()));
+    }
 
+    private String convertNetworkPairToString(NetworkPair<? extends IPAddress> permittedNetwork)
+            throws UnknownHostException {
+        if (permittedNetwork == null || permittedNetwork.getIpAddress() == null) {
+            return new NetworkPair<>(getDefaultAddress(), (short) 0).getIpAddress().getHostAddress();
+        } else {
+            return new NetworkPair<>(IPAddress.parseHostAddress(permittedNetwork.getIpAddress().getHostAddress()),
+                    permittedNetwork.getPrefix()).getIpAddress().getHostAddress();
+        }
+    }
+
+    public void setFirewallNatConfiguration(List<FirewallNatConfig> natConfigs) throws KuraException {
+        this.firewall.replace(new ArrayList<>(this.firewall.getLocalRules()),
+                new ArrayList<>(this.firewall.getPortForwardRules()),
+                buildNATRuleList(natConfigs));
+    }
+
+    private List<LocalRule> buildLocalRuleList(
+            List<FirewallOpenPortConfigIP<? extends IPAddress>> firewallConfiguration) {
         ArrayList<LocalRule> localRules = new ArrayList<>();
         for (FirewallOpenPortConfigIP<? extends IPAddress> openPortEntry : firewallConfiguration) {
             try {
@@ -238,16 +266,11 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
                         openPortEntry.getPort(), e);
             }
         }
-
-        addLocalRules(localRules);
+        return localRules;
     }
 
-    public void setFirewallPortForwardingConfiguration(
-            List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration) throws KuraException {
-
-        logger.debug("setFirewallPortForwardingConfiguration() :: Deleting port forward rules");
-        deleteAllPortForwardRules();
-
+    private List<PortForwardRule> buildPortForwardRuleList(
+            List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration) {
         ArrayList<PortForwardRule> portForwardRules = new ArrayList<>();
         for (FirewallPortForwardConfigIP<? extends IPAddress> portForwardEntry : firewallConfiguration) {
             logger.debug("setFirewallPortForwardingConfiguration() :: Adding port forward rule for: {}",
@@ -271,24 +294,10 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
                         portForwardEntry.getInPort(), e);
             }
         }
-
-        addPortForwardRules(portForwardRules);
+        return portForwardRules;
     }
 
-    private String convertNetworkPairToString(NetworkPair<? extends IPAddress> permittedNetwork)
-            throws UnknownHostException {
-        if (permittedNetwork == null || permittedNetwork.getIpAddress() == null) {
-            return new NetworkPair<>(getDefaultAddress(), (short) 0).getIpAddress().getHostAddress();
-        } else {
-            return new NetworkPair<>(IPAddress.parseHostAddress(permittedNetwork.getIpAddress().getHostAddress()),
-                    permittedNetwork.getPrefix()).getIpAddress().getHostAddress();
-        }
-    }
-
-    public void setFirewallNatConfiguration(List<FirewallNatConfig> natConfigs) throws KuraException {
-
-        deleteAllNatRules();
-
+    private List<NATRule> buildNATRuleList(List<FirewallNatConfig> natConfigs) {
         ArrayList<NATRule> natRules = new ArrayList<>();
         for (FirewallNatConfig natConfig : natConfigs) {
             NATRule natRule = new NATRule(natConfig.getSourceInterface(), natConfig.getDestinationInterface(),
@@ -296,8 +305,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
                     natConfig.isMasquerade(), natConfig.getRuleType());
             natRules.add(natRule);
         }
-
-        addNatRules(natRules);
+        return natRules;
     }
 
     protected void addLocalRules(ArrayList<LocalRule> localRules) throws KuraException {
@@ -326,7 +334,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<NATRule> getAutoNatRules() throws KuraException {
         return this.firewall.getAutoNatRules();
@@ -334,7 +342,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<LocalRule> getLocalRules() throws KuraException {
         return this.firewall.getLocalRules();
@@ -342,7 +350,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<NATRule> getNatRules() throws KuraException {
         return this.firewall.getNatRules();
@@ -350,7 +358,7 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     /**
      * @throws KuraException
-     *             Overriding classes may throw this exception
+     *                       Overriding classes may throw this exception
      */
     protected Set<PortForwardRule> getPortForwardRules() throws KuraException {
         return this.firewall.getPortForwardRules();

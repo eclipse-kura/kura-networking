@@ -39,12 +39,8 @@ import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4;
 import org.eclipse.kura.net.firewall.FirewallOpenPortConfigIP4.FirewallOpenPortConfigIP4Builder;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP4;
 import org.eclipse.kura.net.firewall.FirewallPortForwardConfigIP4.FirewallPortForwardConfigIP4Builder;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -53,13 +49,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(name = "org.eclipse.kura.net.admin.FirewallConfigurationService", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { //
-        "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
-        "kura.ui.service.hide=true" //
-    }
-)
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = { //
+                "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
+                "kura.ui.service.hide=true" //
+        })
 public class FirewallConfigurationServiceImpl extends
         AbstractFirewallConfigurationServiceImpl<IP4Address, FirewallOpenPortConfigIP4Builder, FirewallPortForwardConfigIP4Builder>
         implements FirewallConfigurationService, SelfConfiguringComponent {
@@ -68,27 +63,12 @@ public class FirewallConfigurationServiceImpl extends
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setEventAdmin(EventAdmin eventAdmin) {
-        super.setEventAdmin(eventAdmin);
+        super.setEventAdminInternal(eventAdmin);
     }
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC)
     public void setExecutorService(PrivilegedExecutorService executorService) {
-        super.setExecutorService(executorService);
-    }
-
-    @Activate
-    public void activate(ComponentContext context, Map<String, Object> properties) {
-        super.activate(context, properties);
-    }
-
-    @Deactivate
-    public void deactivate(ComponentContext context) {
-        super.deactivate(context);
-    }
-
-    @Modified
-    public void updated(Map<String, Object> properties) {
-        super.updated(properties);
+        super.setExecutorServiceInternal(executorService);
     }
 
     @Override

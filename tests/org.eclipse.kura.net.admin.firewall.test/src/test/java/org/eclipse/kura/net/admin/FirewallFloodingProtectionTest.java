@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  * 
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -16,10 +16,13 @@ package org.eclipse.kura.net.admin;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -136,11 +139,17 @@ public class FirewallFloodingProtectionTest {
 
     private void whenFirewallConfigurationServiceImplIsActivated() {
         ComponentContext mockContext = mock(ComponentContext.class);
+        Dictionary<String, Object> ccProperties = new Hashtable<>();
+        ccProperties.put("kura.service.pid", "myFirewall");
+        when(mockContext.getProperties()).thenReturn(ccProperties);
         firewallService.activate(mockContext, new HashMap<String, Object>());
     }
 
     private void whenFirewallConfigurationServiceIPv6ImplIsActivated() {
         ComponentContext mockContext = mock(ComponentContext.class);
+        Dictionary<String, Object> ccProperties = new Hashtable<>();
+        ccProperties.put("kura.service.pid", "myFirewall");
+        when(mockContext.getProperties()).thenReturn(ccProperties);
         firewallServiceIPv6.activate(mockContext, new HashMap<String, Object>());
     }
 
