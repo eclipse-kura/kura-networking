@@ -266,11 +266,6 @@ public class ModemManagerDbusWrapper {
                 ? KuraModemMode.fromString(preferredModeOption.get())
                 : KuraModemMode.KURA_MODEM_MODE_NONE;
 
-        if (enabledModes.contains(KuraModemMode.KURA_MODEM_MODE_ANY)) {
-            logger.warn(
-                    "Use of ANY is discouraged. Some devices support the value but do not report it to be set, leading to unnecessary configuration overwrites. Prefer the use of explicit modes");
-        }
-
         Set<MMModemMode> enabledMMModemModes = EnumSet.noneOf(MMModemMode.class);
         enabledModes.forEach(value -> enabledMMModemModes.add(value.toMMModemMode()));
         SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(MMModemMode.toBitMask(enabledMMModemModes),
