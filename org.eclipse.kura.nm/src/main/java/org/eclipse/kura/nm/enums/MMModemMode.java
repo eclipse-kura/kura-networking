@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -103,5 +103,30 @@ public enum MMModemMode {
             }
         }
         return modemModes;
+    }
+
+    public static UInt32 toBitMask(Set<MMModemMode> modes) {
+        if (modes.isEmpty()) {
+            return MM_MODEM_MODE_NONE.toUInt32();
+        }
+
+        if (modes.size() > 1 && (modes.contains(MM_MODEM_MODE_ANY) || modes.contains(MM_MODEM_MODE_NONE))) {
+            throw new IllegalArgumentException(
+                    "Too many modes passed. When MM_MODEM_MODE_ANY and MM_MODEM_MODE_NONE are used, the set should contain only one mode.");
+        }
+
+        long result = 0x00000000L;
+        for (MMModemMode mode : modes) {
+            if (mode == MM_MODEM_MODE_ANY) {
+                return MM_MODEM_MODE_ANY.toUInt32();
+            }
+            if (mode == MM_MODEM_MODE_NONE) {
+                return MM_MODEM_MODE_NONE.toUInt32();
+            }
+
+            result |= mode.toUInt32().longValue();
+        }
+
+        return new UInt32(result);
     }
 }

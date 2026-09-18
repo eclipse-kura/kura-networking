@@ -586,6 +586,22 @@ public class NMDbusConnector {
         String interfaceName = this.networkManager.getDeviceInterface(device);
 
         Optional<Connection> connection = this.networkManager.getAssociatedConnection(device);
+
+        if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
+            Optional<List<String>> enabledModesOption = properties
+                    .getOptStringList("net.interface.%s.config.allowed.modem.modes", deviceId);
+            Optional<String> preferredModeOption = properties.getOpt(String.class,
+                    "net.interface.%s.config.preferred.modem.mode", deviceId);
+
+            try {
+                Optional<String> mmDbusPath = this.networkManager.getModemManagerDbusPath(device.getObjectPath());
+                this.modemManager.setModemModes(mmDbusPath, enabledModesOption, preferredModeOption);
+            } catch (DBusException | RuntimeException e) {
+                logger.warn("Couldn't configure modem modes for device {}. Continuing with the rest of the "
+                        + "configuration. Caused by:", deviceId, e);
+            }
+        }
+
         Map<String, Map<String, Variant<?>>> newConnectionSettings = NMSettingsConverter.buildSettings(properties,
                 connection, deviceId, interfaceName, deviceType, this.networkManager.getVersion());
 
