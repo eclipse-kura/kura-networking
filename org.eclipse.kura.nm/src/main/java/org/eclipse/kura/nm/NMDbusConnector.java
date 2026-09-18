@@ -589,9 +589,9 @@ public class NMDbusConnector {
 
         if (deviceType == NMDeviceType.NM_DEVICE_TYPE_MODEM) {
             Optional<List<String>> enabledModesOption = properties
-                    .getOptStringList("net.interface.%s.config.modem.enabled.modes", deviceId);
+                    .getOptStringList("net.interface.%s.config.allowed.modem.modes", deviceId);
             Optional<String> preferredModeOption = properties.getOpt(String.class,
-                    "net.interface.%s.config.modem.preferred.mode", deviceId);
+                    "net.interface.%s.config.preferred.modem.mode", deviceId);
 
             try {
                 Optional<String> mmDbusPath = this.networkManager.getModemManagerDbusPath(device.getObjectPath());
