@@ -282,7 +282,7 @@ public class ModemManagerDbusWrapper {
             logger.warn("Cannot retrieve MM.Modem.CurrentModes. Applying new settings anyway.");
         }
 
-        logger.info("Applying Modem Mode configuration. Enabled: {}, Preferred: {}", enabledModes, preferredMode);
+        logger.info("Applying Modem Mode configuration: {} | {}", enabledModes, preferredMode);
         try {
             modem.SetCurrentModes(desiredModes);
         } catch (DBusExecutionException ex) {
