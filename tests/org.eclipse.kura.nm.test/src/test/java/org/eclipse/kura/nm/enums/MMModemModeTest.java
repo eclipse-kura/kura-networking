@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,6 +13,8 @@
 package org.eclipse.kura.nm.enums;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -151,6 +153,136 @@ public class MMModemModeTest {
 
         private void thenCalculatedModemModesIsCorrect() {
             assertEquals(this.expectedModemModes, this.calculatedModemModes);
+        }
+
+    }
+
+    @RunWith(Parameterized.class)
+    public static class MMModemModeToBitMaskFromModemModeSetTest {
+
+        @Parameters
+        public static Collection<Object[]> ModemModeParams() {
+            List<Object[]> params = new ArrayList<>();
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), //
+                    new UInt32(0x00000000L), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G), //
+                    new UInt32(0x00000003L), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), //
+                    new UInt32(0x00000006L), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), //
+                    new UInt32(0x00000004L), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
+                            MMModemMode.MM_MODEM_MODE_4G), //
+                    new UInt32(0x0000000FL), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
+                            MMModemMode.MM_MODEM_MODE_4G), //
+                    new UInt32(0x0000000EL), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), //
+                    new UInt32(0xFFFFFFFFL), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.noneOf(MMModemMode.class), //
+                    new UInt32(0x00000000L), //
+                    null //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_NONE), //
+                    null, //
+                    IllegalArgumentException.class //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_2G), //
+                    null, //
+                    IllegalArgumentException.class //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_2G), //
+                    null, //
+                    IllegalArgumentException.class //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_CS,
+                            MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G), //
+                    null, //
+                    IllegalArgumentException.class //
+            });
+            params.add(new Object[] { //
+                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_CS,
+                            MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G), //
+                    null, //
+                    IllegalArgumentException.class //
+            });
+            params.add(new Object[] { //
+                    EnumSet.allOf(MMModemMode.class), //
+                    null, //
+                    IllegalArgumentException.class //
+            });
+            return params;
+        }
+
+        private final Set<MMModemMode> inputValue;
+        private final UInt32 expectedInt;
+        private final Class<? extends Exception> expectedExceptionClass;
+        private UInt32 calculatedInt;
+        private Exception occurredException;
+
+        public MMModemModeToBitMaskFromModemModeSetTest(Set<MMModemMode> modemModes, UInt32 intValue,
+                Class<? extends Exception> expectedExceptionClass) {
+            this.expectedInt = intValue;
+            this.inputValue = modemModes;
+            this.expectedExceptionClass = expectedExceptionClass;
+        }
+
+        @Test
+        public void shouldReturnCorrectBitMaskOrThrowException() {
+            whenCalculatedBitMask();
+            if (this.expectedExceptionClass != null) {
+                thenExceptionOccurred(this.expectedExceptionClass);
+            } else {
+                thenNoExceptionOccurred();
+                thenCalculatedBitMaskIsCorrect();
+            }
+        }
+
+        private void whenCalculatedBitMask() {
+            try {
+                this.calculatedInt = MMModemMode.toBitMask(this.inputValue);
+            } catch (Exception e) {
+                this.occurredException = e;
+            }
+        }
+
+        private void thenCalculatedBitMaskIsCorrect() {
+            assertEquals(this.expectedInt, this.calculatedInt);
+        }
+
+        private void thenNoExceptionOccurred() {
+            assertNull(this.occurredException);
+        }
+
+        private <E extends Exception> void thenExceptionOccurred(Class<E> expectedException) {
+            assertNotNull(this.occurredException);
+            assertEquals(expectedException, this.occurredException.getClass());
         }
 
     }

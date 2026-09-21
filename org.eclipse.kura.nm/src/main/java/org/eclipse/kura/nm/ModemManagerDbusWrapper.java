@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
+import org.eclipse.kura.nm.enums.MMModemMode;
 import org.eclipse.kura.nm.enums.MMModemState;
 import org.eclipse.kura.nm.status.SimProperties;
 import org.freedesktop.dbus.DBusPath;
@@ -29,6 +30,7 @@ import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.interfaces.Properties;
 import org.freedesktop.dbus.types.UInt32;
 import org.freedesktop.modemmanager1.Modem;
+import org.freedesktop.modemmanager1.SetCurrentModesStruct;
 import org.freedesktop.modemmanager1.modem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,4 +244,63 @@ public class ModemManagerDbusWrapper {
 
     }
 
+    public void setModemModes(Optional<String> mmDbusPath, Optional<List<String>> enabledModesOption,
+            Optional<String> preferredModeOption) throws DBusException {
+
+        if (enabledModesOption.isEmpty()) {
+            logger.debug("Enabled modes are missing. Skipping Modem Mode configuration.");
+            return;
+        }
+
+        // Retrieve modem device
+        if (!mmDbusPath.isPresent()) {
+            logger.warn("Cannot retrieve MM.Modem from NM.Modem. Skipping Modem Mode configuration.");
+            return;
+        }
+        Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath.get(), Modem.class);
+
+        // Convert types
+        Set<KuraModemMode> enabledModes = KuraModemMode.fromStringList(enabledModesOption.get());
+        // Missing preferred mode means that "NONE" is preferred
+        KuraModemMode preferredMode = preferredModeOption.isPresent()
+                ? KuraModemMode.fromString(preferredModeOption.get())
+                : KuraModemMode.KURA_MODEM_MODE_NONE;
+
+        Set<MMModemMode> enabledMMModemModes = EnumSet.noneOf(MMModemMode.class);
+        enabledModes.forEach(value -> enabledMMModemModes.add(value.toMMModemMode()));
+        SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(MMModemMode.toBitMask(enabledMMModemModes),
+                preferredMode.toMMModemMode().toUInt32());
+
+        // Retrieve current modes
+        Optional<SetCurrentModesStruct> currentModes = getCurrentModemModes(mmDbusPath.get());
+        if (currentModes.isPresent()) {
+            if (currentModes.get().equals(desiredModes)) {
+                logger.debug("No change in configuration detected. Skipping Modem Mode configuration.");
+                return;
+            }
+        } else {
+            logger.warn("Cannot retrieve MM.Modem.CurrentModes. Applying new settings anyway.");
+        }
+
+        logger.info("Applying Modem Mode configuration: {} | {}", enabledModes, preferredMode);
+        try {
+            modem.SetCurrentModes(desiredModes);
+        } catch (DBusExecutionException ex) {
+            logger.warn("Modem Mode configuration failed. Caused by: ", ex);
+        }
+    }
+
+    private Optional<SetCurrentModesStruct> getCurrentModemModes(String mmDbusPath) {
+        try {
+            Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, mmDbusPath, Properties.class);
+            Object[] rawMode = modemProperties.Get(MM_MODEM_NAME, "CurrentModes");
+            if (rawMode != null && rawMode.length >= 2) {
+                return Optional.of(new SetCurrentModesStruct((UInt32) rawMode[0], (UInt32) rawMode[1]));
+            }
+            logger.warn("Unexpected MM.Modem.CurrentModes value for {}.", mmDbusPath);
+        } catch (DBusException | DBusExecutionException | ClassCastException e) {
+            logger.warn("Cannot retrieve MM.Modem.CurrentModes for {}. Caused by:", mmDbusPath, e);
+        }
+        return Optional.empty();
+    }
 }
