@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -35,9 +34,7 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "RollbackTimeout", type = UInt32.class, access = Access.READ)
 public interface Checkpoint extends DBusInterface {
 
-    public static interface PropertyDevicesType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyDevicesType extends TypeRef<List<DBusPath>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -51,6 +48,5 @@ public interface Checkpoint extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }

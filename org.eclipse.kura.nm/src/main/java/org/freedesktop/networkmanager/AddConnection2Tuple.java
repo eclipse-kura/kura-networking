@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.Tuple;
 import org.freedesktop.dbus.annotations.Position;
@@ -26,6 +25,7 @@ public class AddConnection2Tuple extends Tuple {
 
     @Position(0)
     private DBusPath path;
+
     @Position(1)
     private Map<String, Variant<?>> result;
 
@@ -49,5 +49,4 @@ public class AddConnection2Tuple extends Tuple {
     public Map<String, Variant<?>> getResult() {
         return this.result;
     }
-
 }

@@ -13,9 +13,7 @@
      Eurotech
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,6 +26,30 @@
     <artifactId>kura-networking-distrib</artifactId>
     <packaging>pom</packaging>
     <description>kura-networking distribution packaging</description>
+
+    <properties>
+        <addon.installation.dir>/opt/eclipse/kura/plugins</addon.installation.dir>
+
+        <!--
+            Available DEB architectures:
+            all, amd64, arm64
+        -->
+        <deb.architecture>all</deb.architecture>
+        <deb.maintainer>${project.organization.name} &lt;${project.developers[0].email}&gt;</deb.maintainer>
+        <deb.docs>${project.url}</deb.docs>
+
+        <!-- final name of the generated debian package -->
+        <package.name>kura-networking</package.name>
+        <package.revision>1</package.revision>
+
+        <!-- properties used for artifact upload on artifactory repository -->
+        <kura.repo.distribution>kura-6</kura.repo.distribution>
+        <kura.repo.module>base</kura.repo.module>
+
+        <!-- edit following fields and file deb/control/control -->
+        <summary>Eclipse Kura Networking add-on</summary>
+        <long.description>The Kura Networking add-on provides networking functionality to Eclipse Kura.</long.description>
+    </properties>
 
     <!-- Insert your bundles as dependencies -->
     <dependencies>
@@ -69,84 +91,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <addon.installation.dir>/opt/eclipse/kura/plugins</addon.installation.dir>
-
-        <!--
-            Available DEB architectures:
-            all, amd64, arm64
-        -->
-        <deb.architecture>all</deb.architecture>
-        <deb.maintainer>${project.organization.name} &lt;${project.developers[0].email}&gt;</deb.maintainer>
-        <deb.docs>${project.url}</deb.docs>
-
-        <!-- final name of the generated debian package -->
-        <package.name>kura-networking</package.name>
-        <package.revision>1</package.revision>
-
-        <!-- properties used for artifact upload on artifactory repository -->
-        <kura.repo.distribution>kura-6</kura.repo.distribution>
-        <kura.repo.module>base</kura.repo.module>
-
-        <!-- edit following fields and file deb/control/control -->
-        <summary>Eclipse Kura Networking add-on</summary>
-        <long.description>The Kura Networking add-on provides networking functionality to Eclipse Kura.</long.description>
-    </properties>
-
-    <profiles>
-        <!-- Internal profile: FOR INTERNAL USE ONLY - active if -DreleaseBuild is *not* specified. -->
-        <profile>
-            <id>debugBuild</id>
-            <activation>
-                <property>
-                    <name>!releaseBuild</name>
-                </property>
-            </activation>
-            <properties>
-                <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-                <package.snapshot>git${maven.build.timestamp}.${git.commit.id.abbrev}</package.snapshot>
-
-                <package.version>${release.version}~${package.snapshot}</package.version>
-            </properties>
-        </profile>
-        <!-- Internal profile: FOR INTERNAL USE ONLY - active if -DreleaseBuild *is* specified. -->
-        <profile>
-            <id>releaseBuild</id>
-            <activation>
-                <property>
-                    <name>releaseBuild</name>
-                </property>
-            </activation>
-            <properties>
-                <package.version>${release.version}</package.version>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>enforce-no-snapshots</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireReleaseVersion>
-                                            <message>No snapshots allowed for release builds!</message>
-                                        </requireReleaseVersion>
-                                    </rules>
-                                    <fail>true</fail>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
             <!-- Responsible for removing the "-SNAPSHOT" from the project.version -->
@@ -164,7 +108,7 @@
                             <name>release.version</name>
                             <value>${project.version}</value>
                             <regex>-SNAPSHOT</regex>
-                            <replacement></replacement>
+                            <replacement />
                             <failIfNoMatch>false</failIfNoMatch>
                         </configuration>
                     </execution>
@@ -176,6 +120,14 @@
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
                 <version>9.0.2</version>
+                <configuration>
+                    <injectAllReactorProjects>true</injectAllReactorProjects>
+                    <generateGitPropertiesFile>false</generateGitPropertiesFile>
+                    <skipPoms>false</skipPoms>
+                    <includeOnlyProperties>
+                        <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+                    </includeOnlyProperties>
+                </configuration>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>
@@ -185,14 +137,6 @@
                         <phase>initialize</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <injectAllReactorProjects>true</injectAllReactorProjects>
-                    <generateGitPropertiesFile>false</generateGitPropertiesFile>
-                    <skipPoms>false</skipPoms>
-                    <includeOnlyProperties>
-                        <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
-                    </includeOnlyProperties>
-                </configuration>
             </plugin>
 
             <!--
@@ -210,56 +154,50 @@
                 <executions>
                     <execution>
                         <id>copy-deps-start-level-4</id>
-                        <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <excludeTypes>pom</excludeTypes>
                             <excludeClassifiers>sources</excludeClassifiers>
                             <excludeTransitive>true</excludeTransitive>
                             <outputDirectory>${project.build.directory}/plugins/4</outputDirectory>
-                            <includeArtifactIds>
-                                org.eclipse.kura.linux.net,
-                                org.eclipse.kura.linux.systemd.provider
-                            </includeArtifactIds>
+                            <includeArtifactIds>org.eclipse.kura.linux.net,
+                                org.eclipse.kura.linux.systemd.provider</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
                         <id>copy-deps-start-level-4s</id>
-                        <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <excludeTypes>pom</excludeTypes>
                             <excludeClassifiers>sources</excludeClassifiers>
                             <excludeTransitive>true</excludeTransitive>
                             <outputDirectory>${project.build.directory}/plugins/4s</outputDirectory>
-                            <includeArtifactIds>
-                                org.eclipse.kura.rest.network.configuration.provider,
+                            <includeArtifactIds>org.eclipse.kura.rest.network.configuration.provider,
                                 org.eclipse.kura.network.threat.manager,
                                 org.eclipse.kura.core.net,
-                                org.eclipse.kura.net.configuration
-                            </includeArtifactIds>
+                                org.eclipse.kura.net.configuration</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
                         <id>copy-deps-start-level-5s</id>
-                        <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <excludeTypes>pom</excludeTypes>
                             <excludeClassifiers>sources</excludeClassifiers>
                             <excludeTransitive>true</excludeTransitive>
                             <outputDirectory>${project.build.directory}/plugins/5s</outputDirectory>
-                            <includeArtifactIds>
-                                org.eclipse.kura.net.admin.firewall,
+                            <includeArtifactIds>org.eclipse.kura.net.admin.firewall,
                                 org.eclipse.kura.nm,
-                                org.eclipse.kura.rest.network.status.provider
-                            </includeArtifactIds>
+                                org.eclipse.kura.rest.network.status.provider</includeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
@@ -272,10 +210,10 @@
                 <executions>
                     <execution>
                         <id>generate-deb</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>jdeb</goal>
                         </goals>
+                        <phase>package</phase>
                         <configuration>
                             <verbose>true</verbose>
                             <deb>${basedir}/target/deb/${package.name}_${package.version}-${package.revision}_${deb.architecture}.deb</deb>
@@ -447,4 +385,58 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Internal profile: FOR INTERNAL USE ONLY - active if -DreleaseBuild is *not* specified. -->
+        <profile>
+            <id>debugBuild</id>
+            <activation>
+                <property>
+                    <name>!releaseBuild</name>
+                </property>
+            </activation>
+            <properties>
+                <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+                <package.snapshot>git${maven.build.timestamp}.${git.commit.id.abbrev}</package.snapshot>
+
+                <package.version>${release.version}~${package.snapshot}</package.version>
+            </properties>
+        </profile>
+        <!-- Internal profile: FOR INTERNAL USE ONLY - active if -DreleaseBuild *is* specified. -->
+        <profile>
+            <id>releaseBuild</id>
+            <activation>
+                <property>
+                    <name>releaseBuild</name>
+                </property>
+            </activation>
+            <properties>
+                <package.version>${release.version}</package.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-no-snapshots</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireReleaseVersion>
+                                            <message>No snapshots allowed for release builds!</message>
+                                        </requireReleaseVersion>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IP6Address;
 import org.eclipse.kura.net.IPAddress;
@@ -87,11 +86,11 @@ public class RouteFile {
         }
         if (dest != null && gw != null && mask != null) {
             if (dest instanceof IP4Address) {
-                route = new RouteConfigIP4((IP4Address) dest, (IP4Address) gw, (IP4Address) mask, this.interfaceName,
-                        -1);
+                route = new RouteConfigIP4(
+                        (IP4Address) dest, (IP4Address) gw, (IP4Address) mask, this.interfaceName, -1);
             } else if (dest instanceof IP6Address) {
-                route = new RouteConfigIP6((IP6Address) dest, (IP6Address) gw, (IP6Address) mask, this.interfaceName,
-                        -1);
+                route = new RouteConfigIP6(
+                        (IP6Address) dest, (IP6Address) gw, (IP6Address) mask, this.interfaceName, -1);
             }
         }
         return route;
@@ -100,11 +99,11 @@ public class RouteFile {
     public boolean addRoute(IPAddress destination, IPAddress gateway, IPAddress netmask, String ifaceName) {
         RouteConfig route = null;
         if (destination instanceof IP4Address) {
-            route = new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, ifaceName,
-                    -1);
+            route = new RouteConfigIP4(
+                    (IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, ifaceName, -1);
         } else if (destination instanceof IP6Address) {
-            route = new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, ifaceName,
-                    -1);
+            route = new RouteConfigIP6(
+                    (IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, ifaceName, -1);
         }
         if (route == null || routeIndex(route) != -1) {
             return false;
@@ -117,11 +116,11 @@ public class RouteFile {
     public boolean removeRoute(IPAddress destination, IPAddress gateway, IPAddress netmask) {
         RouteConfig route = null;
         if (destination instanceof IP4Address) {
-            route = new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask,
-                    this.interfaceName, -1);
+            route = new RouteConfigIP4(
+                    (IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, this.interfaceName, -1);
         } else if (destination instanceof IP6Address) {
-            route = new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask,
-                    this.interfaceName, -1);
+            route = new RouteConfigIP6(
+                    (IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, this.interfaceName, -1);
         }
 
         if (route != null) {
@@ -191,5 +190,4 @@ public class RouteFile {
     public void cleanFile() {
         this.routes = new ArrayList<>();
     }
-
 }

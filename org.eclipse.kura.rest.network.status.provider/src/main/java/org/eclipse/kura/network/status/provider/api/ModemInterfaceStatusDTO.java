@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.net.modem.ModemConnectionType;
 import org.eclipse.kura.net.status.modem.AccessTechnology;
 import org.eclipse.kura.net.status.modem.ModemBand;
@@ -69,8 +68,8 @@ public class ModemInterfaceStatusDTO extends NetworkInterfaceStatusDTO {
         this.supportedModemCapabilities = status.getSupportedModemCapabilities();
         this.currentModemCapabilities = status.getCurrentModemCapabilities();
         this.powerState = status.getPowerState();
-        this.supportedModes = status.getSupportedModes().stream().map(ModemModePairDTO::new)
-                .collect(Collectors.toSet());
+        this.supportedModes =
+                status.getSupportedModes().stream().map(ModemModePairDTO::new).collect(Collectors.toSet());
         this.currentModes = new ModemModePairDTO(status.getCurrentModes());
         this.supportedBands = status.getSupportedBands();
         this.currentBands = status.getCurrentBands();
@@ -86,5 +85,4 @@ public class ModemInterfaceStatusDTO extends NetworkInterfaceStatusDTO {
         this.registrationStatus = status.getRegistrationStatus();
         this.operatorName = status.getOperatorName();
     }
-
 }

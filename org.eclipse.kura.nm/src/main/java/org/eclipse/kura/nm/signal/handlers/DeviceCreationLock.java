@@ -1,25 +1,23 @@
 /*******************************************************************************
- * Copyright (c) 2023 Areti and others
- * 
+ * Copyright (c) 2023, 2026 Areti and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Areti
  *  Eurotech
  *******************************************************************************/
 package org.eclipse.kura.nm.signal.handlers;
 
-
 import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import org.eclipse.kura.nm.NMDbusConnector;
 import org.freedesktop.NetworkManager;
 import org.freedesktop.dbus.connections.impl.DBusConnection;
@@ -31,11 +29,11 @@ import org.slf4j.LoggerFactory;
 public class DeviceCreationLock {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceCreationLock.class);
-    
+
     private final BlockingQueue<Device> deviceQueue;
     private final NMDeviceCreationHandler handler;
     private final DBusConnection dbusConnection;
-    
+
     public DeviceCreationLock(NMDbusConnector nm, String deviceId) throws DBusException {
         this.deviceQueue = new ArrayBlockingQueue<>(1);
         this.dbusConnection = nm.getDbusConnection();
@@ -43,7 +41,7 @@ public class DeviceCreationLock {
 
         this.dbusConnection.addSigHandler(NetworkManager.DeviceAdded.class, this.handler);
     }
-    
+
     public Optional<Device> waitForDeviceCreation() throws DBusException, TimeoutException {
         return waitForDeviceCreation(5L);
     }

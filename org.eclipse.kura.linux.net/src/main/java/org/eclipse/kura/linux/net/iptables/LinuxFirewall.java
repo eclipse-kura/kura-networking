@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.eclipse.kura.linux.net.iptables;
 
 import java.io.File;
 import java.net.UnknownHostException;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.net.IP4Address;

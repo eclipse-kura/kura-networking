@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2017, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.dhcp;
 
 import java.io.BufferedReader;
@@ -19,7 +18,6 @@ import java.io.FileReader;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.IPAddress;
@@ -143,7 +141,8 @@ public class DhcpClientLeases {
 
     private List<DhcpClientLeaseBlock> getLeaseBlocks(File dhClientFile) throws KuraException {
         List<DhcpClientLeaseBlock> leaseBlocks = new ArrayList<>();
-        try (FileReader fr = new FileReader(dhClientFile); BufferedReader br = new BufferedReader(fr)) {
+        try (FileReader fr = new FileReader(dhClientFile);
+                BufferedReader br = new BufferedReader(fr)) {
             String line = null;
             List<String> leaseBlock = null;
             while ((line = br.readLine()) != null) {

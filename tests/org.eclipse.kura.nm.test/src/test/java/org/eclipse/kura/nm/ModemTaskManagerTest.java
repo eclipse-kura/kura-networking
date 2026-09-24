@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.networkmanager.Device;
@@ -105,7 +104,7 @@ public class ModemTaskManagerTest {
 
     /**
      * Given
-     * 
+     *
      */
     private void givenNMDbusConnectorMock() {
         this.dbusConnection = mock(DBusConnection.class);
@@ -126,9 +125,8 @@ public class ModemTaskManagerTest {
 
     /**
      * When
-     * 
+     *
      */
-
     private void whenEnableModemTaskHandler(String deviceId) throws DBusException {
         this.modemTaskManager.modemTaskHandlerEnable(deviceId, mock(Device.class), this.networkProperties);
     }
@@ -139,7 +137,7 @@ public class ModemTaskManagerTest {
 
     /*
      * Then
-     * 
+     *
      */
 
     private void thenModemTaskHandlerPresent(String deviceId) {
@@ -151,8 +149,8 @@ public class ModemTaskManagerTest {
     }
 
     private void thenSignalHandlerIsNotAdded() throws DBusException {
-        verify(this.dbusConnection, never()).addSigHandler(eq(org.freedesktop.networkmanager.Device.StateChanged.class),
-                any());
+        verify(this.dbusConnection, never())
+                .addSigHandler(eq(org.freedesktop.networkmanager.Device.StateChanged.class), any());
     }
 
     private void thenSignalHandlerIsAdded(int times) throws DBusException {
@@ -164,5 +162,4 @@ public class ModemTaskManagerTest {
         verify(this.dbusConnection, times(times))
                 .removeSigHandler(eq(org.freedesktop.networkmanager.Device.StateChanged.class), any());
     }
-
 }

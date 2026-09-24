@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -429,85 +429,85 @@ public class NMDeviceTypeTest {
         whenPropertyStringDeviceTypeIsPassed("UNKNOWN");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_UNKNOWN);
     }
-    
+
     @Test
     public void conversionWorksForTypeEthernetProperty() {
         whenPropertyStringDeviceTypeIsPassed("ETHERNET");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
     }
-    
+
     @Test
     public void conversionWorksForTypeWifiProperty() {
         whenPropertyStringDeviceTypeIsPassed("WIFI");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_WIFI);
     }
-    
+
     @Test
     public void conversionWorksForTypeUnused1Property() {
         whenPropertyStringDeviceTypeIsPassed("UNUSED1");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_UNUSED1);
     }
-    
+
     @Test
     public void conversionWorksForTypeUnused2Property() {
         whenPropertyStringDeviceTypeIsPassed("UNUSED2");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_UNUSED2);
     }
-    
+
     @Test
     public void conversionWorksForTypeBtProperty() {
         whenPropertyStringDeviceTypeIsPassed("BT");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_BT);
     }
-    
+
     @Test
     public void conversionWorksForTypeOlpcMeshProperty() {
         whenPropertyStringDeviceTypeIsPassed("OLPC_MESH");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_OLPC_MESH);
     }
-    
+
     @Test
     public void conversionWorksForTypeWimaxProperty() {
         whenPropertyStringDeviceTypeIsPassed("WIMAX");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_WIMAX);
     }
-    
+
     @Test
     public void conversionWorksForTypeModemProperty() {
         whenPropertyStringDeviceTypeIsPassed("MODEM");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_MODEM);
     }
-    
+
     @Test
     public void conversionWorksForTypeInfinibandProperty() {
         whenPropertyStringDeviceTypeIsPassed("INFINIBAND");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_INFINIBAND);
     }
-    
+
     @Test
     public void conversionWorksForTypeBondProperty() {
         whenPropertyStringDeviceTypeIsPassed("BOND");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_BOND);
     }
-    
+
     @Test
     public void conversionWorksForTypeVLANProperty() {
         whenPropertyStringDeviceTypeIsPassed("VLAN");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_VLAN);
     }
-    
+
     @Test
     public void conversionWorksForTypeAdslProperty() {
         whenPropertyStringDeviceTypeIsPassed("ADSL");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_ADSL);
     }
-    
+
     @Test
     public void conversionWorksForTypeLoopbackProperty() {
         whenPropertyStringDeviceTypeIsPassed("LOOPBACK");
         thenTypeShouldBeEqualTo(NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
     }
-        
+
     @Test
     public void conversionWorksForTypeUnexpectedProperty() {
         whenPropertyStringDeviceTypeIsPassed("unexpectedValue");
@@ -521,7 +521,7 @@ public class NMDeviceTypeTest {
     private void whenNMDeviceTypeStateIsPassed(NMDeviceType type) {
         this.typeInt = NMDeviceType.toUInt32(type);
     }
-    
+
     private void whenPropertyStringDeviceTypeIsPassed(String propertyType) {
         this.type = NMDeviceType.fromPropertiesString(propertyType);
     }
@@ -533,5 +533,4 @@ public class NMDeviceTypeTest {
     private void thenTypeUInt32ShouldBeEqualTo(UInt32 type) {
         assertEquals(type, this.typeInt);
     }
-
 }

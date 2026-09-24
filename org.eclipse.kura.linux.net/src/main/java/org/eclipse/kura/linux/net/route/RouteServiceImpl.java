@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -60,16 +59,18 @@ public class RouteServiceImpl implements RouteService {
             if (logger.isErrorEnabled()) {
                 logger.error("Error adding static Route: {}", String.join(" ", commandLine));
             }
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR, String.join(" ", commandLine),
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR,
+                    String.join(" ", commandLine),
                     status.getExitStatus().getExitCode());
         }
 
         if (destination instanceof IP4Address) {
-            tmpRoute = new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, iface,
-                    -1);
+            tmpRoute =
+                    new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, iface, -1);
         } else if (destination instanceof IP6Address) {
-            tmpRoute = new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, iface,
-                    -1);
+            tmpRoute =
+                    new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, iface, -1);
         }
         if (tmpRoute != null) {
             logger.info("Static route added successfully");
@@ -77,8 +78,8 @@ public class RouteServiceImpl implements RouteService {
         }
     }
 
-    private String[] formRouteAddCommand(IPAddress destination, IPAddress gateway, IPAddress netmask, String iface,
-            int metric) {
+    private String[] formRouteAddCommand(
+            IPAddress destination, IPAddress gateway, IPAddress netmask, String iface, int metric) {
         List<String> command = new ArrayList<>();
         command.add(ROUTE);
         command.add("add");
@@ -88,7 +89,8 @@ public class RouteServiceImpl implements RouteService {
             command.add("netmask");
             command.add(netmask.getHostAddress());
         }
-        if (gateway != null && gateway.getHostAddress().compareTo(INADDR_ANY) != 0
+        if (gateway != null
+                && gateway.getHostAddress().compareTo(INADDR_ANY) != 0
                 && gateway.getHostAddress().compareTo(LOCALHOST) != 0) {
             command.add("gw");
             command.add(gateway.getHostAddress());
@@ -143,7 +145,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public RouteConfig[] getRoutes() {
         RouteConfig[] routes = new RouteConfig[0];
-        String[] commandLine = { ROUTE, "-n" };
+        String[] commandLine = {ROUTE, "-n"};
         Command command = new Command(commandLine);
         command.setTimeout(60);
         command.setOutputStream(new ByteArrayOutputStream());
@@ -187,16 +189,18 @@ public class RouteServiceImpl implements RouteService {
             if (logger.isErrorEnabled()) {
                 logger.error("Error removing static route: {}", String.join(" ", commandLine));
             }
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR, String.join(" ", commandLine),
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR,
+                    String.join(" ", commandLine),
                     status.getExitStatus().getExitCode());
         }
 
         if (destination instanceof IP4Address) {
-            tmpRoute = new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, iface,
-                    -1);
+            tmpRoute =
+                    new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, iface, -1);
         } else if (destination instanceof IP6Address) {
-            tmpRoute = new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, iface,
-                    -1);
+            tmpRoute =
+                    new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, iface, -1);
         }
         if (tmpRoute != null) {
             logger.info("Static route removed successfully");
@@ -252,11 +256,11 @@ public class RouteServiceImpl implements RouteService {
         }
 
         if (destination instanceof IP4Address) {
-            route = new RouteConfigIP4((IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, iface,
-                    metric);
+            route = new RouteConfigIP4(
+                    (IP4Address) destination, (IP4Address) gateway, (IP4Address) netmask, iface, metric);
         } else if (destination instanceof IP6Address) {
-            route = new RouteConfigIP6((IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, iface,
-                    metric);
+            route = new RouteConfigIP6(
+                    (IP6Address) destination, (IP6Address) gateway, (IP6Address) netmask, iface, metric);
         }
         logger.trace("Route successfully read from route table entry");
         return route;
@@ -278,7 +282,9 @@ public class RouteServiceImpl implements RouteService {
                     dRoute = route;
                 }
             }
-            logger.debug("Found defualt interface {} for destination {}", dRoute.getInterfaceName(),
+            logger.debug(
+                    "Found defualt interface {} for destination {}",
+                    dRoute.getInterfaceName(),
                     destination.getHostAddress());
             return dRoute.getInterfaceName();
         }

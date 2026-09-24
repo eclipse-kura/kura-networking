@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2019, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2019, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -15,7 +15,6 @@ package org.eclipse.kura.linux.net.util;
 import java.io.ByteArrayOutputStream;
 import java.util.EnumSet;
 import java.util.Set;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -30,8 +29,7 @@ public final class IwlistCapabilityTool {
 
     private static final Logger logger = LoggerFactory.getLogger(IwlistCapabilityTool.class);
 
-    private IwlistCapabilityTool() {
-    }
+    private IwlistCapabilityTool() {}
 
     /*
      * Returns an empty capabilities set if the interface is not found or on error
@@ -45,7 +43,7 @@ public final class IwlistCapabilityTool {
             return capabilities;
         }
 
-        String[] cmd = { "iwlist", ifaceName, "auth" };
+        String[] cmd = {"iwlist", ifaceName, "auth"};
         Command command = new Command(cmd);
         command.setTimeout(60);
         command.setOutputStream(new ByteArrayOutputStream());
@@ -57,7 +55,8 @@ public final class IwlistCapabilityTool {
         }
 
         // get the output
-        getWifiCapabilitiesParse(capabilities,
+        getWifiCapabilitiesParse(
+                capabilities,
                 new String(((ByteArrayOutputStream) status.getOutputStream()).toByteArray(), Charsets.UTF_8));
         return capabilities;
     }

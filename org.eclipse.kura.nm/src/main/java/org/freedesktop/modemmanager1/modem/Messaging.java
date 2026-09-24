@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -59,7 +58,6 @@ public interface Messaging extends DBusInterface {
         public boolean getReceived() {
             return this.received;
         }
-
     }
 
     public static class Deleted extends DBusSignal {
@@ -74,14 +72,9 @@ public interface Messaging extends DBusInterface {
         public DBusPath getDbusPath() {
             return this.dbusPath;
         }
-
     }
 
-    public static interface PropertyMessagesType extends TypeRef<List<DBusPath>> {
+    public static interface PropertyMessagesType extends TypeRef<List<DBusPath>> {}
 
-    }
-
-    public static interface PropertySupportedStoragesType extends TypeRef<List<UInt32>> {
-
-    }
+    public static interface PropertySupportedStoragesType extends TypeRef<List<UInt32>> {}
 }

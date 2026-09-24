@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.linux.executor.LinuxPid;
@@ -132,13 +131,16 @@ public class PppLinux {
         synchronized (lock) {
             String[] command = formConnectCommand(iface, port, pppNetInterfaceNumber);
             // Filter the pid whose command exactly matches the connectCommand
-            List<Pid> pids = this.executorService.getPids(command).entrySet().stream().filter(entry -> {
-                if (pppNetInterfaceNumber.isPresent()) {
-                    return entry.getKey().equals(String.join(" ", command));
-                } else {
-                    return entry.getKey().startsWith(String.join(" ", command));
-                }
-            }).map(Map.Entry::getValue).collect(Collectors.toList());
+            List<Pid> pids = this.executorService.getPids(command).entrySet().stream()
+                    .filter(entry -> {
+                        if (pppNetInterfaceNumber.isPresent()) {
+                            return entry.getKey().equals(String.join(" ", command));
+                        } else {
+                            return entry.getKey().startsWith(String.join(" ", command));
+                        }
+                    })
+                    .map(Map.Entry::getValue)
+                    .collect(Collectors.toList());
             if (!pids.isEmpty()) {
                 pid = pids.get(0);
             }
@@ -162,10 +164,11 @@ public class PppLinux {
 
     private static String[] formConnectCommand(String peer, String port, OptionalInt pppNetInterfaceNumber) {
         if (pppNetInterfaceNumber.isPresent()) {
-            return new String[] { PPP_DAEMON, port, "call", peer, "unit",
-                    Integer.toString(pppNetInterfaceNumber.getAsInt()) };
+            return new String[] {
+                PPP_DAEMON, port, "call", peer, "unit", Integer.toString(pppNetInterfaceNumber.getAsInt())
+            };
         } else {
-            return new String[] { PPP_DAEMON, port, "call", peer };
+            return new String[] {PPP_DAEMON, port, "call", peer};
         }
     }
 }

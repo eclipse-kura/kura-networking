@@ -1,22 +1,20 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2022 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.eclipse.kura.core.net.WifiAccessPointImpl;
 import org.eclipse.kura.core.net.util.NetworkUtil;
 import org.eclipse.kura.net.wifi.WifiAccessPoint;
@@ -104,7 +102,9 @@ class IWAPParser {
             if (this.bitrate == null) {
                 this.bitrate = new ArrayList<>();
             }
-            String[] rateStrings = propLine.replaceFirst("Supported rates: ", "").replaceAll("\\*", "").trim()
+            String[] rateStrings = propLine.replaceFirst("Supported rates: ", "")
+                    .replaceAll("\\*", "")
+                    .trim()
                     .split(" ");
             for (String rateString : rateStrings) {
                 this.bitrate.add((long) (Float.parseFloat(rateString) * 1000000));
@@ -116,7 +116,9 @@ class IWAPParser {
                 this.bitrate = new ArrayList<>();
             }
 
-            String[] rateStrings = propLine.replaceFirst("Extended supported rates: ", "").replaceAll("\\*", "").trim()
+            String[] rateStrings = propLine.replaceFirst("Extended supported rates: ", "")
+                    .replaceAll("\\*", "")
+                    .trim()
                     .split(" ");
             for (String rateString : rateStrings) {
                 this.bitrate.add((long) (Float.parseFloat(rateString) * 1000000));

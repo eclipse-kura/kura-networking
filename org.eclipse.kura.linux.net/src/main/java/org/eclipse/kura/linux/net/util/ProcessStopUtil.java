@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2021 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2021, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -24,8 +24,7 @@ public class ProcessStopUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessStopUtil.class);
 
-    private ProcessStopUtil() {
-    }
+    private ProcessStopUtil() {}
 
     public static boolean stopAndKill(final CommandExecutorService executorService, final Pid pid)
             throws KuraException {
@@ -62,8 +61,8 @@ public class ProcessStopUtil {
         return result;
     }
 
-    private static boolean processExists(final CommandExecutorService executorService, final Pid pid, final long poll,
-            final long timeout) {
+    private static boolean processExists(
+            final CommandExecutorService executorService, final Pid pid, final long poll, final long timeout) {
         boolean exists = false;
         try {
             final long startTime = System.currentTimeMillis();

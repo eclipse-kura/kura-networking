@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -48,9 +48,11 @@ public class NetworkInterfaceStatusDTO {
         this.state = status.getState();
         this.autoConnect = status.isAutoConnect();
         this.mtu = status.getMtu();
-        this.interfaceIp4Addresses = status.getInterfaceIp4Addresses().map(NetworkInterfaceIpAddressStatusDTO::new)
+        this.interfaceIp4Addresses = status.getInterfaceIp4Addresses()
+                .map(NetworkInterfaceIpAddressStatusDTO::new)
                 .orElse(null);
-        this.interfaceIp6Addresses = status.getInterfaceIp6Addresses().map(NetworkInterfaceIpAddressStatusDTO::new)
+        this.interfaceIp6Addresses = status.getInterfaceIp6Addresses()
+                .map(NetworkInterfaceIpAddressStatusDTO::new)
                 .orElse(null);
     }
 

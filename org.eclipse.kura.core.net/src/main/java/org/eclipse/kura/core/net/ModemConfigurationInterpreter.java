@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -18,7 +18,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.Password;
@@ -41,12 +40,11 @@ public class ModemConfigurationInterpreter {
 
     private static final String NET_INTERFACE = "net.interface.";
 
-    private ModemConfigurationInterpreter() {
+    private ModemConfigurationInterpreter() {}
 
-    }
-
-    public static List<NetConfig> populateConfiguration(NetInterfaceAddressConfig netInterfaceAddress,
-            Map<String, Object> props, String interfaceName) throws KuraException {
+    public static List<NetConfig> populateConfiguration(
+            NetInterfaceAddressConfig netInterfaceAddress, Map<String, Object> props, String interfaceName)
+            throws KuraException {
 
         // build the prefixes for all the properties associated with this interface
         StringBuilder sbPrefix = new StringBuilder();
@@ -58,15 +56,17 @@ public class ModemConfigurationInterpreter {
         return populateConfiguration(netInterfaceAddress, props, interfaceName, pppNum);
     }
 
-    public static List<NetConfig> populateConfiguration(NetInterfaceAddressConfig netInterfaceAddress,
-            Map<String, Object> props, String interfaceName, int pppNum) throws KuraException {
+    public static List<NetConfig> populateConfiguration(
+            NetInterfaceAddressConfig netInterfaceAddress, Map<String, Object> props, String interfaceName, int pppNum)
+            throws KuraException {
         List<NetConfig> netConfigs = new ArrayList<>();
 
         if (isNull(props)) {
             return netConfigs;
         }
 
-        ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl = (ModemInterfaceAddressConfigImpl) netInterfaceAddress;
+        ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl =
+                (ModemInterfaceAddressConfigImpl) netInterfaceAddress;
 
         // build the prefixes for all the properties associated with this interface
         StringBuilder sbPrefix = new StringBuilder();
@@ -141,8 +141,8 @@ public class ModemConfigurationInterpreter {
 
     private static boolean isDiversityEnabled(String prefix, Map<String, Object> properties) {
         String key = prefix + "diversityEnabled";
-        Object value = properties.getOrDefault(key,
-                NetworkConfigurationConstants.DEFAULT_MODEM_DIVERSITY_ENABLED_VALUE);
+        Object value =
+                properties.getOrDefault(key, NetworkConfigurationConstants.DEFAULT_MODEM_DIVERSITY_ENABLED_VALUE);
         return value != null ? (Boolean) value : NetworkConfigurationConstants.DEFAULT_MODEM_DIVERSITY_ENABLED_VALUE;
     }
 
@@ -160,8 +160,8 @@ public class ModemConfigurationInterpreter {
 
     private static int getLcpEchoInterval(String prefix, Map<String, Object> properties) {
         String key = prefix + "lcpEchoInterval";
-        Object value = properties.getOrDefault(key,
-                NetworkConfigurationConstants.DEFAULT_MODEM_LCP_ECHO_INTERVAL_VALUE);
+        Object value =
+                properties.getOrDefault(key, NetworkConfigurationConstants.DEFAULT_MODEM_LCP_ECHO_INTERVAL_VALUE);
         return value != null ? (Integer) value : NetworkConfigurationConstants.DEFAULT_MODEM_LCP_ECHO_INTERVAL_VALUE;
     }
 
@@ -198,7 +198,8 @@ public class ModemConfigurationInterpreter {
     private static PdpType getPdpType(String prefix, Map<String, Object> properties) {
         String key = prefix + "pdpType";
         Object value = properties.getOrDefault(key, NetworkConfigurationConstants.DEFAULT_MODEM_PDP_TYPE_VALUE.name());
-        return value != null ? parsePdpType((String) value)
+        return value != null
+                ? parsePdpType((String) value)
                 : NetworkConfigurationConstants.DEFAULT_MODEM_PDP_TYPE_VALUE;
     }
 
@@ -223,8 +224,8 @@ public class ModemConfigurationInterpreter {
         } else if (psswdObj == null) {
             password = new Password("");
         } else {
-            throw new KuraException(KuraErrorCode.CONFIGURATION_ATTRIBUTE_INVALID, "Invalid password type.", key,
-                    psswdObj.getClass());
+            throw new KuraException(
+                    KuraErrorCode.CONFIGURATION_ATTRIBUTE_INVALID, "Invalid password type.", key, psswdObj.getClass());
         }
         return password;
     }
@@ -251,8 +252,8 @@ public class ModemConfigurationInterpreter {
 
     private static int getHeaderCompression(String prefix, Map<String, Object> properties) {
         String key = prefix + "headerCompression";
-        Object value = properties.getOrDefault(key,
-                NetworkConfigurationConstants.DEFAULT_MODEM_HEADER_COMPRESSION_VALUE);
+        Object value =
+                properties.getOrDefault(key, NetworkConfigurationConstants.DEFAULT_MODEM_HEADER_COMPRESSION_VALUE);
         return value != null ? (Integer) value : NetworkConfigurationConstants.DEFAULT_MODEM_HEADER_COMPRESSION_VALUE;
     }
 
@@ -300,5 +301,4 @@ public class ModemConfigurationInterpreter {
         String key = prefix + "pppNum";
         return (int) properties.getOrDefault(key, 0);
     }
-
 }

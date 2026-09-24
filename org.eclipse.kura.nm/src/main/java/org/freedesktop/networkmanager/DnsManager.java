@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -31,7 +30,5 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "Configuration", type = DnsManager.PropertyConfigurationType.class, access = Access.READ)
 public interface DnsManager extends DBusInterface {
 
-    public static interface PropertyConfigurationType extends TypeRef<List<Map<String, Variant>>> {
-
-    }
+    public static interface PropertyConfigurationType extends TypeRef<List<Map<String, Variant>>> {}
 }

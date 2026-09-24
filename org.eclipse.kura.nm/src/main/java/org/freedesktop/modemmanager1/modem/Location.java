@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -33,7 +32,10 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "SignalsLocation", type = Boolean.class, access = Access.READ)
 @DBusProperty(name = "Location", type = Location.PropertyLocationType.class, access = Access.READ)
 @DBusProperty(name = "SuplServer", type = String.class, access = Access.READ)
-@DBusProperty(name = "AssistanceDataServers", type = Location.PropertyAssistanceDataServersType.class, access = Access.READ)
+@DBusProperty(
+        name = "AssistanceDataServers",
+        type = Location.PropertyAssistanceDataServersType.class,
+        access = Access.READ)
 @DBusProperty(name = "GpsRefreshRate", type = UInt32.class, access = Access.READ)
 public interface Location extends DBusInterface {
 
@@ -47,11 +49,7 @@ public interface Location extends DBusInterface {
 
     public void SetGpsRefreshRate(UInt32 rate);
 
-    public static interface PropertyLocationType extends TypeRef<Map<UInt32, Variant>> {
+    public static interface PropertyLocationType extends TypeRef<Map<UInt32, Variant>> {}
 
-    }
-
-    public static interface PropertyAssistanceDataServersType extends TypeRef<List<String>> {
-
-    }
+    public static interface PropertyAssistanceDataServersType extends TypeRef<List<String>> {}
 }

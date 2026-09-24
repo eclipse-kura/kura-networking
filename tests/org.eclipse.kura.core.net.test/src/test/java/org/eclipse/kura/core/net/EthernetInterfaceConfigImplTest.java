@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2016, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -16,13 +16,10 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.net.util.NetworkUtil;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.NetInterfaceState;
@@ -36,25 +33,25 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EthernetInterfaceConfigImplTest {
 
-	@Test
-	public void testEqualsObject() throws UnknownHostException {
-		EthernetInterfaceConfigImpl a = createConfig(2);
-		assertEquals(a, a);
+    @Test
+    public void testEqualsObject() throws UnknownHostException {
+        EthernetInterfaceConfigImpl a = createConfig(2);
+        assertEquals(a, a);
 
-		EthernetInterfaceConfigImpl b = createConfig(2);
-		assertEquals(a, b);
-	}
+        EthernetInterfaceConfigImpl b = createConfig(2);
+        assertEquals(a, b);
+    }
 
-	@Test
-	public void testEqualsObjectDifferentLinkUp() throws UnknownHostException {
-		EthernetInterfaceConfigImpl a = createConfig(2);
-		EthernetInterfaceConfigImpl b = createConfig(2);
+    @Test
+    public void testEqualsObjectDifferentLinkUp() throws UnknownHostException {
+        EthernetInterfaceConfigImpl a = createConfig(2);
+        EthernetInterfaceConfigImpl b = createConfig(2);
 
-		a.setLinkUp(true);
-		b.setLinkUp(false);
+        a.setLinkUp(true);
+        b.setLinkUp(false);
 
-		assertNotEquals(a, b);
-	}
+        assertNotEquals(a, b);
+    }
 
     @Test
     public void testEthernetInterfaceConfigImplString() {
@@ -84,8 +81,10 @@ public class EthernetInterfaceConfigImplTest {
         assertEquals("ethInterface", config.getName());
         assertEquals(2, config.getNetInterfaceAddresses().size());
 
-        assertEquals(createAddress("10.0.0.1"), config.getNetInterfaceAddresses().get(0));
-        assertEquals(createAddress("10.0.0.2"), config.getNetInterfaceAddresses().get(1));
+        assertEquals(
+                createAddress("10.0.0.1"), config.getNetInterfaceAddresses().get(0));
+        assertEquals(
+                createAddress("10.0.0.2"), config.getNetInterfaceAddresses().get(1));
     }
 
     @Test
@@ -111,8 +110,14 @@ public class EthernetInterfaceConfigImplTest {
         config.setSupportsMulticast(true);
         config.setUp(true);
         config.setMTU(42);
-        config.setUsbDevice(new UsbNetDevice("vendorId", "productId", "manufacturerName", "productName", "usbBusNumber",
-                "usbDevicePath", "interfaceName"));
+        config.setUsbDevice(new UsbNetDevice(
+                "vendorId",
+                "productId",
+                "manufacturerName",
+                "productName",
+                "usbBusNumber",
+                "usbDevicePath",
+                "interfaceName"));
         config.setDriver("driverName");
         config.setDriverVersion("driverVersion");
         config.setFirmwareVersion("firmwareVersion");
@@ -283,13 +288,25 @@ public class EthernetInterfaceConfigImplTest {
     public void testUsbDevice() {
         EthernetInterfaceConfigImpl config = new EthernetInterfaceConfigImpl("name");
 
-        UsbDevice usbDevice1 = new UsbNetDevice("vendorId1", "productId1", "manufacturerName1", "productName1",
-                "usbBusNumber1", "usbDevicePath1", "interfaceName1");
+        UsbDevice usbDevice1 = new UsbNetDevice(
+                "vendorId1",
+                "productId1",
+                "manufacturerName1",
+                "productName1",
+                "usbBusNumber1",
+                "usbDevicePath1",
+                "interfaceName1");
         config.setUsbDevice(usbDevice1);
         assertEquals(usbDevice1, config.getUsbDevice());
 
-        UsbDevice usbDevice2 = new UsbNetDevice("vendorId2", "productId2", "manufacturerName2", "productName2",
-                "usbBusNumber2", "usbDevicePath2", "interfaceName2");
+        UsbDevice usbDevice2 = new UsbNetDevice(
+                "vendorId2",
+                "productId2",
+                "manufacturerName2",
+                "productName2",
+                "usbBusNumber2",
+                "usbDevicePath2",
+                "interfaceName2");
         config.setUsbDevice(usbDevice2);
         assertEquals(usbDevice2, config.getUsbDevice());
     }
@@ -311,13 +328,15 @@ public class EthernetInterfaceConfigImplTest {
 
         assertEquals(2, config.getNetInterfaceAddresses().size());
 
-        assertEquals(createAddress("10.0.0.1"), config.getNetInterfaceAddresses().get(0));
-        assertEquals(createAddress("10.0.0.2"), config.getNetInterfaceAddresses().get(1));
+        assertEquals(
+                createAddress("10.0.0.1"), config.getNetInterfaceAddresses().get(0));
+        assertEquals(
+                createAddress("10.0.0.2"), config.getNetInterfaceAddresses().get(1));
     }
 
     EthernetInterfaceConfigImpl createConfig(int noOfAddresses) throws UnknownHostException {
-        EthernetInterfaceImpl<NetInterfaceAddressConfigImpl> interfaceImpl = new EthernetInterfaceImpl<>(
-                "ethInterface");
+        EthernetInterfaceImpl<NetInterfaceAddressConfigImpl> interfaceImpl =
+                new EthernetInterfaceImpl<>("ethInterface");
 
         if (noOfAddresses > 0) {
             List<NetInterfaceAddressConfigImpl> interfaceAddresses = new ArrayList<>();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -21,7 +21,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
@@ -90,10 +89,14 @@ public class DhcpServerConfigWriterTest {
 
         whenWriteConfiguration();
 
-        thenConfigFileContains(new StringBuilder().append("interface=eth0\n")
+        thenConfigFileContains(new StringBuilder()
+                .append("interface=eth0\n")
                 .append("dhcp-range=eth0,192.168.0.111,192.168.0.120,900s\n")
-                .append("dhcp-option=eth0,1,255.255.255.0\n").append("dhcp-option=eth0,3,192.168.0.11\n")
-                .append("dhcp-option=eth0,6,0.0.0.0\n").append("dhcp-option=eth0,27,1\n").toString());
+                .append("dhcp-option=eth0,1,255.255.255.0\n")
+                .append("dhcp-option=eth0,3,192.168.0.11\n")
+                .append("dhcp-option=eth0,6,0.0.0.0\n")
+                .append("dhcp-option=eth0,27,1\n")
+                .toString());
     }
 
     @Test
@@ -112,10 +115,14 @@ public class DhcpServerConfigWriterTest {
 
         whenWriteConfiguration();
 
-        thenConfigFileContains(new StringBuilder().append("interface=eth0\n")
+        thenConfigFileContains(new StringBuilder()
+                .append("interface=eth0\n")
                 .append("dhcp-range=eth0,192.168.0.111,192.168.0.120,900s\n")
-                .append("dhcp-option=eth0,1,255.255.255.0\n").append("dhcp-option=eth0,3\n")
-                .append("dhcp-option=eth0,6\n").append("dhcp-ignore-names=eth0\n").append("dhcp-option=eth0,27,1\n")
+                .append("dhcp-option=eth0,1,255.255.255.0\n")
+                .append("dhcp-option=eth0,3\n")
+                .append("dhcp-option=eth0,6\n")
+                .append("dhcp-ignore-names=eth0\n")
+                .append("dhcp-option=eth0,27,1\n")
                 .toString());
     }
 
@@ -135,10 +142,14 @@ public class DhcpServerConfigWriterTest {
 
         whenWriteConfiguration();
 
-        thenConfigFileContains(new StringBuilder().append("interface=eth0\n")
+        thenConfigFileContains(new StringBuilder()
+                .append("interface=eth0\n")
                 .append("dhcp-range=eth0,192.168.0.111,192.168.0.120,900s\n")
-                .append("dhcp-option=eth0,1,255.255.255.0\n").append("dhcp-option=eth0,3,192.168.0.11\n")
-                .append("dhcp-option=eth0,6\n").append("dhcp-ignore-names=eth0\n").append("dhcp-option=eth0,27,1\n")
+                .append("dhcp-option=eth0,1,255.255.255.0\n")
+                .append("dhcp-option=eth0,3,192.168.0.11\n")
+                .append("dhcp-option=eth0,6\n")
+                .append("dhcp-ignore-names=eth0\n")
+                .append("dhcp-option=eth0,27,1\n")
                 .toString());
     }
 
@@ -154,15 +165,18 @@ public class DhcpServerConfigWriterTest {
         dhcpServerMock = Mockito.mockStatic(DhcpServerManager.class);
 
         switch (tool) {
-        case DNSMASQ:
-            dhcpServerMock.when(DhcpServerManager::getTool).thenReturn(DhcpServerTool.DNSMASQ);
-            dhcpServerMock.when(DhcpServerManager::getConfigConverter)
-                    .thenReturn(Optional.of(new DnsmasqConfigConverter()));
-            dhcpServerMock.when(() -> DhcpServerManager.getLeasesFilename("eth0")).thenReturn("/tmp/dnsmasq.leases");
-            break;
-        case NONE:
-            dhcpServerMock.when(DhcpServerManager::getTool).thenReturn(DhcpServerTool.NONE);
-            break;
+            case DNSMASQ:
+                dhcpServerMock.when(DhcpServerManager::getTool).thenReturn(DhcpServerTool.DNSMASQ);
+                dhcpServerMock
+                        .when(DhcpServerManager::getConfigConverter)
+                        .thenReturn(Optional.of(new DnsmasqConfigConverter()));
+                dhcpServerMock
+                        .when(() -> DhcpServerManager.getLeasesFilename("eth0"))
+                        .thenReturn("/tmp/dnsmasq.leases");
+                break;
+            case NONE:
+                dhcpServerMock.when(DhcpServerManager::getTool).thenReturn(DhcpServerTool.NONE);
+                break;
         }
 
         this.selectedTool = tool;
@@ -176,12 +190,12 @@ public class DhcpServerConfigWriterTest {
         String filename;
 
         switch (DhcpServerConfigWriterTest.this.selectedTool) {
-        case DNSMASQ:
-            filename = String.format(DNSMASQ_CONFIG_FILENAME, interfaceName);
-            break;
-        case NONE:
-        default:
-            filename = "etc";
+            case DNSMASQ:
+                filename = String.format(DNSMASQ_CONFIG_FILENAME, interfaceName);
+                break;
+            case NONE:
+            default:
+                filename = "etc";
         }
 
         this.configFilename = this.mockFiles.newFile(filename).getAbsolutePath();
@@ -245,5 +259,4 @@ public class DhcpServerConfigWriterTest {
     public void cleanUp() {
         dhcpServerMock.close();
     }
-
 }

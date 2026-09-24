@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2023 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2016, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.NetConfig;
 import org.eclipse.kura.net.NetProtocol;
@@ -67,7 +66,8 @@ public class FirewallConfigurationTest {
     @Test
     public void testFirewallConfigurationFromOpenPortConfig() {
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(FirewallConfiguration.OPEN_PORTS_PROP_NAME,
+        properties.put(
+                FirewallConfiguration.OPEN_PORTS_PROP_NAME,
                 "42,tcp,10.0.0.1/24,PIN,UIN,PM,SPR,#;" + "42:100,udp,,,,,,#");
 
         FirewallConfiguration conf = new FirewallConfiguration(properties);
@@ -80,16 +80,21 @@ public class FirewallConfigurationTest {
 
         try {
             FirewallOpenPortConfigIP4Builder builder1 = FirewallOpenPortConfigIP4.builder();
-            builder1.withPort(42).withProtocol(NetProtocol.tcp)
+            builder1.withPort(42)
+                    .withProtocol(NetProtocol.tcp)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("10.0.0.1"), (short) 24))
-                    .withPermittedInterfaceName("PIN").withUnpermittedInterfaceName("UIN").withPermittedMac("PM")
+                    .withPermittedInterfaceName("PIN")
+                    .withUnpermittedInterfaceName("UIN")
+                    .withPermittedMac("PM")
                     .withSourcePortRange("SPR");
             assertEquals(builder1.build(), conf.getOpenPortConfigs().get(0));
 
             FirewallOpenPortConfigIP4Builder builder2 = FirewallOpenPortConfigIP4.builder();
-            builder2.withPortRange("42:100").withProtocol(NetProtocol.udp).withPermittedNetwork(
-                    new NetworkPair<IP4Address>((IP4Address) IP4Address.parseHostAddress("0.0.0.0"), (short) 0));
+            builder2.withPortRange("42:100")
+                    .withProtocol(NetProtocol.udp)
+                    .withPermittedNetwork(new NetworkPair<IP4Address>(
+                            (IP4Address) IP4Address.parseHostAddress("0.0.0.0"), (short) 0));
             assertEquals(builder2.build(), conf.getOpenPortConfigs().get(1));
         } catch (UnknownHostException e) {
             fail("unexpected exception");
@@ -139,7 +144,8 @@ public class FirewallConfigurationTest {
     public void testFirewallConfigurationFromPortForwardConfig() {
 
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(FirewallConfiguration.PORT_FORWARDING_PROP_NAME,
+        properties.put(
+                FirewallConfiguration.PORT_FORWARDING_PROP_NAME,
                 "IF,OF,10.0.1.1,udp,42,100,true,10.0.0.1/24,PM,SPR,#;" + ",,,tcp,0,0,false,,,,#");
 
         FirewallConfiguration conf = new FirewallConfiguration(properties);
@@ -152,16 +158,22 @@ public class FirewallConfigurationTest {
 
         try {
             FirewallPortForwardConfigIP4Builder builder1 = FirewallPortForwardConfigIP4.builder();
-            builder1.withInboundIface("IF").withOutboundIface("OF")
-                    .withAddress((IP4Address) IP4Address.parseHostAddress("10.0.1.1")).withProtocol(NetProtocol.udp)
-                    .withInPort(42).withOutPort(100).withMasquerade(true)
+            builder1.withInboundIface("IF")
+                    .withOutboundIface("OF")
+                    .withAddress((IP4Address) IP4Address.parseHostAddress("10.0.1.1"))
+                    .withProtocol(NetProtocol.udp)
+                    .withInPort(42)
+                    .withOutPort(100)
+                    .withMasquerade(true)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("10.0.0.1"), (short) 24))
-                    .withPermittedMac("PM").withSourcePortRange("SPR");
+                    .withPermittedMac("PM")
+                    .withSourcePortRange("SPR");
             assertEquals(builder1.build(), conf.getPortForwardConfigs().get(0));
 
             FirewallPortForwardConfigIP4Builder builder2 = FirewallPortForwardConfigIP4.builder();
-            builder2.withAddress((IP4Address) IP4Address.parseHostAddress("127.0.0.1")).withProtocol(NetProtocol.tcp)
+            builder2.withAddress((IP4Address) IP4Address.parseHostAddress("127.0.0.1"))
+                    .withProtocol(NetProtocol.tcp)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("0.0.0.0"), (short) 0));
             assertEquals(builder2.build(), conf.getPortForwardConfigs().get(1));
@@ -186,8 +198,8 @@ public class FirewallConfigurationTest {
     @Test
     public void testFirewallConfigurationFromPortForwardConfigInvalid2() {
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(FirewallConfiguration.PORT_FORWARDING_PROP_NAME,
-                ",,,tcp,0,0,false,,,,,#;,,,tcp,0,0,false,asd/xyz,,,#");
+        properties.put(
+                FirewallConfiguration.PORT_FORWARDING_PROP_NAME, ",,,tcp,0,0,false,,,,,#;,,,tcp,0,0,false,asd/xyz,,,#");
 
         FirewallConfiguration conf = new FirewallConfiguration(properties);
 
@@ -227,8 +239,8 @@ public class FirewallConfigurationTest {
         FirewallNatConfig expected1 = new FirewallNatConfig("SI", "DI", "P", "S", "D", true, RuleType.IP_FORWARDING);
         assertEquals(expected1, conf.getNatConfigs().get(0));
 
-        FirewallNatConfig expected2 = new FirewallNatConfig(null, null, null, null, null, false,
-                RuleType.IP_FORWARDING);
+        FirewallNatConfig expected2 =
+                new FirewallNatConfig(null, null, null, null, null, false, RuleType.IP_FORWARDING);
         assertEquals(expected2, conf.getNatConfigs().get(1));
     }
 
@@ -275,8 +287,8 @@ public class FirewallConfigurationTest {
     public void testFirewallConfigurationFromAllConfig() {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(FirewallConfiguration.OPEN_PORTS_PROP_NAME, "42,tcp,10.0.0.1/24,PIN,UIN,PM,SPR,#");
-        properties.put(FirewallConfiguration.PORT_FORWARDING_PROP_NAME,
-                "IF,OF,10.0.1.1,udp,42,100,true,10.0.0.1/24,PM,SPR,#");
+        properties.put(
+                FirewallConfiguration.PORT_FORWARDING_PROP_NAME, "IF,OF,10.0.1.1,udp,42,100,true,10.0.0.1/24,PM,SPR,#");
         properties.put(FirewallConfiguration.NAT_PROP_NAME, "SI,DI,P,S,D,true,#");
 
         FirewallConfiguration conf = new FirewallConfiguration(properties);
@@ -288,24 +300,32 @@ public class FirewallConfigurationTest {
 
         try {
             FirewallOpenPortConfigIP4Builder builder1 = FirewallOpenPortConfigIP4.builder();
-            builder1.withPort(42).withProtocol(NetProtocol.tcp)
+            builder1.withPort(42)
+                    .withProtocol(NetProtocol.tcp)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("10.0.0.1"), (short) 24))
-                    .withPermittedInterfaceName("PIN").withUnpermittedInterfaceName("UIN").withPermittedMac("PM")
+                    .withPermittedInterfaceName("PIN")
+                    .withUnpermittedInterfaceName("UIN")
+                    .withPermittedMac("PM")
                     .withSourcePortRange("SPR");
             assertEquals(builder1.build(), conf.getOpenPortConfigs().get(0));
 
             FirewallPortForwardConfigIP4Builder builder2 = FirewallPortForwardConfigIP4.builder();
-            builder2.withInboundIface("IF").withOutboundIface("OF")
-                    .withAddress((IP4Address) IP4Address.parseHostAddress("10.0.1.1")).withProtocol(NetProtocol.udp)
-                    .withInPort(42).withOutPort(100).withMasquerade(true)
+            builder2.withInboundIface("IF")
+                    .withOutboundIface("OF")
+                    .withAddress((IP4Address) IP4Address.parseHostAddress("10.0.1.1"))
+                    .withProtocol(NetProtocol.udp)
+                    .withInPort(42)
+                    .withOutPort(100)
+                    .withMasquerade(true)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("10.0.0.1"), (short) 24))
-                    .withPermittedMac("PM").withSourcePortRange("SPR");
+                    .withPermittedMac("PM")
+                    .withSourcePortRange("SPR");
             assertEquals(builder2.build(), conf.getPortForwardConfigs().get(0));
 
-            FirewallNatConfig expected3 = new FirewallNatConfig("SI", "DI", "P", "S", "D", true,
-                    RuleType.IP_FORWARDING);
+            FirewallNatConfig expected3 =
+                    new FirewallNatConfig("SI", "DI", "P", "S", "D", true, RuleType.IP_FORWARDING);
             assertEquals(expected3, conf.getNatConfigs().get(0));
         } catch (UnknownHostException e) {
             fail("unexpected exception");
@@ -378,10 +398,13 @@ public class FirewallConfigurationTest {
             FirewallConfiguration conf = new FirewallConfiguration();
 
             FirewallOpenPortConfigIP4Builder builder1 = FirewallOpenPortConfigIP4.builder();
-            builder1.withPort(42).withProtocol(NetProtocol.tcp)
+            builder1.withPort(42)
+                    .withProtocol(NetProtocol.tcp)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("10.0.0.1"), (short) 24))
-                    .withPermittedInterfaceName("PIN").withUnpermittedInterfaceName("UIN").withPermittedMac("PM")
+                    .withPermittedInterfaceName("PIN")
+                    .withUnpermittedInterfaceName("UIN")
+                    .withPermittedMac("PM")
                     .withSourcePortRange("SPR");
             conf.addConfig(builder1.build());
 
@@ -390,7 +413,8 @@ public class FirewallConfigurationTest {
             conf.addConfig(builder2.build());
 
             Map<String, Object> expected = new HashMap<String, Object>();
-            expected.put(FirewallConfiguration.OPEN_PORTS_PROP_NAME,
+            expected.put(
+                    FirewallConfiguration.OPEN_PORTS_PROP_NAME,
                     "42,tcp,10.0.0.1/24,PIN,UIN,PM,SPR,#;" + "42:100,,0.0.0.0/0,,,,,#");
             expected.put(FirewallConfiguration.PORT_FORWARDING_PROP_NAME, "");
             expected.put(FirewallConfiguration.NAT_PROP_NAME, "");
@@ -407,19 +431,25 @@ public class FirewallConfigurationTest {
             FirewallConfiguration conf = new FirewallConfiguration();
 
             FirewallPortForwardConfigIP4Builder builder1 = FirewallPortForwardConfigIP4.builder();
-            builder1.withInboundIface("IF").withOutboundIface("OF")
-                    .withAddress((IP4Address) IP4Address.parseHostAddress("10.0.1.1")).withProtocol(NetProtocol.udp)
-                    .withInPort(42).withOutPort(100).withMasquerade(true)
+            builder1.withInboundIface("IF")
+                    .withOutboundIface("OF")
+                    .withAddress((IP4Address) IP4Address.parseHostAddress("10.0.1.1"))
+                    .withProtocol(NetProtocol.udp)
+                    .withInPort(42)
+                    .withOutPort(100)
+                    .withMasquerade(true)
                     .withPermittedNetwork(new NetworkPair<IP4Address>(
                             (IP4Address) IP4Address.parseHostAddress("10.0.0.1"), (short) 24))
-                    .withPermittedMac("PM").withSourcePortRange("SPR");
+                    .withPermittedMac("PM")
+                    .withSourcePortRange("SPR");
             conf.addConfig(builder1.build());
 
             conf.addConfig(FirewallPortForwardConfigIP4.builder().build());
 
             Map<String, Object> expected = new HashMap<String, Object>();
             expected.put(FirewallConfiguration.OPEN_PORTS_PROP_NAME, "");
-            expected.put(FirewallConfiguration.PORT_FORWARDING_PROP_NAME,
+            expected.put(
+                    FirewallConfiguration.PORT_FORWARDING_PROP_NAME,
                     "IF,OF,10.0.1.1,udp,42,100,true,10.0.0.1/24,PM,SPR,#;" + ",,,,0,0,false,0.0.0.0/0,,,#");
             expected.put(FirewallConfiguration.NAT_PROP_NAME, "");
 
@@ -443,5 +473,4 @@ public class FirewallConfigurationTest {
 
         assertEquals(expected, conf.getConfigurationProperties());
     }
-
 }

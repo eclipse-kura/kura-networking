@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
- *  Jens Reimann <jreimann@redhat.com> 
+ *  Jens Reimann <jreimann@redhat.com>
  *******************************************************************************/
 package org.eclipse.kura.linux.net.dns;
 
@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.Command;
@@ -56,7 +55,7 @@ public class LinuxDns {
 
     private LinuxDns() {
         dnsFileName = "/etc/resolv.conf";
-        String[] pppFiles = { "/var/run/ppp/resolv.conf", "/etc/ppp/resolv.conf" };
+        String[] pppFiles = {"/var/run/ppp/resolv.conf", "/etc/ppp/resolv.conf"};
         pppDnsFileNames = pppFiles;
     }
 
@@ -77,7 +76,8 @@ public class LinuxDns {
             return servers;
         }
 
-        try (FileReader fr = new FileReader(f); BufferedReader br = new BufferedReader(fr)) {
+        try (FileReader fr = new FileReader(f);
+                BufferedReader br = new BufferedReader(fr)) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -111,7 +111,8 @@ public class LinuxDns {
         String pppDnsFileName = getPppDnsFileName();
         if (pppDnsFileName != null) {
             File pppDnsFile = new File(pppDnsFileName);
-            try (FileReader fr = new FileReader(pppDnsFile); BufferedReader br = new BufferedReader(fr)) {
+            try (FileReader fr = new FileReader(pppDnsFile);
+                    BufferedReader br = new BufferedReader(fr)) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.trim();
@@ -214,13 +215,15 @@ public class LinuxDns {
     private void backupDnsFile(CommandExecutorService executorService) throws KuraException {
         File file = new File(dnsFileName);
         if (file.exists()) {
-            Command command = new Command(
-                    new String[] { "mv", dnsFileName, dnsFileName + BACKUP_DNS_FILE_NAME_SUFFIX });
+            Command command = new Command(new String[] {"mv", dnsFileName, dnsFileName + BACKUP_DNS_FILE_NAME_SUFFIX});
             command.setTimeout(COMMAND_TIMEOUT);
             CommandStatus status = executorService.execute(command);
             if (!status.getExitStatus().isSuccessful()) {
-                logger.error("Failed to move the {} file to {}{}. The 'mv' command has failed ...", dnsFileName,
-                        dnsFileName, BACKUP_DNS_FILE_NAME_SUFFIX);
+                logger.error(
+                        "Failed to move the {} file to {}{}. The 'mv' command has failed ...",
+                        dnsFileName,
+                        dnsFileName,
+                        BACKUP_DNS_FILE_NAME_SUFFIX);
                 throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR, "Failed to backup DNS file " + dnsFileName);
             } else {
                 logger.info("successfully backed up {}", dnsFileName);
@@ -233,13 +236,13 @@ public class LinuxDns {
             logger.debug("failed to set permissions to {}", sPppDnsFileName);
         }
 
-        Command command = new Command(new String[] { "ln", "-sf", sPppDnsFileName, dnsFileName });
+        Command command = new Command(new String[] {"ln", "-sf", sPppDnsFileName, dnsFileName});
         command.setTimeout(COMMAND_TIMEOUT);
         CommandStatus status = executorService.execute(command);
         if (!status.getExitStatus().isSuccessful()) {
             logger.error("failed to create symbolic link: {} -> {}", dnsFileName, sPppDnsFileName);
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
-                    "failed to create symbolic link to " + sPppDnsFileName);
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR, "failed to create symbolic link to " + sPppDnsFileName);
         } else {
             logger.info("DNS is set to use ppp resolv.conf");
         }
@@ -248,12 +251,13 @@ public class LinuxDns {
     private void unsetDnsPppLink(String pppDnsFilename, CommandExecutorService executorService) throws KuraException {
         File file = new File(dnsFileName);
         if (file.exists()) {
-            Command command = new Command(new String[] { "rm", dnsFileName });
+            Command command = new Command(new String[] {"rm", dnsFileName});
             command.setTimeout(COMMAND_TIMEOUT);
             CommandStatus status = executorService.execute(command);
             if (!status.getExitStatus().isSuccessful()) {
                 logger.error("failed to delete {} symlink that points to {}", dnsFileName, pppDnsFilename);
-                throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
+                throw new KuraException(
+                        KuraErrorCode.OS_COMMAND_ERROR,
                         "failed to delete " + dnsFileName + " symlink that points to " + pppDnsFilename);
             } else {
                 logger.info("successfully removed symlink that points to {}", pppDnsFilename);
@@ -271,12 +275,13 @@ public class LinuxDns {
     }
 
     private void restoreDnsFileFromBackup(CommandExecutorService executorService) throws KuraException {
-        Command command = new Command(new String[] { "mv", dnsFileName + BACKUP_DNS_FILE_NAME_SUFFIX, dnsFileName });
+        Command command = new Command(new String[] {"mv", dnsFileName + BACKUP_DNS_FILE_NAME_SUFFIX, dnsFileName});
         command.setTimeout(COMMAND_TIMEOUT);
         CommandStatus status = executorService.execute(command);
         if (!status.getExitStatus().isSuccessful()) {
             logger.error("failed to restore {}{} to {}", dnsFileName, BACKUP_DNS_FILE_NAME_SUFFIX, dnsFileName);
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR,
                     "failed to restore " + dnsFileName + BACKUP_DNS_FILE_NAME_SUFFIX + " to " + dnsFileName);
         } else {
             logger.info("successfully restored {}{} from {}", dnsFileName, dnsFileName, BACKUP_DNS_FILE_NAME_SUFFIX);
@@ -352,7 +357,7 @@ public class LinuxDns {
 
     private void writeLinesToDnsFile(List<String> lines) {
         try (FileOutputStream fos = new FileOutputStream(getOrCreateDnsFile());
-                PrintWriter pw = new PrintWriter(fos);) {
+                PrintWriter pw = new PrintWriter(fos); ) {
             lines.forEach(line -> pw.write(line + "\n"));
             pw.flush();
             fos.getFD().sync();
@@ -370,7 +375,8 @@ public class LinuxDns {
         }
 
         ArrayList<String> lines = new ArrayList<>();
-        try (FileReader fr = new FileReader(dnsFile); BufferedReader br = new BufferedReader(fr)) {
+        try (FileReader fr = new FileReader(dnsFile);
+                BufferedReader br = new BufferedReader(fr)) {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();

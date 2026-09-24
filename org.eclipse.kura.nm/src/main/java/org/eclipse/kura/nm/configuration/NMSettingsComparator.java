@@ -15,7 +15,6 @@ package org.eclipse.kura.nm.configuration;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
-
 import org.freedesktop.dbus.types.Variant;
 
 public class NMSettingsComparator {
@@ -32,10 +31,11 @@ public class NMSettingsComparator {
      *
      * @throws IllegalArgumentException if either of the connection settings maps is null.
      */
-    public static boolean areSettingsEqual(Map<String,Map<String,Variant<?>>> newConnectionSettings,
-            Map<String,Map<String,Variant<?>>> oldConnectionSettings) {
+    public static boolean areSettingsEqual(
+            Map<String, Map<String, Variant<?>>> newConnectionSettings,
+            Map<String, Map<String, Variant<?>>> oldConnectionSettings) {
 
-        if(Objects.isNull(newConnectionSettings) || Objects.isNull(oldConnectionSettings)) {
+        if (Objects.isNull(newConnectionSettings) || Objects.isNull(oldConnectionSettings)) {
             throw new IllegalArgumentException("Connection settings cannot be null");
         }
 
@@ -56,7 +56,7 @@ public class NMSettingsComparator {
     }
 
     private static boolean areNestedMapsEqual(Map<String, Variant<?>> newNested, Map<String, Variant<?>> oldNested) {
-        if(Objects.isNull(newNested) || Objects.isNull(oldNested)) {
+        if (Objects.isNull(newNested) || Objects.isNull(oldNested)) {
             // NM settings should never have null nested maps, they would simply be omitted
             // from the top-level map.
             throw new IllegalArgumentException("Nested maps cannot be null");

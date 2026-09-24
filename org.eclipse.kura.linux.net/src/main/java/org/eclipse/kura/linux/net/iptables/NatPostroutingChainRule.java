@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.iptables;
 
 import org.eclipse.kura.KuraErrorCode;
@@ -91,8 +90,14 @@ public class NatPostroutingChainRule {
         this.rule = sbRule.toString();
     }
 
-    public NatPostroutingChainRule(String dstInterface, String protocol, String dstNetwork, String srcNetwork,
-            boolean masquerade, RuleType type) throws KuraException {
+    public NatPostroutingChainRule(
+            String dstInterface,
+            String protocol,
+            String dstNetwork,
+            String srcNetwork,
+            boolean masquerade,
+            RuleType type)
+            throws KuraException {
         try {
             this.dstInterface = dstInterface;
             this.protocol = protocol;
@@ -170,8 +175,11 @@ public class NatPostroutingChainRule {
         StringBuilder sb = new StringBuilder();
         if (this.masquerade) {
             sb.append("-A ").append(getRuleTypeString(this.type));
-            if (this.srcNetwork != null && (this.type == RuleType.IP_FORWARDING || (!this.srcNetwork.equals("0.0.0.0")
-                    && !this.srcNetwork.equals("::") && !this.srcNetwork.equals("0:0:0:0:0:0:0:0")))) {
+            if (this.srcNetwork != null
+                    && (this.type == RuleType.IP_FORWARDING
+                            || (!this.srcNetwork.equals("0.0.0.0")
+                                    && !this.srcNetwork.equals("::")
+                                    && !this.srcNetwork.equals("0:0:0:0:0:0:0:0")))) {
                 sb.append(" -s ").append(this.srcNetwork).append('/').append(this.srcMask);
             }
             if (this.dstNetwork != null) {
@@ -219,12 +227,15 @@ public class NatPostroutingChainRule {
             return false;
         }
 
-        return compareObjects(this.rule, other.rule) && compareObjects(this.dstNetwork, other.dstNetwork)
-                && this.dstMask == other.dstMask && compareObjects(this.srcNetwork, other.srcNetwork)
-                && this.srcMask == other.srcMask && compareObjects(this.dstInterface, other.dstInterface)
-                && compareObjects(this.protocol, other.protocol) && this.masquerade == other.masquerade
+        return compareObjects(this.rule, other.rule)
+                && compareObjects(this.dstNetwork, other.dstNetwork)
+                && this.dstMask == other.dstMask
+                && compareObjects(this.srcNetwork, other.srcNetwork)
+                && this.srcMask == other.srcMask
+                && compareObjects(this.dstInterface, other.dstInterface)
+                && compareObjects(this.protocol, other.protocol)
+                && this.masquerade == other.masquerade
                 && compareObjects(this.type, other.type);
-
     }
 
     private boolean compareObjects(Object obj1, Object obj2) {

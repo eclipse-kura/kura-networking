@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -23,6 +23,7 @@ public class PropertyPreferredNetworksStruct extends Struct {
 
     @Position(0)
     private final String member0;
+
     @Position(1)
     private final UInt32 member1;
 
@@ -38,5 +39,4 @@ public class PropertyPreferredNetworksStruct extends Struct {
     public UInt32 getMember1() {
         return this.member1;
     }
-
 }

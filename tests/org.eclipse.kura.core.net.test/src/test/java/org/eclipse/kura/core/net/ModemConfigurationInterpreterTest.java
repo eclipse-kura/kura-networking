@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -17,7 +17,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
 import java.util.List;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.net.modem.ModemInterfaceAddressConfigImpl;
 import org.eclipse.kura.net.IPAddress;
@@ -72,8 +71,8 @@ public class ModemConfigurationInterpreterTest {
 
         ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl = new ModemInterfaceAddressConfigImpl();
 
-        List<NetConfig> netConfigs = ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl,
-                properties, "ppp", 0);
+        List<NetConfig> netConfigs =
+                ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl, properties, "ppp", 0);
 
         assertNotNull(netConfigs);
         assertEquals(1, netConfigs.size());
@@ -130,8 +129,8 @@ public class ModemConfigurationInterpreterTest {
 
         ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl = new ModemInterfaceAddressConfigImpl();
 
-        List<NetConfig> netConfigs = ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl,
-                properties, "ppp", 0);
+        List<NetConfig> netConfigs =
+                ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl, properties, "ppp", 0);
 
         assertNotNull(netConfigs);
         assertEquals(1, netConfigs.size());
@@ -188,8 +187,8 @@ public class ModemConfigurationInterpreterTest {
 
         ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl = new ModemInterfaceAddressConfigImpl();
 
-        List<NetConfig> netConfigs = ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl,
-                properties, "ppp", 1);
+        List<NetConfig> netConfigs =
+                ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl, properties, "ppp", 1);
 
         assertNotNull(netConfigs);
         assertEquals(1, netConfigs.size());
@@ -246,8 +245,8 @@ public class ModemConfigurationInterpreterTest {
 
         ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl = new ModemInterfaceAddressConfigImpl();
 
-        List<NetConfig> netConfigs = ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl,
-                properties, "ppp");
+        List<NetConfig> netConfigs =
+                ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl, properties, "ppp");
 
         assertNotNull(netConfigs);
         assertEquals(1, netConfigs.size());
@@ -287,8 +286,8 @@ public class ModemConfigurationInterpreterTest {
 
         ModemInterfaceAddressConfigImpl modemInterfaceAddressImpl = new ModemInterfaceAddressConfigImpl();
 
-        List<NetConfig> netConfigs = ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl,
-                properties, "ppp", 0);
+        List<NetConfig> netConfigs =
+                ModemConfigurationInterpreter.populateConfiguration(modemInterfaceAddressImpl, properties, "ppp", 0);
 
         assertNotNull(netConfigs);
         assertEquals(1, netConfigs.size());
@@ -297,5 +296,4 @@ public class ModemConfigurationInterpreterTest {
 
         assertEquals(PdpType.IP, modemConfig.getPdpType());
     }
-
 }

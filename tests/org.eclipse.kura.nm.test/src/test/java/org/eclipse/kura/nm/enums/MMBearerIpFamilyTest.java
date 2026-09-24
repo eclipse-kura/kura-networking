@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.net.status.modem.BearerIpType;
 import org.freedesktop.dbus.types.UInt32;
 import org.junit.Test;
@@ -37,13 +36,13 @@ public class MMBearerIpFamilyTest {
         @Parameters
         public static Collection<Object[]> BearerIpFamilyParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00000000L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_NONE });
-            params.add(new Object[] { new UInt32(0x00000001L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4 });
-            params.add(new Object[] { new UInt32(0x00000002L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV6 });
-            params.add(new Object[] { new UInt32(0x00000004L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4V6 });
-            params.add(new Object[] { new UInt32(0x00000008L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_NON_IP });
-            params.add(new Object[] { new UInt32(0xFFFFFFF7L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_ANY });
-            params.add(new Object[] { new UInt32(0x12345678L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_NONE });
+            params.add(new Object[] {new UInt32(0x00000000L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_NONE});
+            params.add(new Object[] {new UInt32(0x00000001L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4});
+            params.add(new Object[] {new UInt32(0x00000002L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV6});
+            params.add(new Object[] {new UInt32(0x00000004L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4V6});
+            params.add(new Object[] {new UInt32(0x00000008L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_NON_IP});
+            params.add(new Object[] {new UInt32(0xFFFFFFF7L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_ANY});
+            params.add(new Object[] {new UInt32(0x12345678L), MMBearerIpFamily.MM_BEARER_IP_FAMILY_NONE});
             return params;
         }
 
@@ -77,13 +76,13 @@ public class MMBearerIpFamilyTest {
         @Parameters
         public static Collection<Object[]> BearerIpFamilyParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00000000L), BearerIpType.NONE });
-            params.add(new Object[] { new UInt32(0x00000001L), BearerIpType.IPV4 });
-            params.add(new Object[] { new UInt32(0x00000002L), BearerIpType.IPV6 });
-            params.add(new Object[] { new UInt32(0x00000004L), BearerIpType.IPV4V6 });
-            params.add(new Object[] { new UInt32(0x00000008L), BearerIpType.NON_IP });
-            params.add(new Object[] { new UInt32(0xFFFFFFF7L), BearerIpType.ANY });
-            params.add(new Object[] { new UInt32(0x12345678L), BearerIpType.NONE });
+            params.add(new Object[] {new UInt32(0x00000000L), BearerIpType.NONE});
+            params.add(new Object[] {new UInt32(0x00000001L), BearerIpType.IPV4});
+            params.add(new Object[] {new UInt32(0x00000002L), BearerIpType.IPV6});
+            params.add(new Object[] {new UInt32(0x00000004L), BearerIpType.IPV4V6});
+            params.add(new Object[] {new UInt32(0x00000008L), BearerIpType.NON_IP});
+            params.add(new Object[] {new UInt32(0xFFFFFFF7L), BearerIpType.ANY});
+            params.add(new Object[] {new UInt32(0x12345678L), BearerIpType.NONE});
             return params;
         }
 
@@ -117,14 +116,16 @@ public class MMBearerIpFamilyTest {
         @Parameters
         public static Collection<Object[]> BearerIpFamilyParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00000000L), EnumSet.of(BearerIpType.NONE) });
-            params.add(new Object[] { new UInt32(0x00000003L), EnumSet.of(BearerIpType.IPV4, BearerIpType.IPV6) });
-            params.add(new Object[] { new UInt32(0x00000006L), EnumSet.of(BearerIpType.IPV6, BearerIpType.IPV4V6) });
-            params.add(new Object[] { new UInt32(0x00000004L), EnumSet.of(BearerIpType.IPV4V6) });
-            params.add(new Object[] { new UInt32(0x0000000FL),
-                    EnumSet.of(BearerIpType.IPV4, BearerIpType.IPV6, BearerIpType.IPV4V6, BearerIpType.NON_IP) });
-            params.add(new Object[] { new UInt32(0xFFFFFFF7L), EnumSet.of(BearerIpType.ANY) });
-            params.add(new Object[] { new UInt32(0x12345670L), EnumSet.noneOf(BearerIpType.class) });
+            params.add(new Object[] {new UInt32(0x00000000L), EnumSet.of(BearerIpType.NONE)});
+            params.add(new Object[] {new UInt32(0x00000003L), EnumSet.of(BearerIpType.IPV4, BearerIpType.IPV6)});
+            params.add(new Object[] {new UInt32(0x00000006L), EnumSet.of(BearerIpType.IPV6, BearerIpType.IPV4V6)});
+            params.add(new Object[] {new UInt32(0x00000004L), EnumSet.of(BearerIpType.IPV4V6)});
+            params.add(new Object[] {
+                new UInt32(0x0000000FL),
+                EnumSet.of(BearerIpType.IPV4, BearerIpType.IPV6, BearerIpType.IPV4V6, BearerIpType.NON_IP)
+            });
+            params.add(new Object[] {new UInt32(0xFFFFFFF7L), EnumSet.of(BearerIpType.ANY)});
+            params.add(new Object[] {new UInt32(0x12345670L), EnumSet.noneOf(BearerIpType.class)});
             return params;
         }
 
@@ -150,7 +151,6 @@ public class MMBearerIpFamilyTest {
         private void thenCalculatedBearerIpTypeIsCorrect() {
             assertEquals(this.expectedIpFamilies, this.calculatedIpFamily);
         }
-
     }
 
     @RunWith(Parameterized.class)
@@ -159,12 +159,12 @@ public class MMBearerIpFamilyTest {
         @Parameters
         public static Collection<Object[]> BearerIpFamilyParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { MMBearerIpFamily.MM_BEARER_IP_FAMILY_NONE, new UInt32(0x00000000L) });
-            params.add(new Object[] { MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4, new UInt32(0x00000001L) });
-            params.add(new Object[] { MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV6, new UInt32(0x00000002L) });
-            params.add(new Object[] { MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4V6, new UInt32(0x00000004L) });
-            params.add(new Object[] { MMBearerIpFamily.MM_BEARER_IP_FAMILY_NON_IP, new UInt32(0x00000008L) });
-            params.add(new Object[] { MMBearerIpFamily.MM_BEARER_IP_FAMILY_ANY, new UInt32(0xFFFFFFF7L) });
+            params.add(new Object[] {MMBearerIpFamily.MM_BEARER_IP_FAMILY_NONE, new UInt32(0x00000000L)});
+            params.add(new Object[] {MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4, new UInt32(0x00000001L)});
+            params.add(new Object[] {MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV6, new UInt32(0x00000002L)});
+            params.add(new Object[] {MMBearerIpFamily.MM_BEARER_IP_FAMILY_IPV4V6, new UInt32(0x00000004L)});
+            params.add(new Object[] {MMBearerIpFamily.MM_BEARER_IP_FAMILY_NON_IP, new UInt32(0x00000008L)});
+            params.add(new Object[] {MMBearerIpFamily.MM_BEARER_IP_FAMILY_ANY, new UInt32(0xFFFFFFF7L)});
             return params;
         }
 

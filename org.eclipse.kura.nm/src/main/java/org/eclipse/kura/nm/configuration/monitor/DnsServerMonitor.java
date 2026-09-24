@@ -19,7 +19,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.net.AbstractNetInterface;
 import org.eclipse.kura.core.net.NetworkConfiguration;
@@ -69,7 +68,6 @@ public class DnsServerMonitor {
         this.executorService = executorService;
 
         this.linuxNetworkUtil = new LinuxNetworkUtil(this.executorService);
-
     }
 
     public void setNetworkProperties(NetworkProperties networkProperties) {
@@ -83,8 +81,8 @@ public class DnsServerMonitor {
             return t;
         });
 
-        this.monitorTask = this.executor.scheduleWithFixedDelay(this::monitorDnsServerStatus, 0, THREAD_INTERVAL,
-                TimeUnit.MILLISECONDS);
+        this.monitorTask = this.executor.scheduleWithFixedDelay(
+                this::monitorDnsServerStatus, 0, THREAD_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     public void stop() {
@@ -132,7 +130,6 @@ public class DnsServerMonitor {
 
         manageDnsProxies(forwarders, allowedNetworks);
         logger.debug("DnsMonitor task stop");
-
     }
 
     private Set<NetworkPair<IP4Address>> getAllowedNetworks() {
@@ -140,8 +137,8 @@ public class DnsServerMonitor {
         Set<NetworkPair<IP4Address>> allowedNetworks = new HashSet<>();
 
         if (this.networkConfiguration != null && this.networkConfiguration.getNetInterfaceConfigs() != null) {
-            List<NetInterfaceConfig<? extends NetInterfaceAddressConfig>> netInterfaceConfigs = this.networkConfiguration
-                    .getNetInterfaceConfigs();
+            List<NetInterfaceConfig<? extends NetInterfaceAddressConfig>> netInterfaceConfigs =
+                    this.networkConfiguration.getNetInterfaceConfigs();
 
             for (NetInterfaceConfig<? extends NetInterfaceAddressConfig> netInterfaceConfig : netInterfaceConfigs) {
                 if (isSupportedInterfaceType(netInterfaceConfig) && isEnabledForLan(netInterfaceConfig)) {
@@ -156,18 +153,17 @@ public class DnsServerMonitor {
         }
 
         return allowedNetworks;
-
     }
 
-    private void addToAllowedNetworksIfDhcpServerAndPassDnsEnabled(Set<NetworkPair<IP4Address>> allowedNetworks,
-            NetConfig netConfig) {
+    private void addToAllowedNetworksIfDhcpServerAndPassDnsEnabled(
+            Set<NetworkPair<IP4Address>> allowedNetworks, NetConfig netConfig) {
         if (isDhcpServerAndPassDnsEnabled(netConfig)) {
 
             DhcpServerConfig dhcpServerConfig = (DhcpServerConfig) netConfig;
             IPAddress routerAddress = dhcpServerConfig.getRouterAddress();
             if (routerAddress instanceof IP6Address) {
-                logger.debug("Skipping router address: {} IPv6 addresses not supported",
-                        routerAddress.getHostAddress());
+                logger.debug(
+                        "Skipping router address: {} IPv6 addresses not supported", routerAddress.getHostAddress());
                 return;
             }
             short prefix = dhcpServerConfig.getPrefix();
@@ -192,12 +188,14 @@ public class DnsServerMonitor {
     }
 
     private boolean isEnabledForLan(NetInterfaceConfig<? extends NetInterfaceAddressConfig> netInterfaceConfig) {
-        return ((AbstractNetInterface<?>) netInterfaceConfig).getInterfaceStatus()
+        return ((AbstractNetInterface<?>) netInterfaceConfig)
+                .getInterfaceStatus()
                 .equals(NetInterfaceStatus.netIPv4StatusEnabledLAN);
     }
 
     public boolean isDhcpServerAndPassDnsEnabled(NetConfig netConfig) {
-        return (netConfig instanceof DhcpServerConfig dhcpServerConfig) && dhcpServerConfig.isEnabled()
+        return (netConfig instanceof DhcpServerConfig dhcpServerConfig)
+                && dhcpServerConfig.isEnabled()
                 && dhcpServerConfig.isPassDns();
     }
 
@@ -224,12 +222,13 @@ public class DnsServerMonitor {
         DnsServerConfigIP4 newDnsServerConfig = new DnsServerConfigIP4(forwarders, allowedNetworks);
 
         if (currentDnsServerConfig == null || !currentDnsServerConfig.equals(newDnsServerConfig)) {
-            logger.debug("DNS server config has changed - updating from {} to {}", currentDnsServerConfig,
+            logger.debug(
+                    "DNS server config has changed - updating from {} to {}",
+                    currentDnsServerConfig,
                     newDnsServerConfig);
 
             reconfigureDNSProxy(newDnsServerConfig);
         }
-
     }
 
     protected String getCurrentIpAddress(String interfaceName) throws KuraException {
@@ -280,5 +279,4 @@ public class DnsServerMonitor {
             now = System.currentTimeMillis();
         }
     }
-
 }

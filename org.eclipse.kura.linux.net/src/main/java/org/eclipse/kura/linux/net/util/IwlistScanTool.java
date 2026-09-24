@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.util;
 
 import java.io.BufferedReader;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -71,18 +69,21 @@ public class IwlistScanTool implements IScanTool {
     @Override
     public List<WifiAccessPoint> scan() throws KuraException {
 
-        String[] cmdIfconfig = { "ifconfig", this.ifaceName, "up" };
+        String[] cmdIfconfig = {"ifconfig", this.ifaceName, "up"};
         Command ifconfigCommand = new Command(cmdIfconfig);
         ifconfigCommand.setErrorStream(new ByteArrayOutputStream());
         CommandStatus ifconfigCommandStatus = this.executorService.execute(ifconfigCommand);
         if (!ifconfigCommandStatus.getExitStatus().isSuccessful() && logger.isErrorEnabled()) {
-            logger.error("failed to execute the {} command {}", String.join(" ", cmdIfconfig), new String(
-                    ((ByteArrayOutputStream) ifconfigCommandStatus.getErrorStream()).toByteArray(), Charsets.UTF_8));
+            logger.error(
+                    "failed to execute the {} command {}",
+                    String.join(" ", cmdIfconfig),
+                    new String(
+                            ((ByteArrayOutputStream) ifconfigCommandStatus.getErrorStream()).toByteArray(),
+                            Charsets.UTF_8));
         }
 
         List<WifiAccessPoint> wifiAccessPoints;
         synchronized (LOCK) {
-
             String[] cmdIwList = formIwlistScanCommand(IwlistScanTool.this.ifaceName);
             if (logger.isInfoEnabled()) {
                 logger.info("scan() :: executing: {}", String.join(" ", cmdIwList));
@@ -102,8 +103,8 @@ public class IwlistScanTool implements IScanTool {
                         ((ByteArrayOutputStream) iwListCommandStatus.getOutputStream()).toByteArray());
             } else {
                 if (logger.isErrorEnabled()) {
-                    logger.error("scan() :: failed to execute {} error code is {}", String.join(" ", cmdIwList),
-                            exitValue);
+                    logger.error(
+                            "scan() :: failed to execute {} error code is {}", String.join(" ", cmdIwList), exitValue);
                 }
             }
 
@@ -325,6 +326,6 @@ public class IwlistScanTool implements IScanTool {
     }
 
     private String[] formIwlistScanCommand(String interfaceName) {
-        return new String[] { "iwlist", interfaceName, "scanning" };
+        return new String[] {"iwlist", interfaceName, "scanning"};
     }
 }

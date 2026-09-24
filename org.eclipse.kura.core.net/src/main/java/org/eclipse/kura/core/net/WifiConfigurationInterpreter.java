@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.Password;
@@ -51,9 +50,7 @@ public class WifiConfigurationInterpreter {
     private static final String DRIVER_KEY = ".driver";
     private static final String WIFI_SSID_KEY = ".ssid";
 
-    private WifiConfigurationInterpreter() {
-
-    }
+    private WifiConfigurationInterpreter() {}
 
     public static List<NetConfig> populateConfiguration(Map<String, Object> props, String interfaceName)
             throws KuraException {
@@ -73,7 +70,6 @@ public class WifiConfigurationInterpreter {
         netConfigs.add(getWifiConfig(netIfConfigPrefix, WifiMode.INFRA, props));
 
         return netConfigs;
-
     }
 
     public static WifiMode getWifiMode(Map<String, Object> props, String interfaceName) {
@@ -90,7 +86,9 @@ public class WifiConfigurationInterpreter {
 
     private static WifiConfig getWifiConfig(String netIfConfigPrefix, WifiMode mode, Map<String, Object> properties)
             throws KuraException {
-        String prefix = new StringBuilder(netIfConfigPrefix).append("wifi.").append(mode.toString().toLowerCase())
+        String prefix = new StringBuilder(netIfConfigPrefix)
+                .append("wifi.")
+                .append(mode.toString().toLowerCase())
                 .toString();
 
         WifiConfig wifiConfig = new WifiConfig();
@@ -133,7 +131,6 @@ public class WifiConfigurationInterpreter {
         wifiConfig.setRadioMode(getRadioMode(properties, prefix));
 
         return wifiConfig;
-
     }
 
     private static WifiRadioMode getRadioMode(Map<String, Object> properties, String prefix) throws KuraException {
@@ -142,8 +139,8 @@ public class WifiConfigurationInterpreter {
             try {
                 return WifiRadioMode.valueOf((String) radioModeObject);
             } catch (IllegalArgumentException e) {
-                throw new KuraException(KuraErrorCode.CONFIGURATION_ATTRIBUTE_INVALID,
-                        "Could not parse wifi radio mode", e);
+                throw new KuraException(
+                        KuraErrorCode.CONFIGURATION_ATTRIBUTE_INVALID, "Could not parse wifi radio mode", e);
             }
         }
         return NetworkConfigurationConstants.DEFAULT_WIFI_RADIO_MODE_VALUE;
@@ -228,7 +225,7 @@ public class WifiConfigurationInterpreter {
             }
         }
 
-        return new int[] { Integer.parseInt(NetworkConfigurationConstants.DEFAULT_WIFI_CHANNEL_VALUE) };
+        return new int[] {Integer.parseInt(NetworkConfigurationConstants.DEFAULT_WIFI_CHANNEL_VALUE)};
     }
 
     private static WifiSecurity getWifiSecurity(Map<String, Object> properties, String prefix) throws KuraException {
@@ -238,7 +235,8 @@ public class WifiConfigurationInterpreter {
             try {
                 return WifiSecurity.valueOf(securityString);
             } catch (IllegalArgumentException e) {
-                throw new KuraException(KuraErrorCode.CONFIGURATION_ATTRIBUTE_INVALID,
+                throw new KuraException(
+                        KuraErrorCode.CONFIGURATION_ATTRIBUTE_INVALID,
                         "Could not parse wifi security " + securityString);
             }
         }
@@ -254,5 +252,4 @@ public class WifiConfigurationInterpreter {
         String key = prefix + WIFI_SSID_KEY;
         return (String) properties.get(key);
     }
-
 }

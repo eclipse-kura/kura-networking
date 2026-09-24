@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
-
 import org.eclipse.kura.core.net.util.NetworkUtil;
 import org.eclipse.kura.net.wifi.WifiAccessPoint;
 import org.eclipse.kura.net.wifi.WifiMode;
@@ -131,8 +130,12 @@ public class WifiAccessPointImpl implements WifiAccessPoint {
         if (this.hardwareAddress != null && this.hardwareAddress.length == 6) {
             sb.append(" :: hardwareAddress=").append(NetworkUtil.macToString(this.hardwareAddress));
         }
-        sb.append(" :: frequency=").append(this.frequency).append(" :: channel=").append(this.channel)
-                .append(" :: mode=").append(this.mode);
+        sb.append(" :: frequency=")
+                .append(this.frequency)
+                .append(" :: channel=")
+                .append(this.channel)
+                .append(" :: mode=")
+                .append(this.mode);
         if (this.bitrate != null && this.bitrate.size() > 0) {
             sb.append(" :: bitrate=");
             for (Long rate : this.bitrate) {
@@ -160,8 +163,9 @@ public class WifiAccessPointImpl implements WifiAccessPoint {
         final int prime = 31;
         int result = 1;
         result = prime * result + Arrays.hashCode(hardwareAddress);
-        result = prime * result + Objects.hash(bitrate, capabilities, channel, frequency, mode, rsnSecurity, ssid,
-                strength, wpaSecurity);
+        result = prime * result
+                + Objects.hash(
+                        bitrate, capabilities, channel, frequency, mode, rsnSecurity, ssid, strength, wpaSecurity);
         return result;
     }
 
@@ -177,11 +181,15 @@ public class WifiAccessPointImpl implements WifiAccessPoint {
             return false;
         }
         WifiAccessPointImpl other = (WifiAccessPointImpl) obj;
-        return Objects.equals(bitrate, other.bitrate) && Objects.equals(capabilities, other.capabilities)
-                && channel == other.channel && frequency == other.frequency
-                && Arrays.equals(hardwareAddress, other.hardwareAddress) && mode == other.mode
-                && Objects.equals(rsnSecurity, other.rsnSecurity) && Objects.equals(ssid, other.ssid)
-                && strength == other.strength && Objects.equals(wpaSecurity, other.wpaSecurity);
+        return Objects.equals(bitrate, other.bitrate)
+                && Objects.equals(capabilities, other.capabilities)
+                && channel == other.channel
+                && frequency == other.frequency
+                && Arrays.equals(hardwareAddress, other.hardwareAddress)
+                && mode == other.mode
+                && Objects.equals(rsnSecurity, other.rsnSecurity)
+                && Objects.equals(ssid, other.ssid)
+                && strength == other.strength
+                && Objects.equals(wpaSecurity, other.wpaSecurity);
     }
-
 }

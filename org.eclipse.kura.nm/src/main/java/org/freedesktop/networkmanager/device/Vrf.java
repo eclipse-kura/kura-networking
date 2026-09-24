@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -23,6 +23,4 @@ import org.freedesktop.dbus.types.UInt32;
  */
 @DBusInterfaceName("org.freedesktop.NetworkManager.Device.Vrf")
 @DBusProperty(name = "Table", type = UInt32.class, access = Access.READ)
-public interface Vrf extends DBusInterface {
-
-}
+public interface Vrf extends DBusInterface {}

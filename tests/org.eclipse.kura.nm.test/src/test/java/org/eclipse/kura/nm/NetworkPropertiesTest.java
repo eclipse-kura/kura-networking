@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.eclipse.kura.configuration.Password;
 import org.junit.Test;
 
@@ -367,7 +366,8 @@ public class NetworkPropertiesTest {
 
     @Test
     public void getOptStringListShouldWorkWithMalformed() {
-        givenMapWith("testKey-comma-seperated",
+        givenMapWith(
+                "testKey-comma-seperated",
                 ", , ,,,,commaSeparated1, , , ,,,,,commaSeparated2,,,, ,, ,,commaSeparated3,, , ,,,, ,");
         givenNetworkPropertiesBuiltWith(this.properties);
         whenGetOptStringListIsCalledWith("testKey-comma-seperated");
@@ -526,7 +526,8 @@ public class NetworkPropertiesTest {
     private void thenOptionalPasswordResultEquals(Optional<Password> optPasswordResult) {
         if (optPasswordResult.isPresent()) {
             // Workaround to compare Password.class since it doesn't have an equals method
-            assertEquals(optPasswordResult.get().toString(), this.optResult.get().toString());
+            assertEquals(
+                    optPasswordResult.get().toString(), this.optResult.get().toString());
         } else {
             assertEquals(optPasswordResult, this.optResult);
         }
@@ -534,7 +535,8 @@ public class NetworkPropertiesTest {
 
     private <E extends Exception> void thenExceptionOccurred(Class<E> expectedException) {
         assertNotNull(this.occurredException);
-        assertEquals(expectedException.getName(), this.occurredException.getClass().getName());
+        assertEquals(
+                expectedException.getName(), this.occurredException.getClass().getName());
     }
 
     public void thenNoExceptionsOccured() {
@@ -543,11 +545,11 @@ public class NetworkPropertiesTest {
             StringWriter sw = new StringWriter();
             this.occurredException.printStackTrace(new PrintWriter(sw));
 
-            errorMessage = String.format("No exception expected, \"%s\" found. Caused by: %s",
+            errorMessage = String.format(
+                    "No exception expected, \"%s\" found. Caused by: %s",
                     this.occurredException.getClass().getName(), sw.toString());
         }
 
         assertNull(errorMessage, this.occurredException);
     }
-
 }

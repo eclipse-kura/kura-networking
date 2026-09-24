@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
- *  Red Hat Inc 
+ *  Red Hat Inc
  *******************************************************************************/
 package org.eclipse.kura.linux.net.modem;
 
@@ -21,7 +21,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -58,8 +57,14 @@ public class SupportedUsbModems {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder("USB Modem :-> ");
-            sb.append("Bus ").append(this.bus).append(" Device ").append(this.device).append(" ID ").append(this.vendor)
-                    .append(':').append(this.product);
+            sb.append("Bus ")
+                    .append(this.bus)
+                    .append(" Device ")
+                    .append(this.device)
+                    .append(" ID ")
+                    .append(this.vendor)
+                    .append(':')
+                    .append(this.product);
             if (this.description != null) {
                 sb.append(" - ").append(this.description);
             }
@@ -67,8 +72,7 @@ public class SupportedUsbModems {
         }
     }
 
-    private SupportedUsbModems() {
-    }
+    private SupportedUsbModems() {}
 
     public static void installModemDrivers(CommandExecutorService executorService) {
         List<LsusbEntry> lsusbEntries = null;
@@ -121,7 +125,8 @@ public class SupportedUsbModems {
 
     private static SupportedUsbModemInfo getModemInternal(String vendorId, String productId, String productName) {
         for (SupportedUsbModemInfo modem : SupportedUsbModemInfo.values()) {
-            if (vendorId.equals(modem.getVendorId()) && productId.equals(modem.getProductId())
+            if (vendorId.equals(modem.getVendorId())
+                    && productId.equals(modem.getProductId())
                     && (modem.getProductName().isEmpty() || productName.equals(modem.getProductName()))) {
                 return modem;
             }
@@ -163,7 +168,8 @@ public class SupportedUsbModems {
             return false;
         }
 
-        StringBuilder usbFilePath = new StringBuilder("/sys/bus/usb/devices/").append(usbModemDevice.getUsbPort())
+        StringBuilder usbFilePath = new StringBuilder("/sys/bus/usb/devices/")
+                .append(usbModemDevice.getUsbPort())
                 .append("/");
         return readUsbConfig(usbFilePath.toString() + "idVendor", usbModemDevice.getVendorId())
                 && readUsbConfig(usbFilePath.toString() + "idProduct", usbModemDevice.getProductId());
@@ -182,8 +188,9 @@ public class SupportedUsbModems {
     }
 
     @Deprecated
-    private static boolean isAttached(String vendor, String product, List<LsusbEntry> lsusbEntries,
-            CommandExecutorService executorService) throws IOException {
+    private static boolean isAttached(
+            String vendor, String product, List<LsusbEntry> lsusbEntries, CommandExecutorService executorService)
+            throws IOException {
         boolean attached = false;
         if (lsusbEntries == null || lsusbEntries.isEmpty()) {
             attached = isAttached(vendor, product, executorService);
@@ -197,7 +204,9 @@ public class SupportedUsbModems {
         boolean attached = false;
         if (lsusbEntries != null) {
             for (LsusbEntry lsusbEntry : lsusbEntries) {
-                if (vendor != null && product != null && vendor.equals(lsusbEntry.vendor)
+                if (vendor != null
+                        && product != null
+                        && vendor.equals(lsusbEntry.vendor)
                         && product.equals(lsusbEntry.product)) {
                     logger.info("The 'lsusb' command detected {}", lsusbEntry);
                     attached = true;
@@ -226,8 +235,8 @@ public class SupportedUsbModems {
         CommandStatus status = executorService.execute(command);
         logger.debug("Called {} - rc = {}", commandLine, status.getExitStatus().getExitCode());
 
-        return IOUtils
-                .readLines(new ByteArrayInputStream(((ByteArrayOutputStream) command.getOutputStream()).toByteArray()));
+        return IOUtils.readLines(
+                new ByteArrayInputStream(((ByteArrayOutputStream) command.getOutputStream()).toByteArray()));
     }
 
     private static List<LsusbEntry> getLsusbInfo(CommandExecutorService executorService) throws IOException {
@@ -254,7 +263,8 @@ public class SupportedUsbModems {
                 description.append(tokens[i]);
                 description.append(' ');
             }
-            lsusbEntry = new LsusbEntry(bus, device, vendor, product, description.toString().trim());
+            lsusbEntry = new LsusbEntry(
+                    bus, device, vendor, product, description.toString().trim());
         } else {
             lsusbEntry = new LsusbEntry(bus, device, vendor, product);
         }

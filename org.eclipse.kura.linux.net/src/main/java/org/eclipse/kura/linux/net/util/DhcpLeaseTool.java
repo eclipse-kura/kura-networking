@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2023 Sterwen Technology and others
+ * Copyright (c) 2022, 2026 Sterwen Technology and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -16,7 +16,6 @@ package org.eclipse.kura.linux.net.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerLeaseReader;
@@ -29,9 +28,7 @@ public class DhcpLeaseTool {
 
     private static final Logger logger = LoggerFactory.getLogger(DhcpLeaseTool.class);
 
-    private DhcpLeaseTool() {
-
-    }
+    private DhcpLeaseTool() {}
 
     public static List<DhcpLease> probeLeases(String interfaceName, CommandExecutorService executorService) {
         List<DhcpLease> leases = new ArrayList<>();
@@ -45,5 +42,4 @@ public class DhcpLeaseTool {
         }
         return leases;
     }
-
 }

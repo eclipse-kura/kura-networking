@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -43,8 +42,8 @@ public interface Settings extends DBusInterface {
 
     public DBusPath AddConnectionUnsaved(Map<String, Map<String, Variant<?>>> connection);
 
-    public AddConnection2Tuple AddConnection2(Map<String, Map<String, Variant<?>>> settings, UInt32 flags,
-            Map<String, Variant<?>> args);
+    public AddConnection2Tuple AddConnection2(
+            Map<String, Map<String, Variant<?>>> settings, UInt32 flags, Map<String, Variant<?>> args);
 
     public LoadConnectionsTuple LoadConnections(List<String> filenames);
 
@@ -52,9 +51,7 @@ public interface Settings extends DBusInterface {
 
     public void SaveHostname(String hostname);
 
-    public static interface PropertyConnectionsType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyConnectionsType extends TypeRef<List<DBusPath>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -68,7 +65,6 @@ public interface Settings extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class NewConnection extends DBusSignal {
@@ -83,7 +79,6 @@ public interface Settings extends DBusInterface {
         public DBusPath getConnection() {
             return this.connection;
         }
-
     }
 
     public static class ConnectionRemoved extends DBusSignal {
@@ -98,6 +93,5 @@ public interface Settings extends DBusInterface {
         public DBusPath getConnection() {
             return this.connection;
         }
-
     }
 }

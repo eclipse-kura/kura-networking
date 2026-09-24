@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -39,11 +38,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component( //
-    name = "org.eclipse.kura.net.status.NetworkStatusService", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { "service.pid=org.eclipse.kura.net.status.NetworkStatusService" }
-)
+        name = "org.eclipse.kura.net.status.NetworkStatusService", //
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = {"service.pid=org.eclipse.kura.net.status.NetworkStatusService"})
 public class NMStatusServiceImpl implements NetworkStatusService {
 
     private static final Logger logger = LoggerFactory.getLogger(NMStatusServiceImpl.class);
@@ -52,7 +50,10 @@ public class NMStatusServiceImpl implements NetworkStatusService {
 
     private NMDbusConnector nmDbusConnector;
 
-    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC, service = PrivilegedExecutorService.class)
+    @Reference(
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.STATIC,
+            service = PrivilegedExecutorService.class)
     public void setCommandExecutorService(CommandExecutorService executorService) {
         this.commandExecutorService = executorService;
     }
@@ -111,19 +112,20 @@ public class NMStatusServiceImpl implements NetworkStatusService {
 
         Optional<NetworkInterfaceStatus> networkInterfaceStatus = Optional.empty();
         try {
-            NetworkInterfaceStatus status = this.nmDbusConnector.getInterfaceStatus(interfaceId, recompute,
-                    this.commandExecutorService);
+            NetworkInterfaceStatus status =
+                    this.nmDbusConnector.getInterfaceStatus(interfaceId, recompute, this.commandExecutorService);
             if (Objects.nonNull(status)) {
                 networkInterfaceStatus = Optional.of(status);
             }
         } catch (UnknownMethod e) {
-            throw new KuraIOException(e, "Could not retrieve status for " + interfaceId
-                    + " interface from NM because the DBus object path references got invalidated.");
+            throw new KuraIOException(
+                    e,
+                    "Could not retrieve status for " + interfaceId
+                            + " interface from NM because the DBus object path references got invalidated.");
         } catch (DBusException e) {
             throw new KuraIOException(e, "Could not retrieve status for " + interfaceId + " interface from NM.");
         }
 
         return networkInterfaceStatus;
     }
-
 }

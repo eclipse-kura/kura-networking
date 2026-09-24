@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.util;
 
 import java.io.BufferedReader;
@@ -21,7 +20,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -92,8 +90,11 @@ public class IwScanTool extends ScanTool implements IScanTool {
             } else {
                 if (logger.isErrorEnabled()) {
                     logger.error("scan() :: failed to execute {} error code is {}", String.join(" ", cmd), exitValue);
-                    logger.error("scan() :: STDERR: {}", new String(
-                            ((ByteArrayOutputStream) iwCommandStatus.getErrorStream()).toByteArray(), Charsets.UTF_8));
+                    logger.error(
+                            "scan() :: STDERR: {}",
+                            new String(
+                                    ((ByteArrayOutputStream) iwCommandStatus.getErrorStream()).toByteArray(),
+                                    Charsets.UTF_8));
                 }
             }
 
@@ -115,18 +116,19 @@ public class IwScanTool extends ScanTool implements IScanTool {
     private void activateInterface() throws KuraException {
         if (!this.linuxNetworkUtil.hasAddress(this.ifaceName)) {
             // activate the interface
-            String[] cmdIpLink = { "ip", "link", "set", this.ifaceName, "up" };
+            String[] cmdIpLink = {"ip", "link", "set", this.ifaceName, "up"};
             CommandStatus commandStatus = this.executorService.execute(new Command(cmdIpLink));
             if (!commandStatus.getExitStatus().isSuccessful()) {
-                throw new KuraException(KuraErrorCode.PROCESS_EXECUTION_ERROR,
-                        "Failed to activate interface " + this.ifaceName);
+                throw new KuraException(
+                        KuraErrorCode.PROCESS_EXECUTION_ERROR, "Failed to activate interface " + this.ifaceName);
             }
 
             // remove the previous ip address (needed on mgw)
-            String[] cmdIpAddr = { "ip", "addr", "flush", "dev", this.ifaceName };
+            String[] cmdIpAddr = {"ip", "addr", "flush", "dev", this.ifaceName};
             commandStatus = this.executorService.execute(new Command(cmdIpAddr));
             if (!commandStatus.getExitStatus().isSuccessful()) {
-                throw new KuraException(KuraErrorCode.PROCESS_EXECUTION_ERROR,
+                throw new KuraException(
+                        KuraErrorCode.PROCESS_EXECUTION_ERROR,
                         "Failed to remove address for interface " + this.ifaceName);
             }
         }
@@ -199,6 +201,6 @@ public class IwScanTool extends ScanTool implements IScanTool {
     }
 
     private String[] formIwScanCommand(String interfaceName) {
-        return new String[] { "iw", "dev", interfaceName, "scan" };
+        return new String[] {"iw", "dev", interfaceName, "scan"};
     }
 }

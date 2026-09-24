@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2021, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -15,7 +15,6 @@ package org.eclipse.kura.rest.network.configuration.provider.test.responses;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.configuration.ComponentConfiguration;
 import org.eclipse.kura.configuration.metatype.AD;
 import org.eclipse.kura.configuration.metatype.Icon;
@@ -82,5 +81,4 @@ public class MockComponentConfiguration {
     public ComponentConfiguration getComponentConfiguration() {
         return this.componentConfiguration;
     }
-
 }

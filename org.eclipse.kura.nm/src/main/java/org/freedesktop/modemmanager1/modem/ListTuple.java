@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.Tuple;
 import org.freedesktop.dbus.annotations.Position;
 import org.freedesktop.dbus.types.Variant;
@@ -26,6 +25,7 @@ public class ListTuple extends Tuple {
 
     @Position(0)
     private String selected;
+
     @Position(1)
     private List<Map<String, Variant<?>>> installed;
 
@@ -49,5 +49,4 @@ public class ListTuple extends Tuple {
     public List<Map<String, Variant<?>>> getInstalled() {
         return this.installed;
     }
-
 }

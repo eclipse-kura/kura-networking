@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,11 +14,9 @@ package org.eclipse.kura.nm.enums;
 
 import java.util.EnumSet;
 import java.util.Set;
-
 import org.freedesktop.dbus.types.UInt32;
 
 public enum MMModemLocationSource {
-
     MM_MODEM_LOCATION_SOURCE_NONE(0x00000000),
     MM_MODEM_LOCATION_SOURCE_3GPP_LAC_CI(0x00000001),
     MM_MODEM_LOCATION_SOURCE_GPS_RAW(0x00000002),
@@ -44,24 +42,24 @@ public enum MMModemLocationSource {
 
     public static MMModemLocationSource toMMModemLocationSource(UInt32 type) {
         switch (type.intValue()) {
-        case 0x00000000:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE;
-        case 0x00000001:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_3GPP_LAC_CI;
-        case 0x00000002:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW;
-        case 0x00000004:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA;
-        case 0x00000008:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_CDMA_BS;
-        case 0x00000010:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED;
-        case 0x00000020:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_AGPS_MSA;
-        case 0x00000040:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_AGPS_MSB;
-        default:
-            return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE;
+            case 0x00000000:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE;
+            case 0x00000001:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_3GPP_LAC_CI;
+            case 0x00000002:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW;
+            case 0x00000004:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA;
+            case 0x00000008:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_CDMA_BS;
+            case 0x00000010:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED;
+            case 0x00000020:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_AGPS_MSA;
+            case 0x00000040:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_AGPS_MSB;
+            default:
+                return MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE;
         }
     }
 

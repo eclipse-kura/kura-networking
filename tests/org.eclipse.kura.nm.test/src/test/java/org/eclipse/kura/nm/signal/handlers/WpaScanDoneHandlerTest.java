@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -17,12 +17,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import fi.w1.wpa_supplicant1.Interface;
 import java.util.concurrent.CountDownLatch;
-
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.junit.Test;
-
-import fi.w1.wpa_supplicant1.Interface;
 
 public class WpaScanDoneHandlerTest {
 

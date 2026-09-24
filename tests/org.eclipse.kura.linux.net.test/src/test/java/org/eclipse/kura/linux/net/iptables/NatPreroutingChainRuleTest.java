@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2020, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -15,7 +15,6 @@ package org.eclipse.kura.linux.net.iptables;
 import static org.junit.Assert.assertEquals;
 
 import java.net.UnknownHostException;
-
 import org.eclipse.kura.KuraException;
 import org.junit.Test;
 
@@ -40,13 +39,20 @@ public class NatPreroutingChainRuleTest {
 
     @Test
     public void natPreroutingRuleToStringTest() throws NumberFormatException, UnknownHostException {
-        NatPreroutingChainRule preroutingRule = new NatPreroutingChainRule().inputInterface("eth1").protocol("udp")
-                .externalPort(123).internalPort(321).srcPortFirst(10200).srcPortLast(10400).dstIpAddress("1.2.3.4")
-                .permittedNetwork("9.8.7.6").permittedNetworkMask(32).permittedMacAddress("00:11:22:33:44:55:66");
+        NatPreroutingChainRule preroutingRule = new NatPreroutingChainRule()
+                .inputInterface("eth1")
+                .protocol("udp")
+                .externalPort(123)
+                .internalPort(321)
+                .srcPortFirst(10200)
+                .srcPortLast(10400)
+                .dstIpAddress("1.2.3.4")
+                .permittedNetwork("9.8.7.6")
+                .permittedNetworkMask(32)
+                .permittedMacAddress("00:11:22:33:44:55:66");
 
         assertEquals(
                 "-A prerouting-kura -s 9.8.7.6/32 -i eth1 -p udp -m mac --mac-source 00:11:22:33:44:55:66 -m udp --sport 10200:10400 --dport 123 -j DNAT --to-destination 1.2.3.4:321",
                 preroutingRule.toString());
     }
-
 }

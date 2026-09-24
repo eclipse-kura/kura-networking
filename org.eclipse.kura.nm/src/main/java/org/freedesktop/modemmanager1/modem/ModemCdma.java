@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1.modem;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
 import org.freedesktop.dbus.annotations.DBusProperty.Access;
@@ -46,8 +45,9 @@ public interface ModemCdma extends DBusInterface {
         private final UInt32 activationError;
         private final Map<String, Variant<?>> statusChanges;
 
-        public ActivationStateChanged(String _path, UInt32 _activationState, UInt32 _activationError,
-                Map<String, Variant<?>> _statusChanges) throws DBusException {
+        public ActivationStateChanged(
+                String _path, UInt32 _activationState, UInt32 _activationError, Map<String, Variant<?>> _statusChanges)
+                throws DBusException {
             super(_path, _activationState, _activationError, _statusChanges);
             this.activationState = _activationState;
             this.activationError = _activationError;
@@ -65,6 +65,5 @@ public interface ModemCdma extends DBusInterface {
         public Map<String, Variant<?>> getStatusChanges() {
             return this.statusChanges;
         }
-
     }
 }

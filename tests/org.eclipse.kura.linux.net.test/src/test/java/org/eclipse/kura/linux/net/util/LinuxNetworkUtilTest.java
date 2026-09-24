@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -19,14 +19,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
 import org.eclipse.kura.executor.Command;
@@ -97,7 +94,8 @@ public class LinuxNetworkUtilTest {
     }
 
     @Test
-    @Ignore("Given the current implementation, we cannot inject the exit code of the command execution and therefore this test will fail.")
+    @Ignore(
+            "Given the current implementation, we cannot inject the exit code of the command execution and therefore this test will fail.")
     public void shouldCheckSystemdUnitExistence() throws IOException {
         givenLinuxNetworkUtil();
         givenTool("/tmp/systemctl");
@@ -168,15 +166,15 @@ public class LinuxNetworkUtilTest {
     }
 
     private void whenCheckTool(String toolName, String searchPath) {
-        this.toolExists = LinuxNetworkUtil.toolExists(toolName, new String[] { searchPath });
+        this.toolExists = LinuxNetworkUtil.toolExists(toolName, new String[] {searchPath});
     }
 
     private void whenCheckSystemdUnit(String unitName, String searchPath) {
-        this.systemdUnitExists = LinuxNetworkUtil.systemdSystemUnitExists(unitName, new String[] { searchPath });
+        this.systemdUnitExists = LinuxNetworkUtil.systemdSystemUnitExists(unitName, new String[] {searchPath});
     }
 
     private void whenGetTool(String tool, String searchPath) {
-        this.toolPath = LinuxNetworkUtil.getToolPath(tool, new String[] { searchPath });
+        this.toolPath = LinuxNetworkUtil.getToolPath(tool, new String[] {searchPath});
     }
 
     private void thenApNetworkInterfaceIsCreated() {
@@ -193,7 +191,8 @@ public class LinuxNetworkUtilTest {
     private void thenNetworkInterfaceMacAddressIsSet() {
         try {
             this.linuxNetworkUtil.setNetworkInterfaceMacAddress(this.dedicatedInterfaceName);
-            assertArrayEquals(LinuxNetworkUtil.formIpLinkSetAddress(this.dedicatedInterfaceName, this.macAddress),
+            assertArrayEquals(
+                    LinuxNetworkUtil.formIpLinkSetAddress(this.dedicatedInterfaceName, this.macAddress),
                     this.commandExecutorServiceStub.getLastCommand());
         } catch (KuraException e) {
             fail();
@@ -203,7 +202,8 @@ public class LinuxNetworkUtilTest {
     private void thenNetworkInterfaceLinkIsUP() {
         try {
             this.linuxNetworkUtil.setNetworkInterfaceLinkUp(this.dedicatedInterfaceName);
-            assertArrayEquals(LinuxNetworkUtil.formIpLinkSetStatus(this.dedicatedInterfaceName, this.linkStatus),
+            assertArrayEquals(
+                    LinuxNetworkUtil.formIpLinkSetStatus(this.dedicatedInterfaceName, this.linkStatus),
                     this.commandExecutorServiceStub.getLastCommand());
         } catch (KuraException e) {
             fail();
@@ -213,7 +213,8 @@ public class LinuxNetworkUtilTest {
     private void thenNetworkInterfaceLinkIsDown() {
         try {
             this.linuxNetworkUtil.setNetworkInterfaceLinkDown(this.dedicatedInterfaceName);
-            assertArrayEquals(LinuxNetworkUtil.formIpLinkSetStatus(this.dedicatedInterfaceName, this.linkStatus),
+            assertArrayEquals(
+                    LinuxNetworkUtil.formIpLinkSetStatus(this.dedicatedInterfaceName, this.linkStatus),
                     this.commandExecutorServiceStub.getLastCommand());
         } catch (KuraException e) {
             fail();
@@ -236,5 +237,4 @@ public class LinuxNetworkUtilTest {
         assertTrue(this.toolPath.isPresent());
         assertEquals(expectedToolPath, this.toolPath.get());
     }
-
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.nm;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.eclipse.kura.nm.enums.NMDeviceState;
 import org.eclipse.kura.nm.enums.NMDeviceType;
 import org.freedesktop.NetworkManager;
@@ -77,26 +75,26 @@ public class NetworkManagerDbusWrapper {
     }
 
     protected String getDeviceInterface(Device device) throws DBusException {
-        Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(),
-                Properties.class);
+        Properties deviceProperties =
+                this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(), Properties.class);
         return deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_INTERFACE);
     }
 
     protected NMDeviceState getDeviceState(Device device) throws DBusException {
-        Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(),
-                Properties.class);
+        Properties deviceProperties =
+                this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(), Properties.class);
         return NMDeviceState.fromUInt32(deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_STATE));
     }
 
     protected Boolean isDeviceManaged(Device device) throws DBusException {
-        Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(),
-                Properties.class);
+        Properties deviceProperties =
+                this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(), Properties.class);
         return deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_MANAGED);
     }
 
     protected void setDeviceManaged(Device device, Boolean manage) throws DBusException {
-        Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(),
-                Properties.class);
+        Properties deviceProperties =
+                this.dbusConnection.getRemoteObject(NM_BUS_NAME, device.getObjectPath(), Properties.class);
 
         deviceProperties.Set(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_MANAGED, manage);
     }
@@ -113,19 +111,19 @@ public class NetworkManagerDbusWrapper {
     }
 
     protected NMDeviceType getDeviceType(String deviceDbusPath) throws DBusException {
-        Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, deviceDbusPath,
-                Properties.class);
+        Properties deviceProperties =
+                this.dbusConnection.getRemoteObject(NM_BUS_NAME, deviceDbusPath, Properties.class);
 
-        NMDeviceType deviceType = NMDeviceType
-                .fromUInt32(deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_DEVICETYPE));
+        NMDeviceType deviceType =
+                NMDeviceType.fromUInt32(deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_DEVICETYPE));
 
         // Workaround to identify Loopback interface for NM versions prior to 1.42
         if (deviceType == NMDeviceType.NM_DEVICE_TYPE_GENERIC) {
             Generic genericDevice = this.dbusConnection.getRemoteObject(NM_BUS_NAME, deviceDbusPath, Generic.class);
-            Properties genericDeviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME,
-                    genericDevice.getObjectPath(), Properties.class);
-            String genericDeviceType = genericDeviceProperties.Get(NM_GENERIC_DEVICE_BUS_NAME,
-                    NM_DEVICE_GENERIC_PROPERTY_TYPEDESCRIPTION);
+            Properties genericDeviceProperties =
+                    this.dbusConnection.getRemoteObject(NM_BUS_NAME, genericDevice.getObjectPath(), Properties.class);
+            String genericDeviceType =
+                    genericDeviceProperties.Get(NM_GENERIC_DEVICE_BUS_NAME, NM_DEVICE_GENERIC_PROPERTY_TYPEDESCRIPTION);
             if (genericDeviceType.equals("loopback")) {
                 return NMDeviceType.NM_DEVICE_TYPE_LOOPBACK;
             }
@@ -154,15 +152,18 @@ public class NetworkManagerDbusWrapper {
 
     protected Optional<Connection> getAppliedConnection(Device dev) throws DBusException {
         try {
-            Map<String, Map<String, Variant<?>>> connectionSettings = dev.GetAppliedConnection(new UInt32(0))
-                    .getConnection();
-            String uuid = String.valueOf(connectionSettings.get(NM_SETTING_CONNECTION_KEY).get("uuid").getValue());
+            Map<String, Map<String, Variant<?>>> connectionSettings =
+                    dev.GetAppliedConnection(new UInt32(0)).getConnection();
+            String uuid = String.valueOf(connectionSettings
+                    .get(NM_SETTING_CONNECTION_KEY)
+                    .get("uuid")
+                    .getValue());
 
             Settings settings = this.dbusConnection.getRemoteObject(NM_BUS_NAME, NM_SETTINGS_BUS_PATH, Settings.class);
 
             DBusPath connectionPath = settings.GetConnectionByUuid(uuid);
-            return Optional
-                    .of(this.dbusConnection.getRemoteObject(NM_BUS_NAME, connectionPath.getPath(), Connection.class));
+            return Optional.of(
+                    this.dbusConnection.getRemoteObject(NM_BUS_NAME, connectionPath.getPath(), Connection.class));
         } catch (DBusExecutionException e) {
             logger.debug("Could not find applied connection for {}, caused by", dev.getObjectPath(), e);
         }
@@ -178,24 +179,25 @@ public class NetworkManagerDbusWrapper {
 
             List<DBusPath> connectionPath = settings.ListConnections();
 
-            Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, dev.getObjectPath(),
-                    Properties.class);
+            Properties deviceProperties =
+                    this.dbusConnection.getRemoteObject(NM_BUS_NAME, dev.getObjectPath(), Properties.class);
             String interfaceName = deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_INTERFACE);
             String expectedConnectionName = String.format("kura-%s-connection", interfaceName);
 
             for (DBusPath path : connectionPath) {
 
-                Connection availableConnection = this.dbusConnection.getRemoteObject(NM_BUS_NAME, path.getPath(),
-                        Connection.class);
+                Connection availableConnection =
+                        this.dbusConnection.getRemoteObject(NM_BUS_NAME, path.getPath(), Connection.class);
 
                 Map<String, Map<String, Variant<?>>> availableConnectionSettings = availableConnection.GetSettings();
-                String availableConnectionId = (String) availableConnectionSettings.get(NM_SETTING_CONNECTION_KEY)
-                        .get("id").getValue();
+                String availableConnectionId = (String) availableConnectionSettings
+                        .get(NM_SETTING_CONNECTION_KEY)
+                        .get("id")
+                        .getValue();
 
                 if (availableConnectionId.equals(expectedConnectionName)) {
                     connections.add(availableConnection);
                 }
-
             }
 
         } catch (DBusExecutionException e) {
@@ -206,8 +208,8 @@ public class NetworkManagerDbusWrapper {
     }
 
     protected void activateConnection(Connection connection, Device device) {
-        this.networkManager.ActivateConnection(new DBusPath(connection.getObjectPath()),
-                new DBusPath(device.getObjectPath()), new DBusPath("/"));
+        this.networkManager.ActivateConnection(
+                new DBusPath(connection.getObjectPath()), new DBusPath(device.getObjectPath()), new DBusPath("/"));
     }
 
     protected boolean reapplySettings(Device device, Map<String, Map<String, Variant<?>>> settings) {
@@ -227,10 +229,9 @@ public class NetworkManagerDbusWrapper {
         List<Properties> accessPointProperties = new ArrayList<>();
 
         for (DBusPath path : accessPointPaths) {
-            Properties apProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, path.getPath(),
-                    Properties.class);
+            Properties apProperties =
+                    this.dbusConnection.getRemoteObject(NM_BUS_NAME, path.getPath(), Properties.class);
             accessPointProperties.add(apProperties);
-
         }
 
         return accessPointProperties;
@@ -238,8 +239,8 @@ public class NetworkManagerDbusWrapper {
 
     protected Optional<String> getModemManagerDbusPath(String devicePath) throws DBusException {
         Properties deviceProperties = this.dbusConnection.getRemoteObject(NM_BUS_NAME, devicePath, Properties.class);
-        NMDeviceType deviceType = NMDeviceType
-                .fromUInt32(deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_DEVICETYPE));
+        NMDeviceType deviceType =
+                NMDeviceType.fromUInt32(deviceProperties.Get(NM_DEVICE_BUS_NAME, NM_DEVICE_PROPERTY_DEVICETYPE));
 
         if (deviceType != NMDeviceType.NM_DEVICE_TYPE_MODEM) {
             logger.warn("Device {} is not a modem", devicePath);

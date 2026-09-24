@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm;
 
 public enum Kura8021xEAP {
-
     KURA_8021X_EAP_TLS("Kura8021xEapTls"),
     KURA_8021X_EAP_PEAP("Kura8021xEapPeap"),
     KURA_8021X_EAP_TTLS("Kura8021xEapTtls");

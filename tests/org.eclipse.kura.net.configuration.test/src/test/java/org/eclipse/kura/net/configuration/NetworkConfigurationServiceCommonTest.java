@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.Password;
 import org.eclipse.kura.configuration.metatype.AD;
@@ -102,39 +101,37 @@ public class NetworkConfigurationServiceCommonTest {
 
         whenConfigurationPropertiesAreRetrieved();
 
-        thenReturnedPropertyEqualsPassword("net.interface.1-4.config.password",
-                new Password(new char[] { 'f', 'o', 'o' }));
-        thenReturnedPropertyEqualsPassword("net.interface.wlp1s0.config.wifi.master.passphrase",
-                new Password(new char[] { 'b', 'a', 'r' }));
-        thenReturnedPropertyEqualsPassword("net.interface.wlp1s0.config.wifi.infra.passphrase",
-                new Password(new char[] { 'b', 'a', 'z' }));
-        thenReturnedPropertyEqualsPassword("net.interface.wlp1s0.config.802-1x.password",
-                new Password(new char[] { 'q', 'u', 'x' }));
-
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.1-4.config.password", new Password(new char[] {'f', 'o', 'o'}));
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.wlp1s0.config.wifi.master.passphrase", new Password(new char[] {'b', 'a', 'r'}));
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.wlp1s0.config.wifi.infra.passphrase", new Password(new char[] {'b', 'a', 'z'}));
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.wlp1s0.config.802-1x.password", new Password(new char[] {'q', 'u', 'x'}));
     }
 
     @Test
     public void shouldNotChangeWrappedPasswords() throws KuraException {
         givenFullProperties();
-        givenConfigurationProperty("net.interface.1-4.config.password", new Password(new char[] { 'f', 'o', 'o' }));
-        givenConfigurationProperty("net.interface.wlp1s0.config.wifi.master.passphrase",
-                new Password(new char[] { 'b', 'a', 'r' }));
-        givenConfigurationProperty("net.interface.wlp1s0.config.wifi.infra.passphrase",
-                new Password(new char[] { 'b', 'a', 'z' }));
-        givenConfigurationProperty("net.interface.wlp1s0.config.802-1x.password",
-                new Password(new char[] { 'q', 'u', 'x' }));
+        givenConfigurationProperty("net.interface.1-4.config.password", new Password(new char[] {'f', 'o', 'o'}));
+        givenConfigurationProperty(
+                "net.interface.wlp1s0.config.wifi.master.passphrase", new Password(new char[] {'b', 'a', 'r'}));
+        givenConfigurationProperty(
+                "net.interface.wlp1s0.config.wifi.infra.passphrase", new Password(new char[] {'b', 'a', 'z'}));
+        givenConfigurationProperty(
+                "net.interface.wlp1s0.config.802-1x.password", new Password(new char[] {'q', 'u', 'x'}));
 
         whenConfigurationPropertiesAreRetrieved();
 
-        thenReturnedPropertyEqualsPassword("net.interface.1-4.config.password",
-                new Password(new char[] { 'f', 'o', 'o' }));
-        thenReturnedPropertyEqualsPassword("net.interface.wlp1s0.config.wifi.master.passphrase",
-                new Password(new char[] { 'b', 'a', 'r' }));
-        thenReturnedPropertyEqualsPassword("net.interface.wlp1s0.config.wifi.infra.passphrase",
-                new Password(new char[] { 'b', 'a', 'z' }));
-        thenReturnedPropertyEqualsPassword("net.interface.wlp1s0.config.802-1x.password",
-                new Password(new char[] { 'q', 'u', 'x' }));
-
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.1-4.config.password", new Password(new char[] {'f', 'o', 'o'}));
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.wlp1s0.config.wifi.master.passphrase", new Password(new char[] {'b', 'a', 'r'}));
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.wlp1s0.config.wifi.infra.passphrase", new Password(new char[] {'b', 'a', 'z'}));
+        thenReturnedPropertyEqualsPassword(
+                "net.interface.wlp1s0.config.802-1x.password", new Password(new char[] {'q', 'u', 'x'}));
     }
 
     @Test
@@ -317,8 +314,9 @@ public class NetworkConfigurationServiceCommonTest {
     }
 
     private void whenConfigurationPropertiesAreRetrieved() throws KuraException {
-        this.returnedProperties = NetworkConfigurationServiceCommon
-                .getConfiguration("foo", this.properties, Optional.empty()).getConfigurationProperties();
+        this.returnedProperties = NetworkConfigurationServiceCommon.getConfiguration(
+                        "foo", this.properties, Optional.empty())
+                .getConfigurationProperties();
     }
 
     private void thenComponentDefinitionHasBasicProperties() {
@@ -339,8 +337,11 @@ public class NetworkConfigurationServiceCommonTest {
     }
 
     private void thenReturnedPropertyEqualsPassword(final String key, final Password value) {
-        assertEquals(Password.class,
-                Optional.ofNullable(this.returnedProperties.get(key)).map(Object::getClass).orElse(null));
+        assertEquals(
+                Password.class,
+                Optional.ofNullable(this.returnedProperties.get(key))
+                        .map(Object::getClass)
+                        .orElse(null));
         assertArrayEquals(value.getPassword(), ((Password) this.returnedProperties.get(key)).getPassword());
     }
 
@@ -631,19 +632,25 @@ public class NetworkConfigurationServiceCommonTest {
     }
 
     private void thenComponentDefinitionHasWifiProperties() {
-        assertEquals(51, this.ads.stream().filter(ad -> ad.getName().contains("wlp1s0")).count());
+        assertEquals(
+                51,
+                this.ads.stream().filter(ad -> ad.getName().contains("wlp1s0")).count());
     }
 
     private void thenComponentDefinitionHasModemProperties() {
-        assertEquals(37, this.ads.stream().filter(ad -> ad.getName().contains("1-4")).count());
+        assertEquals(
+                37, this.ads.stream().filter(ad -> ad.getName().contains("1-4")).count());
     }
 
     private void thenComponentDefinitionHasVlanProperties() {
-        assertEquals(34, this.ads.stream().filter(ad -> ad.getName().contains("ens5s0")).count());
+        assertEquals(
+                34,
+                this.ads.stream().filter(ad -> ad.getName().contains("ens5s0")).count());
     }
 
     private void thenPppNumIsInteger() {
-        Optional<AD> adOptional = this.ads.stream().filter(ad -> ad.getName().equals("net.interface.1-4.config.pppNum"))
+        Optional<AD> adOptional = this.ads.stream()
+                .filter(ad -> ad.getName().equals("net.interface.1-4.config.pppNum"))
                 .findFirst();
         assertTrue(adOptional.isPresent());
         assertEquals(Scalar.INTEGER, adOptional.get().getType());
@@ -664,7 +671,8 @@ public class NetworkConfigurationServiceCommonTest {
     private void thenComponentDefinitionHasEthernetProperties(String interfaceName) {
         int adsConfigured = 0;
         for (AD ad : this.ads) {
-            if (String.format("net.interface.%s.config.dhcpClient4.enabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpClient4.enabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
@@ -675,56 +683,65 @@ public class NetworkConfigurationServiceCommonTest {
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.enabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.enabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.maxLeaseTime", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.maxLeaseTime", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(-1, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.passDns", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.passDns", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.prefix", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.prefix", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(-1, Short.parseShort(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.rangeEnd", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.rangeEnd", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.rangeStart", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.rangeStart", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.ip4.address", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.ip4.address", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.ip4.gateway", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.ip4.gateway", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.nat.enabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.nat.enabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.ip6.address.method", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.ip6.address.method", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals("netIPv6MethodAuto", ad.getDefault());
                 adsConfigured++;
             }
-
         }
         assertEquals(12, adsConfigured);
     }
@@ -732,7 +749,8 @@ public class NetworkConfigurationServiceCommonTest {
     private void thenComponentDefinitionHasWifiProperties(String interfaceName) {
         int adsConfigured = 0;
         for (AD ad : this.ads) {
-            if (String.format("net.interface.%s.config.dhcpClient4.enabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpClient4.enabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
@@ -743,157 +761,188 @@ public class NetworkConfigurationServiceCommonTest {
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.enabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.enabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.maxLeaseTime", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.maxLeaseTime", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(-1, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.passDns", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.passDns", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.prefix", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.prefix", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(-1, Short.parseShort(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.rangeEnd", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.rangeEnd", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dhcpServer4.rangeStart", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dhcpServer4.rangeStart", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.ip4.address", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.ip4.address", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.ip4.gateway", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.ip4.gateway", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.nat.enabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.nat.enabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.channel", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.channel", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals("1", ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.channel", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.channel", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals("1", ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.groupCiphers", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.groupCiphers", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiCiphers.CCMP_TKIP.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.pairwiseCiphers", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.pairwiseCiphers", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiCiphers.CCMP_TKIP.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.passphrase", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.passphrase", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.passphrase", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.passphrase", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.radioMode", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.radioMode", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiRadioMode.RADIO_MODE_80211b.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.radioMode", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.radioMode", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiRadioMode.RADIO_MODE_80211b.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.securityType", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.securityType", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiSecurity.NONE.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.securityType", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.securityType", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiSecurity.NONE.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.ssid", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.ssid", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.ssid", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.ssid", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.mode", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.mode", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiMode.UNKNOWN.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.bgscan", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.bgscan", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.pingAccessPoint", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.pingAccessPoint", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.infra.ignoreSSID", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.infra.ignoreSSID", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.802-1x.password", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.802-1x.password", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.broadcast", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.broadcast", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.ignoreSSID", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.ignoreSSID", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.pairwiseCiphers", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.pairwiseCiphers", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiCiphers.CCMP_TKIP.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.wifi.master.groupCiphers", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.wifi.master.groupCiphers", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(WifiCiphers.CCMP_TKIP.name(), ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.wifi.capabilities", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.wifi.capabilities", interfaceName)
+                    .equals(ad.getId())) {
                 assertTrue(ad.getDefault().isEmpty());
                 adsConfigured++;
             }
@@ -919,7 +968,8 @@ public class NetworkConfigurationServiceCommonTest {
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.resetTimeout", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.resetTimeout", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(5, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
@@ -929,27 +979,32 @@ public class NetworkConfigurationServiceCommonTest {
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.activeFilter", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.activeFilter", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals("inbound", ad.getDefault());
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.lcpEchoInterval", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.lcpEchoInterval", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(0, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.lcpEchoFailure", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.lcpEchoFailure", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(0, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.gpsEnabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.gpsEnabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.diversityEnabled", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.diversityEnabled", interfaceName)
+                    .equals(ad.getId())) {
                 assertFalse(Boolean.parseBoolean(ad.getDefault()));
                 adsConfigured++;
             }
@@ -959,17 +1014,20 @@ public class NetworkConfigurationServiceCommonTest {
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.profileId", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.profileId", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(0, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.dataCompression", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.dataCompression", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(0, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
 
-            if (String.format("net.interface.%s.config.headerCompression", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.headerCompression", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(0, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
@@ -995,12 +1053,12 @@ public class NetworkConfigurationServiceCommonTest {
     private void thenComponentDefinitionHasVlanProperties(String interfaceName) {
         int adsConfigured = 0;
         for (AD ad : this.ads) {
-            if (String.format("net.interface.%s.config.vlan.flags", interfaceName).equals(ad.getId())) {
+            if (String.format("net.interface.%s.config.vlan.flags", interfaceName)
+                    .equals(ad.getId())) {
                 assertEquals(1, Integer.parseInt(ad.getDefault()));
                 adsConfigured++;
             }
         }
         assertEquals(1, adsConfigured);
     }
-
 }

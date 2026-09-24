@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2024, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.nm.position;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +22,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
 import org.eclipse.kura.linux.position.options.PositionServiceOptions;
 import org.eclipse.kura.linux.position.provider.GpsDeviceAvailabilityListener;
 import org.eclipse.kura.linux.position.provider.LockStatusListener;
@@ -91,14 +89,15 @@ public class MMPositionProviderTest {
      */
     private void givenModemManagerFakeLocation(double lat, double lon, double alt) {
 
-        Scanner scanner = new Scanner(MMPositionProviderTest.class.getResourceAsStream("/fakeNmeaSentences.txt"),
-                "UTF-8");
+        Scanner scanner =
+                new Scanner(MMPositionProviderTest.class.getResourceAsStream("/fakeNmeaSentences.txt"), "UTF-8");
         CharSequence locationString = scanner.useDelimiter("\\A").next().replace(" ", "");
         scanner.close();
 
         Location mockLocation = mock(Location.class);
         Map<UInt32, Variant<?>> variantMap = new HashMap<>();
-        variantMap.put(new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA.getValue()),
+        variantMap.put(
+                new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA.getValue()),
                 new Variant<>(locationString));
 
         Map<String, Variant<?>> rawLocationMap = new HashMap<>();
@@ -107,7 +106,8 @@ public class MMPositionProviderTest {
         rawLocationMap.put("altitude", new Variant<>(alt, Double.class));
         rawLocationMap.put("utc-time", new Variant<>("103355", String.class));
 
-        variantMap.put(new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW.getValue()),
+        variantMap.put(
+                new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW.getValue()),
                 new Variant<>(rawLocationMap, "a{sv}"));
 
         when(mockLocation.GetLocation()).thenReturn(variantMap);
@@ -120,14 +120,15 @@ public class MMPositionProviderTest {
 
     private void givenModemManagerWithNoFix() {
 
-        Scanner scanner = new Scanner(MMPositionProviderTest.class.getResourceAsStream("/noFixNmeaSentences.txt"),
-                "UTF-8");
+        Scanner scanner =
+                new Scanner(MMPositionProviderTest.class.getResourceAsStream("/noFixNmeaSentences.txt"), "UTF-8");
         CharSequence locationString = scanner.useDelimiter("\\A").next().replace(" ", "");
         scanner.close();
 
         Location mockLocation = mock(Location.class);
         Map<UInt32, Variant<?>> variantMap = new HashMap<>();
-        variantMap.put(new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA.getValue()),
+        variantMap.put(
+                new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA.getValue()),
                 new Variant<>(locationString));
 
         when(mockLocation.GetLocation()).thenReturn(variantMap);
@@ -161,7 +162,6 @@ public class MMPositionProviderTest {
         } catch (Exception ex) {
             this.unexpectedException = ex;
         }
-
     }
 
     private void whenServiceAsksForFix() throws InterruptedException {
@@ -172,7 +172,6 @@ public class MMPositionProviderTest {
         } catch (Exception ex) {
             this.unexpectedException = ex;
         }
-
     }
 
     private void thenNoExceptionThrown() {
@@ -194,5 +193,4 @@ public class MMPositionProviderTest {
     private void thenPositionIsFixed(boolean fixValue) {
         assertEquals(fixValue, this.isFix);
     }
-
 }
