@@ -23,7 +23,6 @@ public class NetworkConfigurationMessages {
 
     private static final Logger logger = LoggerFactory.getLogger(NetworkConfigurationMessages.class);
 
-    @SuppressWarnings("checkstyle:lineLength")
     private static final String NETWORK_CONFIGURATION_MESSAGES_BUNDLE = "org.eclipse.kura.net.configuration.messages.NetworkConfigurationMessagesBundle";
 
     private NetworkConfigurationMessages() {
