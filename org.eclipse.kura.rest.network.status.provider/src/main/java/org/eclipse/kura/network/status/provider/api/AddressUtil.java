@@ -14,8 +14,7 @@ package org.eclipse.kura.network.status.provider.api;
 
 public class AddressUtil {
 
-    private AddressUtil() {
-    }
+    private AddressUtil() {}
 
     public static String formatHardwareAddress(final byte[] value) {
         final StringBuilder result = new StringBuilder();

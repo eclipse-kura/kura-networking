@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -22,8 +22,7 @@ public final class NetworkUtil {
     private static final String FULL_FORM_IP6_ADDRESS_IS_INVALID_MESSAGE = "fullFormIP6Address is invalid: ";
     private static final String MAC_IS_INVALID_MESSAGE = "mac is invalid: ";
 
-    private NetworkUtil() {
-    }
+    private NetworkUtil() {}
 
     public static String calculateNetwork(String ipAddress, String netmask) {
         int ipAddressValue = NetworkUtil.convertIp4Address(ipAddress);

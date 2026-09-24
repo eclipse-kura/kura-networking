@@ -14,7 +14,6 @@ package fi.w1;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -79,7 +78,6 @@ public interface Wpa_supplicant1 extends DBusInterface {
         public DBusPath getRemovedInterfacePath() {
             return this.removedInterfacePath;
         }
-
     }
 
     public static class PropertiesChanged extends DBusSignal {
@@ -94,22 +92,13 @@ public interface Wpa_supplicant1 extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
-    public static interface PropertyInterfacesType extends TypeRef<List<DBusPath>> {
+    public static interface PropertyInterfacesType extends TypeRef<List<DBusPath>> {}
 
-    }
+    public static interface PropertyEapMethodsType extends TypeRef<List<String>> {}
 
-    public static interface PropertyEapMethodsType extends TypeRef<List<String>> {
+    public static interface PropertyCapabilitiesType extends TypeRef<List<String>> {}
 
-    }
-
-    public static interface PropertyCapabilitiesType extends TypeRef<List<String>> {
-
-    }
-
-    public static interface PropertyWFDIEsType extends TypeRef<List<Byte>> {
-
-    }
+    public static interface PropertyWFDIEsType extends TypeRef<List<Byte>> {}
 }

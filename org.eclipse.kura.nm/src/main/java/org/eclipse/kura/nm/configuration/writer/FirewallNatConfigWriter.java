@@ -15,7 +15,6 @@ package org.eclipse.kura.nm.configuration.writer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -33,8 +32,8 @@ public class FirewallNatConfigWriter {
     private final List<String> wanInterfaceNames;
     private final List<String> natInterfaceNames;
 
-    public FirewallNatConfigWriter(CommandExecutorService executorService, List<String> wanInterfaceNames,
-            List<String> natInterfaceNames) {
+    public FirewallNatConfigWriter(
+            CommandExecutorService executorService, List<String> wanInterfaceNames, List<String> natInterfaceNames) {
         this.executorService = executorService;
         this.wanInterfaceNames = wanInterfaceNames;
         this.natInterfaceNames = natInterfaceNames;
@@ -55,8 +54,10 @@ public class FirewallNatConfigWriter {
 
             this.firewall.replaceAllNatRules(natRules);
         } catch (Exception e) {
-            throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR,
-                    "Failed to replace all NAT rules with new ones for interfaces: " + this.natInterfaceNames, e);
+            throw new KuraException(
+                    KuraErrorCode.CONFIGURATION_ERROR,
+                    "Failed to replace all NAT rules with new ones for interfaces: " + this.natInterfaceNames,
+                    e);
         }
     }
 
@@ -70,5 +71,4 @@ public class FirewallNatConfigWriter {
 
         return natRule;
     }
-
 }

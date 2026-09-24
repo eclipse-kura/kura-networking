@@ -14,6 +14,16 @@ package org.eclipse.kura.internal.rest.network.configuration;
 
 import static java.util.Objects.isNull;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -49,33 +58,25 @@ import org.osgi.service.useradmin.UserAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 @Path("networkConfiguration/v1")
-@Component(name = "org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", //
-    immediate = true, //
-    property = { //
-        "service.pid=org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", //
-        "kura.service.pid=org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", //
-        "osgi.jakartars.resource=true" //
-    }, //
-    service = NetworkConfigurationRestService.class //
-)
+@Component(
+        name = "org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", //
+        immediate = true, //
+        property = { //
+            "service.pid=org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", //
+            "kura.service.pid=org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", //
+            "osgi.jakartars.resource=true" //
+        }, //
+        service = NetworkConfigurationRestService.class //
+        )
 public class NetworkConfigurationRestService {
 
     private static final Logger logger = LoggerFactory.getLogger(NetworkConfigurationRestService.class);
     private static final String KURA_PERMISSION_REST_CONFIGURATION_ROLE = "kura.permission.rest.network.configuration";
-    private static final String NETWORK_CONFIGURATION_SERVICE_PID = "org.eclipse.kura.net.admin.NetworkConfigurationService";
-    private static final List<String> NETWORK_CONFIGURATION_PIDS = Arrays.asList(NETWORK_CONFIGURATION_SERVICE_PID,
+    private static final String NETWORK_CONFIGURATION_SERVICE_PID =
+            "org.eclipse.kura.net.admin.NetworkConfigurationService";
+    private static final List<String> NETWORK_CONFIGURATION_PIDS = Arrays.asList(
+            NETWORK_CONFIGURATION_SERVICE_PID,
             "org.eclipse.kura.net.admin.FirewallConfigurationService",
             "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6");
     private static final String SUBTASK_SNAPSHOT_TAG = "snapshot";
@@ -103,7 +104,8 @@ public class NetworkConfigurationRestService {
     @Produces(MediaType.APPLICATION_JSON)
     public PidSet listNetworkConfigurableComponentsPids() {
         Set<String> pids = this.configurationService.getConfigurableComponentPids().stream()
-                .filter(this::isNetworkConfigurationPid).collect(Collectors.toSet());
+                .filter(this::isNetworkConfigurationPid)
+                .collect(Collectors.toSet());
 
         return new PidSet(pids);
     }
@@ -124,7 +126,8 @@ public class NetworkConfigurationRestService {
         } catch (final Exception e) {
             throw DefaultExceptionHandler.toWebApplicationException(e);
         }
-        return DTOUtil.toComponentConfigurationList(ccs, this.cryptoService, false).replacePasswordsWithPlaceholder();
+        return DTOUtil.toComponentConfigurationList(ccs, this.cryptoService, false)
+                .replacePasswordsWithPlaceholder();
     }
 
     @POST
@@ -159,15 +162,16 @@ public class NetworkConfigurationRestService {
         final List<ComponentConfigurationDTO> requestResult = new ArrayList<>();
         for (final String pid : pids.getPids()) {
             try {
-                final ComponentConfiguration componentConfiguration = this.configurationService
-                        .getDefaultComponentConfiguration(pid);
-                if (!isNetworkConfigurationPid(pid) || componentConfiguration == null
+                final ComponentConfiguration componentConfiguration =
+                        this.configurationService.getDefaultComponentConfiguration(pid);
+                if (!isNetworkConfigurationPid(pid)
+                        || componentConfiguration == null
                         || componentConfiguration.getDefinition() == null) {
                     logger.warn("cannot find default network configuration for {}", pid);
                     continue;
                 }
-                requestResult
-                        .add(DTOUtil.toComponentConfigurationDTO(componentConfiguration, this.cryptoService, false));
+                requestResult.add(
+                        DTOUtil.toComponentConfigurationDTO(componentConfiguration, this.cryptoService, false));
             } catch (final Exception ex) {
                 logger.warn("failed to get default configuration for {}", pid, ex);
             }
@@ -186,11 +190,11 @@ public class NetworkConfigurationRestService {
         for (ComponentConfigurationDTO componentConfig : request.getComponentConfigurations()) {
             if (isNetworkConfigurationPid(componentConfig.getPid())) {
                 failureHandler.runFallibleSubtask("update:" + componentConfig.getPid(), () -> {
-                    final Map<String, Object> configurationProperties = DTOUtil
-                            .dtosToConfigurationProperties(componentConfig.getProperties());
+                    final Map<String, Object> configurationProperties =
+                            DTOUtil.dtosToConfigurationProperties(componentConfig.getProperties());
                     updateNetInterfaces(configurationProperties, componentConfig.getPid());
-                    this.configurationService.updateConfiguration(componentConfig.getPid(), configurationProperties,
-                            false);
+                    this.configurationService.updateConfiguration(
+                            componentConfig.getPid(), configurationProperties, false);
                 });
             }
         }
@@ -221,10 +225,9 @@ public class NetworkConfigurationRestService {
 
         for (final FactoryComponentConfigurationDTO config : configs.getConfigs()) {
             handler.runFallibleSubtask("create:" + config.getPid(), () -> {
-
-                throw new KuraException(KuraErrorCode.INVALID_PARAMETER,
+                throw new KuraException(
+                        KuraErrorCode.INVALID_PARAMETER,
                         "Factory pid doesn't correspond to a network component factory");
-
             });
         }
 
@@ -248,8 +251,8 @@ public class NetworkConfigurationRestService {
 
         for (final String pid : request.getPids()) {
             handler.runFallibleSubtask("delete:" + pid, () -> {
-                throw new KuraException(KuraErrorCode.INVALID_PARAMETER,
-                        "Pid doesn't correspond to a network factory component");
+                throw new KuraException(
+                        KuraErrorCode.INVALID_PARAMETER, "Pid doesn't correspond to a network factory component");
             });
         }
 
@@ -301,8 +304,8 @@ public class NetworkConfigurationRestService {
                 Optional<String> interfaceName = parseInterfaceName(key);
                 interfaceName.ifPresent(interfaceNames::add);
             });
-            Map<String, Object> properties = this.configurationService.getComponentConfiguration(pid)
-                    .getConfigurationProperties();
+            Map<String, Object> properties =
+                    this.configurationService.getComponentConfiguration(pid).getConfigurationProperties();
             String netInterfaces = (String) properties.get("net.interfaces");
             List<String> netInterfacesList = Arrays.asList(netInterfaces.split(","));
             for (String name : interfaceNames) {

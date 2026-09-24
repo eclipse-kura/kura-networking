@@ -20,18 +20,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import fi.w1.Wpa_supplicant1;
+import fi.w1.wpa_supplicant1.Interface;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.types.Variant;
 import org.junit.Test;
-
-import fi.w1.Wpa_supplicant1;
-import fi.w1.wpa_supplicant1.Interface;
 
 public class WpaSupplicantDbusWrapperTest {
 
@@ -100,7 +98,8 @@ public class WpaSupplicantDbusWrapperTest {
      */
 
     private void givenMockWpaSupplicant() throws DBusException {
-        when(this.mockedDbusConnection.getRemoteObject(WPA_SUPPLICANT_BUS_NAME, WPA_SUPPLICANT_BUS_PATH, Wpa_supplicant1.class))
+        when(this.mockedDbusConnection.getRemoteObject(
+                        WPA_SUPPLICANT_BUS_NAME, WPA_SUPPLICANT_BUS_PATH, Wpa_supplicant1.class))
                 .thenReturn(this.mockedWpaSupplicant);
     }
 
@@ -110,8 +109,7 @@ public class WpaSupplicantDbusWrapperTest {
     }
 
     private void givenMockInterface(String interfaceName, String dbusPath) throws DBusException {
-        when(this.mockedWpaSupplicant.GetInterface(interfaceName))
-                .thenReturn(new DBusPath(dbusPath));
+        when(this.mockedWpaSupplicant.GetInterface(interfaceName)).thenReturn(new DBusPath(dbusPath));
         when(this.mockedDbusConnection.getRemoteObject(WPA_SUPPLICANT_BUS_NAME, dbusPath, Interface.class))
                 .thenReturn(this.mockedInterface);
     }

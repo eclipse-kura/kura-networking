@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IP6Address;
 import org.eclipse.kura.net.IPAddress;
@@ -117,8 +116,8 @@ public class NMStatusConverterTest {
         givenDevicePropertiesWith("Autoconnect", true);
         givenDevicePropertiesWith("FirmwareVersion", "awesomeFirmwareVersion");
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
 
         whenBuildLoopbackStatusIsCalledWith("lo", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.empty());
 
@@ -135,8 +134,8 @@ public class NMStatusConverterTest {
         givenDevicePropertiesWith("Mtu", new UInt32(42));
         givenDevicePropertiesWith("HwAddress", "00:00:00:00:00:00");
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
 
         whenBuildLoopbackStatusIsCalledWith("lo", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.empty());
 
@@ -149,7 +148,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverIs("awesomeDriver");
         thenResultingNetworkInterfaceDriverVersionIs("awesomeDriverVersion");
         thenResultingNetworkInterfaceMtuIs(42);
-        thenResultingNetworkInterfaceHardwareAddressIs(new byte[] { 0, 0, 0, 0, 0, 0 });
+        thenResultingNetworkInterfaceHardwareAddressIs(new byte[] {0, 0, 0, 0, 0, 0});
 
         thenResultingIp4InterfaceAddressIsMissing();
         thenResultingIp6InterfaceAddressIsMissing();
@@ -169,11 +168,11 @@ public class NMStatusConverterTest {
         givenIpv4ConfigPropertiesWithDNS(Arrays.asList());
         givenIpv4ConfigPropertiesWithAddress(Arrays.asList("127.0.0.1/8"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
 
-        whenBuildLoopbackStatusIsCalledWith("lo", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty());
+        whenBuildLoopbackStatusIsCalledWith(
+                "lo", this.mockDevicePropertiesWrapper, Optional.of(this.mockIp4ConfigProperties), Optional.empty());
 
         thenNoExceptionOccurred();
 
@@ -185,7 +184,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingIp4InterfaceGatewayIsMissing();
         thenResultingIp4InterfaceDNSIsMissing();
@@ -209,11 +208,11 @@ public class NMStatusConverterTest {
         givenIpv4ConfigPropertiesWithDNS(Arrays.asList());
         givenIpv4ConfigPropertiesWithAddress(Arrays.asList("not-an-ip-address/8"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
 
-        whenBuildLoopbackStatusIsCalledWith("lo", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty());
+        whenBuildLoopbackStatusIsCalledWith(
+                "lo", this.mockDevicePropertiesWrapper, Optional.of(this.mockIp4ConfigProperties), Optional.empty());
 
         thenNoExceptionOccurred();
 
@@ -225,7 +224,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingIp4InterfaceAddressIsMissing();
         thenResultingIp6InterfaceAddressIsMissing();
@@ -245,11 +244,11 @@ public class NMStatusConverterTest {
         givenIpv6ConfigPropertiesWithDNS(Arrays.asList());
         givenIpv6ConfigPropertiesWithAddress(Arrays.asList("::1/128"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_LOOPBACK);
 
-        whenBuildLoopbackStatusIsCalledWith("lo", this.mockDevicePropertiesWrapper, Optional.empty(),
-                Optional.of(this.mockIp6ConfigProperties));
+        whenBuildLoopbackStatusIsCalledWith(
+                "lo", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.of(this.mockIp6ConfigProperties));
 
         thenNoExceptionOccurred();
 
@@ -261,7 +260,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingIp6InterfaceGatewayIsMissing();
         thenResultingIp6InterfaceDNSIsMissing();
@@ -271,8 +270,8 @@ public class NMStatusConverterTest {
 
     @Test
     public void buildEthernetStatusThrowsWithEmptyProperties() {
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper, Optional.empty(),
-                Optional.empty());
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.empty());
 
         thenExceptionOccurred(NullPointerException.class);
     }
@@ -283,11 +282,11 @@ public class NMStatusConverterTest {
         givenDevicePropertiesWith("Autoconnect", true);
         givenDevicePropertiesWith("FirmwareVersion", "awesomeFirmwareVersion");
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper, Optional.empty(),
-                Optional.empty());
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.empty());
 
         thenExceptionOccurred(NullPointerException.class);
     }
@@ -302,11 +301,11 @@ public class NMStatusConverterTest {
         givenDevicePropertiesWith("Mtu", new UInt32(42));
         givenDevicePropertiesWith("HwAddress", "00:00:00:00:00:00");
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper, Optional.empty(),
-                Optional.empty());
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.empty());
 
         thenNoExceptionOccurred();
 
@@ -317,7 +316,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverIs("awesomeDriver");
         thenResultingNetworkInterfaceDriverVersionIs("awesomeDriverVersion");
         thenResultingNetworkInterfaceMtuIs(42);
-        thenResultingNetworkInterfaceHardwareAddressIs(new byte[] { 0, 0, 0, 0, 0, 0 });
+        thenResultingNetworkInterfaceHardwareAddressIs(new byte[] {0, 0, 0, 0, 0, 0});
 
         thenResultingIp4InterfaceAddressIsMissing();
         thenResultingIp6InterfaceAddressIsMissing();
@@ -337,11 +336,11 @@ public class NMStatusConverterTest {
         givenIpv4ConfigPropertiesWithDNS(Arrays.asList("192.168.1.10"));
         givenIpv4ConfigPropertiesWithAddress(Arrays.asList("192.168.1.82/24"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty());
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.of(this.mockIp4ConfigProperties), Optional.empty());
 
         thenNoExceptionOccurred();
 
@@ -353,7 +352,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingEthernetInterfaceLinkUpIs(true);
 
@@ -379,11 +378,11 @@ public class NMStatusConverterTest {
         givenIpv4ConfigPropertiesWithDNS(Arrays.asList("8.8.8.8", "8.8.4.4"));
         givenIpv4ConfigPropertiesWithAddress(Arrays.asList("192.168.1.82/24", "192.168.3.69/24"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty());
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.of(this.mockIp4ConfigProperties), Optional.empty());
 
         thenNoExceptionOccurred();
 
@@ -395,7 +394,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingEthernetInterfaceLinkUpIs(true);
 
@@ -403,10 +402,10 @@ public class NMStatusConverterTest {
         thenResultingIp4InterfaceDNSIs(
                 Arrays.asList(IPAddress.parseHostAddress("8.8.4.4"), IPAddress.parseHostAddress("8.8.8.8")));
         thenResultingIp4InterfaceAddressIs(Arrays.asList(
-                new NetworkInterfaceIpAddress<IP4Address>((IP4Address) IP4Address.parseHostAddress("192.168.1.82"),
-                        (short) 24),
-                new NetworkInterfaceIpAddress<IP4Address>((IP4Address) IP4Address.parseHostAddress("192.168.3.69"),
-                        (short) 24)));
+                new NetworkInterfaceIpAddress<IP4Address>(
+                        (IP4Address) IP4Address.parseHostAddress("192.168.1.82"), (short) 24),
+                new NetworkInterfaceIpAddress<IP4Address>(
+                        (IP4Address) IP4Address.parseHostAddress("192.168.3.69"), (short) 24)));
 
         thenResultingIp6InterfaceAddressIsMissing();
     }
@@ -425,11 +424,11 @@ public class NMStatusConverterTest {
         givenIpv6ConfigPropertiesWithDNS(Arrays.asList("20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.88"));
         givenIpv6ConfigPropertiesWithAddress(Arrays.asList("fe80::dea6:32ff:fee0:54f0/64"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper, Optional.empty(),
-                Optional.of(this.mockIp6ConfigProperties));
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.of(this.mockIp6ConfigProperties));
 
         thenNoExceptionOccurred();
 
@@ -441,7 +440,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingEthernetInterfaceLinkUpIs(true);
 
@@ -464,16 +463,16 @@ public class NMStatusConverterTest {
         givenDevicePropertiesWith("HwAddress", "F5:5B:32:7C:40:EA");
 
         givenIpv6ConfigPropertiesWith("Gateway", "fe80:0:0:0:dea6:32ff:fee0:0001");
-        givenIpv6ConfigPropertiesWithDNS(Arrays.asList("20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.88",
-                "20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.44"));
+        givenIpv6ConfigPropertiesWithDNS(Arrays.asList(
+                "20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.88", "20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.44"));
         givenIpv6ConfigPropertiesWithAddress(
                 Arrays.asList("fe80::dea6:32ff:fee0:54f0/64", "fe80::dea6:32ff:fee0:54f6/64"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper, Optional.empty(),
-                Optional.of(this.mockIp6ConfigProperties));
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0", this.mockDevicePropertiesWrapper, Optional.empty(), Optional.of(this.mockIp6ConfigProperties));
 
         thenNoExceptionOccurred();
 
@@ -485,14 +484,15 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingEthernetInterfaceLinkUpIs(true);
 
         thenResultingIp4InterfaceAddressIsMissing();
 
         thenResultingIp6InterfaceGatewayIs(IPAddress.parseHostAddress("fe80::dea6:32ff:fee0:0001"));
-        thenResultingIp6InterfaceDNSIs(Arrays.asList(IPAddress.parseHostAddress("2001:4860:4860:0:0:0:0:8844"),
+        thenResultingIp6InterfaceDNSIs(Arrays.asList(
+                IPAddress.parseHostAddress("2001:4860:4860:0:0:0:0:8844"),
                 IPAddress.parseHostAddress("2001:4860:4860:0:0:0:0:8888")));
         thenResultingIp6InterfaceAddressIs(Arrays.asList(
                 new NetworkInterfaceIpAddress<IP6Address>(
@@ -516,16 +516,19 @@ public class NMStatusConverterTest {
         givenIpv4ConfigPropertiesWithAddress(Arrays.asList("192.168.1.82/24", "192.168.3.69/24"));
 
         givenIpv6ConfigPropertiesWith("Gateway", "fe80:0:0:0:dea6:32ff:fee0:0001");
-        givenIpv6ConfigPropertiesWithDNS(Arrays.asList("20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.88",
-                "20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.44"));
+        givenIpv6ConfigPropertiesWithDNS(Arrays.asList(
+                "20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.88", "20.01.48.60.48.60.00.00.00.00.00.00.00.00.88.44"));
         givenIpv6ConfigPropertiesWithAddress(
                 Arrays.asList("fe80::dea6:32ff:fee0:54f0/64", "fe80::dea6:32ff:fee0:54f6/64"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.empty(),
-                NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.empty(), NMDeviceType.NM_DEVICE_TYPE_ETHERNET);
 
-        whenBuildEthernetStatusIsCalledWith("eth0", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.of(this.mockIp6ConfigProperties));
+        whenBuildEthernetStatusIsCalledWith(
+                "eth0",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.of(this.mockIp6ConfigProperties));
 
         thenNoExceptionOccurred();
 
@@ -537,7 +540,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("anAwesomeDriverVersion");
         thenResultingNetworkInterfaceMtuIs(42);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xDE, (byte) 0xAD, (byte) 0xBE, (byte) 0xEF, (byte) 0x66, (byte) 0x69 });
+                new byte[] {(byte) 0xDE, (byte) 0xAD, (byte) 0xBE, (byte) 0xEF, (byte) 0x66, (byte) 0x69});
 
         thenResultingEthernetInterfaceLinkUpIs(true);
 
@@ -545,13 +548,14 @@ public class NMStatusConverterTest {
         thenResultingIp4InterfaceDNSIs(
                 Arrays.asList(IPAddress.parseHostAddress("8.8.4.4"), IPAddress.parseHostAddress("8.8.8.8")));
         thenResultingIp4InterfaceAddressIs(Arrays.asList(
-                new NetworkInterfaceIpAddress<IP4Address>((IP4Address) IP4Address.parseHostAddress("192.168.1.82"),
-                        (short) 24),
-                new NetworkInterfaceIpAddress<IP4Address>((IP4Address) IP4Address.parseHostAddress("192.168.3.69"),
-                        (short) 24)));
+                new NetworkInterfaceIpAddress<IP4Address>(
+                        (IP4Address) IP4Address.parseHostAddress("192.168.1.82"), (short) 24),
+                new NetworkInterfaceIpAddress<IP4Address>(
+                        (IP4Address) IP4Address.parseHostAddress("192.168.3.69"), (short) 24)));
 
         thenResultingIp6InterfaceGatewayIs(IPAddress.parseHostAddress("fe80::dea6:32ff:fee0:0001"));
-        thenResultingIp6InterfaceDNSIs(Arrays.asList(IPAddress.parseHostAddress("2001:4860:4860:0:0:0:0:8844"),
+        thenResultingIp6InterfaceDNSIs(Arrays.asList(
+                IPAddress.parseHostAddress("2001:4860:4860:0:0:0:0:8844"),
                 IPAddress.parseHostAddress("2001:4860:4860:0:0:0:0:8888")));
         thenResultingIp6InterfaceAddressIs(Arrays.asList(
                 new NetworkInterfaceIpAddress<IP6Address>(
@@ -577,11 +581,16 @@ public class NMStatusConverterTest {
         givenIpv4ConfigPropertiesWithDNS(Arrays.asList("1.1.1.1"));
         givenIpv4ConfigPropertiesWithAddress(Arrays.asList("192.168.3.242/28"));
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.of(this.mockVlanConfigProperties),
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties,
+                Optional.of(this.mockVlanConfigProperties),
                 NMDeviceType.NM_DEVICE_TYPE_VLAN);
 
-        whenBuildVlanStatusIsCalledWith("eth0.101", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty());
+        whenBuildVlanStatusIsCalledWith(
+                "eth0.101",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.empty());
 
         thenNoExceptionOccurred();
 
@@ -593,7 +602,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("frightening");
         thenResultingNetworkInterfaceMtuIs(420);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x66, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x66, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
 
         thenResultingVlanIdIs(101);
         thenResultingVlanParentInterfaceIs("eth0");
@@ -610,8 +619,12 @@ public class NMStatusConverterTest {
     public void buildModemStatusWorksWithDeviceInfo() {
         givenModemConfiguration();
 
-        whenBuildModemStatusIsCalledWith("1-4", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty(), Arrays.asList(this.mockSimProperties),
+        whenBuildModemStatusIsCalledWith(
+                "1-4",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.empty(),
+                Arrays.asList(this.mockSimProperties),
                 Arrays.asList(this.mockBearerProperties));
 
         thenNoExceptionOccurred();
@@ -624,7 +637,7 @@ public class NMStatusConverterTest {
         thenResultingNetworkInterfaceDriverVersionIs("caughtInALandslide");
         thenResultingNetworkInterfaceMtuIs(69);
         thenResultingNetworkInterfaceHardwareAddressIs(
-                new byte[] { (byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA });
+                new byte[] {(byte) 0xF5, (byte) 0x5B, (byte) 0x32, (byte) 0x7C, (byte) 0x40, (byte) 0xEA});
         thenResultingNetworkInterfaceIpInterfaceIs("cdc-acm0");
     }
 
@@ -632,8 +645,12 @@ public class NMStatusConverterTest {
     public void buildModemStatusWorksWithIPInfo() throws UnknownHostException {
         givenModemConfiguration();
 
-        whenBuildModemStatusIsCalledWith("1-4", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty(), Arrays.asList(this.mockSimProperties),
+        whenBuildModemStatusIsCalledWith(
+                "1-4",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.empty(),
+                Arrays.asList(this.mockSimProperties),
                 Arrays.asList(this.mockBearerProperties));
 
         thenNoExceptionOccurred();
@@ -644,15 +661,18 @@ public class NMStatusConverterTest {
                 (IP4Address) IP4Address.parseHostAddress("192.168.1.82"), (short) 24)));
 
         thenResultingIp6InterfaceAddressIsMissing();
-
     }
 
     @Test
     public void buildModemStatusWorksWithModemInfo() {
         givenModemConfiguration();
 
-        whenBuildModemStatusIsCalledWith("1-4", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty(), Arrays.asList(this.mockSimProperties),
+        whenBuildModemStatusIsCalledWith(
+                "1-4",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.empty(),
+                Arrays.asList(this.mockSimProperties),
                 Arrays.asList(this.mockBearerProperties));
 
         thenNoExceptionOccurred();
@@ -664,7 +684,8 @@ public class NMStatusConverterTest {
         thenResultingModemHWRevisionIs("TopSecret");
         thenResultingModemPrimaryPortIs("NaN");
         thenResultingModemPortsAre(new HashMap<String, ModemPortType>());
-        thenResultingModemSupportedCapabilitiesAre(EnumSet.of(ModemCapability.POTS, ModemCapability.GSM_UMTS),
+        thenResultingModemSupportedCapabilitiesAre(
+                EnumSet.of(ModemCapability.POTS, ModemCapability.GSM_UMTS),
                 EnumSet.of(ModemCapability.LTE, ModemCapability.GSM_UMTS));
         thenResultingModemCurrentCapabilitiesAre(EnumSet.of(ModemCapability.POTS, ModemCapability.GSM_UMTS));
         thenResultingModemPowerStateIs(ModemPowerState.ON);
@@ -681,15 +702,18 @@ public class NMStatusConverterTest {
         thenResultingModemOperatorNameIs("VodaTim");
         thenResultingModemLocationCapabilitiesAre(new HashSet<>(Arrays.asList(ModemGpsMode.UNMANAGED)));
         thenResultingModemIsGpsSupported(true);
-
     }
 
     @Test
     public void buildModemStatusWorksWithModemSimInfo() {
         givenModemConfiguration();
 
-        whenBuildModemStatusIsCalledWith("1-4", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty(), Arrays.asList(this.mockSimProperties),
+        whenBuildModemStatusIsCalledWith(
+                "1-4",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.empty(),
+                Arrays.asList(this.mockSimProperties),
                 Arrays.asList(this.mockBearerProperties));
 
         thenNoExceptionOccurred();
@@ -707,8 +731,12 @@ public class NMStatusConverterTest {
     public void buildModemStatusWorksWithModemBearerInfo() {
         givenModemConfiguration();
 
-        whenBuildModemStatusIsCalledWith("1-4", this.mockDevicePropertiesWrapper,
-                Optional.of(this.mockIp4ConfigProperties), Optional.empty(), Arrays.asList(this.mockSimProperties),
+        whenBuildModemStatusIsCalledWith(
+                "1-4",
+                this.mockDevicePropertiesWrapper,
+                Optional.of(this.mockIp4ConfigProperties),
+                Optional.empty(),
+                Arrays.asList(this.mockSimProperties),
                 Arrays.asList(this.mockBearerProperties));
 
         thenNoExceptionOccurred();
@@ -729,11 +757,13 @@ public class NMStatusConverterTest {
     }
 
     private void givenParentDevicePropertiesWith(String propertyName, Object propertyValue) {
-        when(this.mockParentDeviceProperties.Get(NM_DEVICE_BUS_NAME, propertyName)).thenReturn(propertyValue);
+        when(this.mockParentDeviceProperties.Get(NM_DEVICE_BUS_NAME, propertyName))
+                .thenReturn(propertyValue);
     }
 
     private void givenIpv4ConfigPropertiesWith(String propertyName, Object propertyValue) {
-        when(this.mockIp4ConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, propertyName)).thenReturn(propertyValue);
+        when(this.mockIp4ConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, propertyName))
+                .thenReturn(propertyValue);
     }
 
     private void givenIpv4ConfigPropertiesWithDNS(List<String> addresses) {
@@ -746,7 +776,8 @@ public class NMStatusConverterTest {
             addressList.add(structure);
         }
 
-        when(this.mockIp4ConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, "NameserverData")).thenReturn(addressList);
+        when(this.mockIp4ConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, "NameserverData"))
+                .thenReturn(addressList);
     }
 
     private void givenIpv4ConfigPropertiesWithAddress(List<String> addressList) {
@@ -763,11 +794,13 @@ public class NMStatusConverterTest {
             structureList.add(structure);
         }
 
-        when(this.mockIp4ConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, "AddressData")).thenReturn(structureList);
+        when(this.mockIp4ConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, "AddressData"))
+                .thenReturn(structureList);
     }
 
     private void givenIpv6ConfigPropertiesWith(String propertyName, String propertyValue) {
-        when(this.mockIp6ConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, propertyName)).thenReturn(propertyValue);
+        when(this.mockIp6ConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, propertyName))
+                .thenReturn(propertyValue);
     }
 
     private void givenIpv6ConfigPropertiesWithDNS(List<String> dnsAddresses) {
@@ -783,7 +816,8 @@ public class NMStatusConverterTest {
 
             dnsAddressesByteList.add(byteAddress);
         }
-        when(this.mockIp6ConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, "Nameservers")).thenReturn(dnsAddressesByteList);
+        when(this.mockIp6ConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, "Nameservers"))
+                .thenReturn(dnsAddressesByteList);
     }
 
     private void givenIpv6ConfigPropertiesWithAddress(List<String> addressList) {
@@ -800,17 +834,18 @@ public class NMStatusConverterTest {
             structureList.add(structure);
         }
 
-        when(this.mockIp6ConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, "AddressData")).thenReturn(structureList);
+        when(this.mockIp6ConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, "AddressData"))
+                .thenReturn(structureList);
     }
 
     private void givenVlanConfigPropertiesWith(String propertyName, Object propertyValue) {
         when(this.mockVlanConfigProperties.Get(NM_VLAN_BUS_NAME, propertyName)).thenReturn(propertyValue);
     }
 
-    private void givenDevicePropertiesWrapperBuiltWith(Properties deviceProperties,
-            Optional<Properties> deviceSpecificProperties, NMDeviceType nmDeviceType) {
-        this.mockDevicePropertiesWrapper = new DevicePropertiesWrapper(deviceProperties, deviceSpecificProperties,
-                nmDeviceType);
+    private void givenDevicePropertiesWrapperBuiltWith(
+            Properties deviceProperties, Optional<Properties> deviceSpecificProperties, NMDeviceType nmDeviceType) {
+        this.mockDevicePropertiesWrapper =
+                new DevicePropertiesWrapper(deviceProperties, deviceSpecificProperties, nmDeviceType);
     }
 
     private void givenModemPropertiesWith(String propertyName, Object propertyValue) {
@@ -818,7 +853,8 @@ public class NMStatusConverterTest {
     }
 
     private void givenModemLocationPropertiesWith(String propertyName, Object propertyValue) {
-        when(this.mockModemProperties.Get(MM_MODEM_LOCATION_BUS_NAME, propertyName)).thenReturn(propertyValue);
+        when(this.mockModemProperties.Get(MM_MODEM_LOCATION_BUS_NAME, propertyName))
+                .thenReturn(propertyValue);
     }
 
     private void givenModem3gppPropertiesWith(String propertyName, Object propertyValue) {
@@ -882,24 +918,23 @@ public class NMStatusConverterTest {
         givenModemPropertiesWith("HardwareRevision", "TopSecret");
         givenModemPropertiesWith("PrimaryPort", "NaN");
         givenModemPropertiesWith("Ports", Arrays.asList(new Object[] {}));
-        givenModemPropertiesWith("SupportedCapabilities",
-                Arrays.asList(new UInt32[] { new UInt32(5), new UInt32(12) }));
+        givenModemPropertiesWith("SupportedCapabilities", Arrays.asList(new UInt32[] {new UInt32(5), new UInt32(12)}));
         givenModemPropertiesWith("CurrentCapabilities", new UInt32(5));
         givenModemPropertiesWith("PowerState", MMModemPowerState.MM_MODEM_POWER_STATE_ON.toUInt32());
         givenModemPropertiesWith("SupportedModes", Arrays.asList(new Object[] {}));
         givenModemPropertiesWith("CurrentModes", new Object[] {});
-        givenModemPropertiesWith("SupportedBands", Arrays.asList(new UInt32[] { new UInt32(1), new UInt32(32) }));
-        givenModemPropertiesWith("CurrentBands", Arrays.asList(new UInt32[] { new UInt32(36), new UInt32(102) }));
+        givenModemPropertiesWith("SupportedBands", Arrays.asList(new UInt32[] {new UInt32(1), new UInt32(32)}));
+        givenModemPropertiesWith("CurrentBands", Arrays.asList(new UInt32[] {new UInt32(36), new UInt32(102)}));
         givenModemPropertiesWith("UnlockRequired", new UInt32(1));
         givenModemPropertiesWith("State", 11);
         givenModemPropertiesWith("AccessTechnologies", new UInt32(32768));
-        givenModemPropertiesWith("SignalQuality", new Object[] { new UInt32(23), new UInt32(0) });
+        givenModemPropertiesWith("SignalQuality", new Object[] {new UInt32(23), new UInt32(0)});
 
-        givenModemLocationPropertiesWith("Capabilities",
-                MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED.toUInt32());
+        givenModemLocationPropertiesWith(
+                "Capabilities", MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED.toUInt32());
 
-        givenModem3gppPropertiesWith("RegistrationState",
-                MMModem3gppRegistrationState.MM_MODEM_3GPP_REGISTRATION_STATE_HOME.toUInt32());
+        givenModem3gppPropertiesWith(
+                "RegistrationState", MMModem3gppRegistrationState.MM_MODEM_3GPP_REGISTRATION_STATE_HOME.toUInt32());
         givenModem3gppPropertiesWith("OperatorName", "VodaTim");
 
         givenSimIsActive(true);
@@ -920,8 +955,8 @@ public class NMStatusConverterTest {
         givenBearerPropertiesBuiltWithSettings(this.bearerSettings);
         givenBearerPropertiesBuiltWithStats(this.bearerStats);
 
-        givenDevicePropertiesWrapperBuiltWith(this.mockDeviceProperties, Optional.of(this.mockModemProperties),
-                NMDeviceType.NM_DEVICE_TYPE_MODEM);
+        givenDevicePropertiesWrapperBuiltWith(
+                this.mockDeviceProperties, Optional.of(this.mockModemProperties), NMDeviceType.NM_DEVICE_TYPE_MODEM);
 
         givenSimPropertiesBuiltWith(this.mockAvailableSimProperties);
     }
@@ -930,44 +965,57 @@ public class NMStatusConverterTest {
      * When
      */
 
-    private void whenBuildLoopbackStatusIsCalledWith(String ifaceName, DevicePropertiesWrapper deviceProps,
-            Optional<Properties> ip4Properties, Optional<Properties> ip6Properties) {
+    private void whenBuildLoopbackStatusIsCalledWith(
+            String ifaceName,
+            DevicePropertiesWrapper deviceProps,
+            Optional<Properties> ip4Properties,
+            Optional<Properties> ip6Properties) {
         try {
-            this.resultingStatus = NMStatusConverter.buildLoopbackStatus(ifaceName, deviceProps, ip4Properties,
-                    ip6Properties);
+            this.resultingStatus =
+                    NMStatusConverter.buildLoopbackStatus(ifaceName, deviceProps, ip4Properties, ip6Properties);
         } catch (Exception e) {
             this.occurredException = e;
         }
     }
 
-    private void whenBuildEthernetStatusIsCalledWith(String ifaceName, DevicePropertiesWrapper deviceProps,
-            Optional<Properties> ip4Properties, Optional<Properties> ip6Properties) {
+    private void whenBuildEthernetStatusIsCalledWith(
+            String ifaceName,
+            DevicePropertiesWrapper deviceProps,
+            Optional<Properties> ip4Properties,
+            Optional<Properties> ip6Properties) {
         try {
-            this.resultingStatus = NMStatusConverter.buildEthernetStatus(ifaceName, deviceProps, ip4Properties,
-                    ip6Properties);
+            this.resultingStatus =
+                    NMStatusConverter.buildEthernetStatus(ifaceName, deviceProps, ip4Properties, ip6Properties);
             this.resultingEthernetStatus = (EthernetInterfaceStatus) this.resultingStatus;
         } catch (Exception e) {
             this.occurredException = e;
         }
     }
 
-    private void whenBuildVlanStatusIsCalledWith(String ifaceName, DevicePropertiesWrapper deviceProps,
-            Optional<Properties> ip4Properties, Optional<Properties> ip6Properties) {
+    private void whenBuildVlanStatusIsCalledWith(
+            String ifaceName,
+            DevicePropertiesWrapper deviceProps,
+            Optional<Properties> ip4Properties,
+            Optional<Properties> ip6Properties) {
         try {
-            this.resultingStatus = NMStatusConverter.buildVlanStatus(ifaceName, deviceProps, ip4Properties,
-                    ip6Properties, this.mockParentDeviceProperties);
+            this.resultingStatus = NMStatusConverter.buildVlanStatus(
+                    ifaceName, deviceProps, ip4Properties, ip6Properties, this.mockParentDeviceProperties);
             this.resultingVlanStatus = (VlanInterfaceStatus) this.resultingStatus;
         } catch (Exception e) {
             this.occurredException = e;
         }
     }
 
-    private void whenBuildModemStatusIsCalledWith(String ifaceName, DevicePropertiesWrapper deviceProps,
-            Optional<Properties> ip4Properties, Optional<Properties> ip6Properties, List<SimProperties> simProperties,
+    private void whenBuildModemStatusIsCalledWith(
+            String ifaceName,
+            DevicePropertiesWrapper deviceProps,
+            Optional<Properties> ip4Properties,
+            Optional<Properties> ip6Properties,
+            List<SimProperties> simProperties,
             List<Properties> bearerProperties) {
         try {
-            this.resultingStatus = NMStatusConverter.buildModemStatus(ifaceName, deviceProps, ip4Properties,
-                    ip6Properties, simProperties, bearerProperties);
+            this.resultingStatus = NMStatusConverter.buildModemStatus(
+                    ifaceName, deviceProps, ip4Properties, ip6Properties, simProperties, bearerProperties);
             this.resultingModemStatus = (ModemInterfaceStatus) this.resultingStatus;
         } catch (Exception e) {
             this.occurredException = e;
@@ -984,7 +1032,8 @@ public class NMStatusConverterTest {
             StringWriter sw = new StringWriter();
             this.occurredException.printStackTrace(new PrintWriter(sw));
 
-            errorMessage = String.format("No exception expected, \"%s\" found. Caused by: %s",
+            errorMessage = String.format(
+                    "No exception expected, \"%s\" found. Caused by: %s",
                     this.occurredException.getClass().getName(), sw.toString());
         }
 
@@ -993,7 +1042,8 @@ public class NMStatusConverterTest {
 
     private <E extends Exception> void thenExceptionOccurred(Class<E> expectedException) {
         assertNotNull(this.occurredException);
-        assertEquals(expectedException.getName(), this.occurredException.getClass().getName());
+        assertEquals(
+                expectedException.getName(), this.occurredException.getClass().getName());
     }
 
     private void thenResultingNetworkInterfaceIsVirtual(boolean expectedResult) {
@@ -1038,14 +1088,16 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp4InterfaceGatewayIsMissing() {
         assertTrue(this.resultingStatus.getInterfaceIp4Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP4Address> address = this.resultingStatus.getInterfaceIp4Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP4Address> address =
+                this.resultingStatus.getInterfaceIp4Addresses().get();
 
         assertFalse(address.getGateway().isPresent());
     }
 
     private void thenResultingIp4InterfaceGatewayIs(IPAddress expectedResult) {
         assertTrue(this.resultingStatus.getInterfaceIp4Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP4Address> address = this.resultingStatus.getInterfaceIp4Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP4Address> address =
+                this.resultingStatus.getInterfaceIp4Addresses().get();
 
         assertTrue(address.getGateway().isPresent());
         assertEquals(expectedResult, address.getGateway().get());
@@ -1053,7 +1105,8 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp4InterfaceDNSIsMissing() {
         assertTrue(this.resultingStatus.getInterfaceIp4Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP4Address> address = this.resultingStatus.getInterfaceIp4Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP4Address> address =
+                this.resultingStatus.getInterfaceIp4Addresses().get();
 
         List<IP4Address> dns = address.getDnsServerAddresses();
         assertTrue(dns.isEmpty());
@@ -1061,7 +1114,8 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp4InterfaceDNSIs(List<IPAddress> expectedDNSAddresses) {
         assertTrue(this.resultingStatus.getInterfaceIp4Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP4Address> address = this.resultingStatus.getInterfaceIp4Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP4Address> address =
+                this.resultingStatus.getInterfaceIp4Addresses().get();
 
         List<IP4Address> dns = address.getDnsServerAddresses();
         assertEquals(expectedDNSAddresses.size(), dns.size());
@@ -1073,7 +1127,8 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp4InterfaceAddressIs(List<NetworkInterfaceIpAddress<IP4Address>> expectedAddresses) {
         assertTrue(this.resultingStatus.getInterfaceIp4Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP4Address> address = this.resultingStatus.getInterfaceIp4Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP4Address> address =
+                this.resultingStatus.getInterfaceIp4Addresses().get();
 
         List<NetworkInterfaceIpAddress<IP4Address>> addresses = address.getAddresses();
         assertEquals(expectedAddresses.size(), addresses.size());
@@ -1093,14 +1148,16 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp6InterfaceGatewayIsMissing() {
         assertTrue(this.resultingStatus.getInterfaceIp6Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP6Address> address = this.resultingStatus.getInterfaceIp6Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP6Address> address =
+                this.resultingStatus.getInterfaceIp6Addresses().get();
 
         assertFalse(address.getGateway().isPresent());
     }
 
     private void thenResultingIp6InterfaceDNSIsMissing() {
         assertTrue(this.resultingStatus.getInterfaceIp6Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP6Address> address = this.resultingStatus.getInterfaceIp6Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP6Address> address =
+                this.resultingStatus.getInterfaceIp6Addresses().get();
 
         List<IP6Address> dns = address.getDnsServerAddresses();
         assertTrue(dns.isEmpty());
@@ -1108,7 +1165,8 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp6InterfaceAddressIs(List<NetworkInterfaceIpAddress<IP6Address>> expectedAddresses) {
         assertTrue(this.resultingStatus.getInterfaceIp6Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP6Address> address = this.resultingStatus.getInterfaceIp6Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP6Address> address =
+                this.resultingStatus.getInterfaceIp6Addresses().get();
 
         List<NetworkInterfaceIpAddress<IP6Address>> addresses = address.getAddresses();
         assertEquals(expectedAddresses.size(), addresses.size());
@@ -1120,7 +1178,8 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp6InterfaceDNSIs(List<IPAddress> expectedDNSAddresses) {
         assertTrue(this.resultingStatus.getInterfaceIp6Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP6Address> address = this.resultingStatus.getInterfaceIp6Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP6Address> address =
+                this.resultingStatus.getInterfaceIp6Addresses().get();
 
         List<IP6Address> dns = address.getDnsServerAddresses();
         assertEquals(expectedDNSAddresses.size(), dns.size());
@@ -1132,7 +1191,8 @@ public class NMStatusConverterTest {
 
     private void thenResultingIp6InterfaceGatewayIs(IPAddress expectedResult) {
         assertTrue(this.resultingStatus.getInterfaceIp6Addresses().isPresent());
-        NetworkInterfaceIpAddressStatus<IP6Address> address = this.resultingStatus.getInterfaceIp6Addresses().get();
+        NetworkInterfaceIpAddressStatus<IP6Address> address =
+                this.resultingStatus.getInterfaceIp6Addresses().get();
 
         assertTrue(address.getGateway().isPresent());
         assertEquals(expectedResult, address.getGateway().get());
@@ -1174,8 +1234,8 @@ public class NMStatusConverterTest {
         assertEquals(ports, this.resultingModemStatus.getPorts());
     }
 
-    private void thenResultingModemSupportedCapabilitiesAre(Set<ModemCapability> firstModemCapability,
-            Set<ModemCapability> secondModemCapability) {
+    private void thenResultingModemSupportedCapabilitiesAre(
+            Set<ModemCapability> firstModemCapability, Set<ModemCapability> secondModemCapability) {
         List<Set<ModemCapability>> supportedModemCapabilities = new ArrayList<Set<ModemCapability>>();
         supportedModemCapabilities.add(firstModemCapability);
         supportedModemCapabilities.add(secondModemCapability);
@@ -1243,11 +1303,13 @@ public class NMStatusConverterTest {
     }
 
     private void thenResultingModemSimIsActive(boolean isActive) {
-        assertEquals(isActive, this.resultingModemStatus.getAvailableSims().get(0).isActive());
+        assertEquals(
+                isActive, this.resultingModemStatus.getAvailableSims().get(0).isActive());
     }
 
     private void thenResultingModemSimIsPrimary(boolean isPrimary) {
-        assertEquals(isPrimary, this.resultingModemStatus.getAvailableSims().get(0).isPrimary());
+        assertEquals(
+                isPrimary, this.resultingModemStatus.getAvailableSims().get(0).isPrimary());
     }
 
     private void thenResultingModemSimIdentifierIs(String iccid) {
@@ -1263,19 +1325,24 @@ public class NMStatusConverterTest {
     }
 
     private void thenResultingModemSimOperatorNameIs(String operatorName) {
-        assertEquals(operatorName, this.resultingModemStatus.getAvailableSims().get(0).getOperatorName());
+        assertEquals(
+                operatorName,
+                this.resultingModemStatus.getAvailableSims().get(0).getOperatorName());
     }
 
     private void thenResultingModemSimOperatorIdIs(String operatorId) {
-        assertEquals(operatorId, this.resultingModemStatus.getAvailableSims().get(0).getOperatorIdentifier());
+        assertEquals(
+                operatorId, this.resultingModemStatus.getAvailableSims().get(0).getOperatorIdentifier());
     }
 
     private void thenResultingModemSimTypeIs(SimType simType) {
-        assertEquals(simType, this.resultingModemStatus.getAvailableSims().get(0).getSimType());
+        assertEquals(
+                simType, this.resultingModemStatus.getAvailableSims().get(0).getSimType());
     }
 
     private void thenResultingModemBearerInterfaceIs(String interfaceName) {
-        assertEquals(interfaceName, this.resultingModemStatus.getBearers().get(0).getName());
+        assertEquals(
+                interfaceName, this.resultingModemStatus.getBearers().get(0).getName());
     }
 
     private void thenResultingModemBearerIsConnected(boolean isConnected) {

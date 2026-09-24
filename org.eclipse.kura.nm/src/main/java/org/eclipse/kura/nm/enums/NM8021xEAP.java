@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.enums;
 
 public enum NM8021xEAP {
-
     LEAP("leap"),
     MD5("md5"),
     TLS("tls"),

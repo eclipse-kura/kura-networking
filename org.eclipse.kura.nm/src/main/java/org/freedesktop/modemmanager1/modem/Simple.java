@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1.modem;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.interfaces.DBusInterface;
@@ -30,5 +29,4 @@ public interface Simple extends DBusInterface {
     public void Disconnect(DBusPath bearer);
 
     public Map<String, Variant<?>> GetStatus();
-
 }

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IP6Address;
 import org.eclipse.kura.net.IPAddress;
@@ -105,22 +104,24 @@ public class NMStatusConverter {
     private static final String MM_MODEM_LOCATION_BUS_NAME = "org.freedesktop.ModemManager1.Modem.Location";
     private static final String MM_MODEM_3GPP_BUS_NAME = "org.freedesktop.ModemManager1.Modem.Modem3gpp";
     private static final String EMPTY_MAC_ADDRESS = "00:00:00:00:00:00";
-    private static final byte[] EMPTY_MAC_ADDRESS_BYTES = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    private static final byte[] EMPTY_MAC_ADDRESS_BYTES = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     private static final String STATE = "State";
 
     private NMStatusConverter() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static NetworkInterfaceStatus buildEthernetStatus(String interfaceId,
-            DevicePropertiesWrapper devicePropertiesWrapper, Optional<Properties> ip4configProperties,
+    public static NetworkInterfaceStatus buildEthernetStatus(
+            String interfaceId,
+            DevicePropertiesWrapper devicePropertiesWrapper,
+            Optional<Properties> ip4configProperties,
             Optional<Properties> ip6configProperties) {
 
         EthernetInterfaceStatusBuilder builder = EthernetInterfaceStatus.builder();
         builder.withInterfaceId(interfaceId).withInterfaceName(interfaceId).withVirtual(false);
 
-        NMDeviceState deviceState = NMDeviceState
-                .fromUInt32(devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
+        NMDeviceState deviceState = NMDeviceState.fromUInt32(
+                devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
         builder.withState(deviceStateConvert(deviceState));
         builder.withIsLinkUp(NMDeviceState.isConnected(deviceState));
 
@@ -129,17 +130,18 @@ public class NMStatusConverter {
         setIP6Status(builder, ip6configProperties);
 
         return builder.build();
-
     }
 
-    public static NetworkInterfaceStatus buildLoopbackStatus(String interfaceId,
-            DevicePropertiesWrapper devicePropertiesWrapper, Optional<Properties> ip4configProperties,
+    public static NetworkInterfaceStatus buildLoopbackStatus(
+            String interfaceId,
+            DevicePropertiesWrapper devicePropertiesWrapper,
+            Optional<Properties> ip4configProperties,
             Optional<Properties> ip6configProperties) {
         LoopbackInterfaceStatusBuilder builder = LoopbackInterfaceStatus.builder();
         builder.withInterfaceId(interfaceId).withInterfaceName(interfaceId).withVirtual(true);
 
-        NMDeviceState deviceState = NMDeviceState
-                .fromUInt32(devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
+        NMDeviceState deviceState = NMDeviceState.fromUInt32(
+                devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
         builder.withState(deviceStateConvert(deviceState));
 
         setDeviceStatus(builder, devicePropertiesWrapper);
@@ -149,36 +151,46 @@ public class NMStatusConverter {
         return builder.build();
     }
 
-    public static NetworkInterfaceStatus buildWirelessStatus(String interfaceId,
-            DevicePropertiesWrapper devicePropertiesWrapper, Optional<Properties> ip4configProperties,
-            Optional<Properties> ip6configProperties, AccessPointsProperties accessPointsProperties,
+    public static NetworkInterfaceStatus buildWirelessStatus(
+            String interfaceId,
+            DevicePropertiesWrapper devicePropertiesWrapper,
+            Optional<Properties> ip4configProperties,
+            Optional<Properties> ip6configProperties,
+            AccessPointsProperties accessPointsProperties,
             SupportedChannelsProperties supportedChannelsProperties) {
         WifiInterfaceStatusBuilder builder = WifiInterfaceStatus.builder();
         builder.withInterfaceId(interfaceId).withInterfaceName(interfaceId).withVirtual(false);
 
-        NMDeviceState deviceState = NMDeviceState
-                .fromUInt32(devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
+        NMDeviceState deviceState = NMDeviceState.fromUInt32(
+                devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
         builder.withState(deviceStateConvert(deviceState));
 
         setDeviceStatus(builder, devicePropertiesWrapper);
         setIP4Status(builder, ip4configProperties);
         setIP6Status(builder, ip6configProperties);
-        setWifiStatus(builder, devicePropertiesWrapper.getDeviceSpecificProperties(),
-                accessPointsProperties.getActiveAccessPoint(), accessPointsProperties.getAvailableAccessPoints(),
-                supportedChannelsProperties.getCountryCode(), supportedChannelsProperties.getSupportedChannels());
+        setWifiStatus(
+                builder,
+                devicePropertiesWrapper.getDeviceSpecificProperties(),
+                accessPointsProperties.getActiveAccessPoint(),
+                accessPointsProperties.getAvailableAccessPoints(),
+                supportedChannelsProperties.getCountryCode(),
+                supportedChannelsProperties.getSupportedChannels());
 
         return builder.build();
     }
 
-    public static NetworkInterfaceStatus buildVlanStatus(String interfaceId,
-            DevicePropertiesWrapper devicePropertiesWrapper, Optional<Properties> ip4configProperties,
-            Optional<Properties> ip6configProperties, Properties parentProperties) {
+    public static NetworkInterfaceStatus buildVlanStatus(
+            String interfaceId,
+            DevicePropertiesWrapper devicePropertiesWrapper,
+            Optional<Properties> ip4configProperties,
+            Optional<Properties> ip6configProperties,
+            Properties parentProperties) {
 
         VlanInterfaceStatusBuilder builder = VlanInterfaceStatus.builder();
         builder.withInterfaceId(interfaceId).withInterfaceName(interfaceId).withVirtual(true);
 
-        NMDeviceState deviceState = NMDeviceState
-                .fromUInt32(devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
+        NMDeviceState deviceState = NMDeviceState.fromUInt32(
+                devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, STATE));
         builder.withState(deviceStateConvert(deviceState));
 
         Optional<Properties> vlanProperties = devicePropertiesWrapper.getDeviceSpecificProperties();
@@ -190,8 +202,8 @@ public class NMStatusConverter {
         return builder.build();
     }
 
-    private static void setVlanStatus(VlanInterfaceStatusBuilder builder, Optional<Properties> vlanProperties,
-            Properties parentProperties) {
+    private static void setVlanStatus(
+            VlanInterfaceStatusBuilder builder, Optional<Properties> vlanProperties, Properties parentProperties) {
         String parentInterfaceName = parentProperties.Get(NM_DEVICE_BUS_NAME, "Interface");
         builder.withParentInterface(parentInterfaceName);
         vlanProperties.ifPresent(properties -> {
@@ -200,8 +212,8 @@ public class NMStatusConverter {
         });
     }
 
-    private static void setDeviceStatus(NetworkInterfaceStatusBuilder<?> builder,
-            DevicePropertiesWrapper devicePropertiesWrapper) {
+    private static void setDeviceStatus(
+            NetworkInterfaceStatusBuilder<?> builder, DevicePropertiesWrapper devicePropertiesWrapper) {
         builder.withAutoConnect(devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, "Autoconnect"));
         builder.withFirmwareVersion(
                 devicePropertiesWrapper.getDeviceProperties().Get(NM_DEVICE_BUS_NAME, "FirmwareVersion"));
@@ -214,9 +226,12 @@ public class NMStatusConverter {
         builder.withHardwareAddress(getMacAddressBytes(hwAddress));
     }
 
-    public static NetworkInterfaceStatus buildModemStatus(String interfaceId,
-            DevicePropertiesWrapper devicePropertiesWrapper, Optional<Properties> ip4configProperties,
-            Optional<Properties> ip6configProperties, List<SimProperties> simProperties,
+    public static NetworkInterfaceStatus buildModemStatus(
+            String interfaceId,
+            DevicePropertiesWrapper devicePropertiesWrapper,
+            Optional<Properties> ip4configProperties,
+            Optional<Properties> ip6configProperties,
+            List<SimProperties> simProperties,
             List<Properties> bearerProperties) {
         ModemInterfaceStatusBuilder builder = ModemInterfaceStatus.builder();
         Properties deviceProperties = devicePropertiesWrapper.getDeviceProperties();
@@ -243,8 +258,8 @@ public class NMStatusConverter {
     }
 
     // Set the interface name as the interface used for the connection if available
-    private static void setModemInterfaceName(String interfaceId, Properties deviceProperties,
-            ModemInterfaceStatusBuilder builder) {
+    private static void setModemInterfaceName(
+            String interfaceId, Properties deviceProperties, ModemInterfaceStatusBuilder builder) {
         try {
             String ipInterface = deviceProperties.Get(NM_DEVICE_BUS_NAME, "IpInterface");
             if (Objects.nonNull(ipInterface) && !ipInterface.isEmpty()) {
@@ -272,27 +287,27 @@ public class NMStatusConverter {
         }
 
         switch (devicePropertiesWrapper.getDeviceType()) {
-        case NM_DEVICE_TYPE_ETHERNET:
-            return specificProperties.get().Get(NM_DEVICE_WIRED_BUS_NAME, NM_DEVICE_PROPERTY_HW_ADDRESS);
-        case NM_DEVICE_TYPE_WIFI:
-            return specificProperties.get().Get(NM_DEVICE_WIRELESS_BUS_NAME, NM_DEVICE_PROPERTY_HW_ADDRESS);
-        case NM_DEVICE_TYPE_VLAN:
-            return specificProperties.get().Get(NM_DEVICE_VLAN_BUS_NAME, NM_DEVICE_PROPERTY_HW_ADDRESS);
-        case NM_DEVICE_TYPE_MODEM:
-        case NM_DEVICE_TYPE_GENERIC:
-        case NM_DEVICE_TYPE_LOOPBACK:
-        default:
-            logger.debug("Setting HW Address to blank.");
-            return EMPTY_MAC_ADDRESS;
+            case NM_DEVICE_TYPE_ETHERNET:
+                return specificProperties.get().Get(NM_DEVICE_WIRED_BUS_NAME, NM_DEVICE_PROPERTY_HW_ADDRESS);
+            case NM_DEVICE_TYPE_WIFI:
+                return specificProperties.get().Get(NM_DEVICE_WIRELESS_BUS_NAME, NM_DEVICE_PROPERTY_HW_ADDRESS);
+            case NM_DEVICE_TYPE_VLAN:
+                return specificProperties.get().Get(NM_DEVICE_VLAN_BUS_NAME, NM_DEVICE_PROPERTY_HW_ADDRESS);
+            case NM_DEVICE_TYPE_MODEM:
+            case NM_DEVICE_TYPE_GENERIC:
+            case NM_DEVICE_TYPE_LOOPBACK:
+            default:
+                logger.debug("Setting HW Address to blank.");
+                return EMPTY_MAC_ADDRESS;
         }
     }
 
-    private static void setIP4Status(NetworkInterfaceStatusBuilder<?> builder,
-            Optional<Properties> ip4configProperties) {
+    private static void setIP4Status(
+            NetworkInterfaceStatusBuilder<?> builder, Optional<Properties> ip4configProperties) {
         ip4configProperties.ifPresent(properties -> {
             try {
-                NetworkInterfaceIpAddressStatus.Builder<IP4Address> ip4AddressStatusBuilder = NetworkInterfaceIpAddressStatus
-                        .builder();
+                NetworkInterfaceIpAddressStatus.Builder<IP4Address> ip4AddressStatusBuilder =
+                        NetworkInterfaceIpAddressStatus.builder();
                 setIPGateway(properties, ip4AddressStatusBuilder, IP4Address.class);
                 setIP4DnsServers(properties, ip4AddressStatusBuilder);
                 setIPAddresses(properties, ip4AddressStatusBuilder, IP4Address.class);
@@ -303,12 +318,12 @@ public class NMStatusConverter {
         });
     }
 
-    private static void setIP6Status(NetworkInterfaceStatusBuilder<?> builder,
-            Optional<Properties> ip6configProperties) {
+    private static void setIP6Status(
+            NetworkInterfaceStatusBuilder<?> builder, Optional<Properties> ip6configProperties) {
         ip6configProperties.ifPresent(properties -> {
             try {
-                NetworkInterfaceIpAddressStatus.Builder<IP6Address> ip6AddressStatusBuilder = NetworkInterfaceIpAddressStatus
-                        .builder();
+                NetworkInterfaceIpAddressStatus.Builder<IP6Address> ip6AddressStatusBuilder =
+                        NetworkInterfaceIpAddressStatus.builder();
                 setIPGateway(properties, ip6AddressStatusBuilder, IP6Address.class);
                 setIP6DnsServers(properties, ip6AddressStatusBuilder);
                 setIPAddresses(properties, ip6AddressStatusBuilder, IP6Address.class);
@@ -319,20 +334,24 @@ public class NMStatusConverter {
         });
     }
 
-    private static void setWifiStatus(WifiInterfaceStatusBuilder builder, Optional<Properties> wirelessDeviceProperties,
-            Optional<Properties> activeAccessPoint, List<Properties> accessPoints, String countryCode,
+    private static void setWifiStatus(
+            WifiInterfaceStatusBuilder builder,
+            Optional<Properties> wirelessDeviceProperties,
+            Optional<Properties> activeAccessPoint,
+            List<Properties> accessPoints,
+            String countryCode,
             List<WifiChannel> supportedChannels) {
         if (wirelessDeviceProperties.isPresent()) {
-            NM80211Mode mode = NM80211Mode
-                    .fromUInt32(wirelessDeviceProperties.get().Get(NM_DEVICE_WIRELESS_BUS_NAME, "Mode"));
+            NM80211Mode mode =
+                    NM80211Mode.fromUInt32(wirelessDeviceProperties.get().Get(NM_DEVICE_WIRELESS_BUS_NAME, "Mode"));
             builder.withMode(wifiModeConvert(mode));
 
             List<NMDeviceWifiCapabilities> capabilities = NMDeviceWifiCapabilities.fromUInt32(
                     wirelessDeviceProperties.get().Get(NM_DEVICE_WIRELESS_BUS_NAME, "WirelessCapabilities"));
             builder.withCapabilities(wifiCapabilitiesConvert(capabilities));
         }
-        List<org.eclipse.kura.net.status.wifi.WifiChannel> kuraSupportedChannels = wifiChannelsConvert(
-                supportedChannels);
+        List<org.eclipse.kura.net.status.wifi.WifiChannel> kuraSupportedChannels =
+                wifiChannelsConvert(supportedChannels);
         builder.withWifiChannels(kuraSupportedChannels);
 
         builder.withCountryCode(countryCode);
@@ -352,8 +371,8 @@ public class NMStatusConverter {
         List<org.eclipse.kura.net.status.wifi.WifiChannel> kuraChannels = new ArrayList<>();
 
         for (WifiChannel channel : supportedChannels) {
-            org.eclipse.kura.net.status.wifi.WifiChannel.Builder kuraChannel = org.eclipse.kura.net.status.wifi.WifiChannel
-                    .builder(channel.getChannel(), channel.getFrequency());
+            org.eclipse.kura.net.status.wifi.WifiChannel.Builder kuraChannel =
+                    org.eclipse.kura.net.status.wifi.WifiChannel.builder(channel.getChannel(), channel.getFrequency());
             if (channel.getAttenuation() != null) {
                 kuraChannel.withAttenuation(channel.getAttenuation());
             }
@@ -405,7 +424,8 @@ public class NMStatusConverter {
         UInt32 uintFrequency = nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "Frequency");
         int frequency = uintFrequency.intValue();
         int channel = channelFrequencyConvert(frequency);
-        builder.withChannel(org.eclipse.kura.net.status.wifi.WifiChannel.builder(channel, frequency).build());
+        builder.withChannel(org.eclipse.kura.net.status.wifi.WifiChannel.builder(channel, frequency)
+                .build());
 
         UInt32 maxBitrate = nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "MaxBitrate");
         builder.withMaxBitrate(maxBitrate.longValue());
@@ -414,12 +434,12 @@ public class NMStatusConverter {
         builder.withSignalQuality(signalQuality.intValue());
         builder.withSignalStrength(convertToWifiSignalStrength(signalQuality.intValue()));
 
-        List<NM80211ApSecurityFlags> wpaSecurityFlags = NM80211ApSecurityFlags
-                .fromUInt32(nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "WpaFlags"));
+        List<NM80211ApSecurityFlags> wpaSecurityFlags =
+                NM80211ApSecurityFlags.fromUInt32(nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "WpaFlags"));
         builder.withWpaSecurity(wifiSecurityFlagConvert(wpaSecurityFlags));
 
-        List<NM80211ApSecurityFlags> rsnSecurityFlags = NM80211ApSecurityFlags
-                .fromUInt32(nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "RsnFlags"));
+        List<NM80211ApSecurityFlags> rsnSecurityFlags =
+                NM80211ApSecurityFlags.fromUInt32(nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "RsnFlags"));
         builder.withRsnSecurity(wifiSecurityFlagConvert(rsnSecurityFlags));
 
         List<NM80211ApFlags> flags = NM80211ApFlags.fromUInt32(nmAccessPoint.Get(NM_ACCESSPOINT_BUS_NAME, "Flags"));
@@ -440,7 +460,8 @@ public class NMStatusConverter {
             return (fMHz - 5000) / 5;
         } else if (fMHz == 5935) {
             return 2;
-        } else if (fMHz <= 45000) { /* DMG band lower limit */
+        } else if (fMHz <= 45000) {
+            /* DMG band lower limit */
             /* see 802.11ax D6.1 27.3.22.2 */
             return (fMHz - 5950) / 5;
         } else if (fMHz >= 58320 && fMHz <= 70200) {
@@ -465,38 +486,39 @@ public class NMStatusConverter {
 
     private static WifiSecurity wifiSecurityFlagConvert(NM80211ApSecurityFlags nmFlag) {
         switch (nmFlag) {
-        case NM_802_11_AP_SEC_NONE:
-            return WifiSecurity.NONE;
-        case NM_802_11_AP_SEC_PAIR_WEP40:
-            return WifiSecurity.PAIR_WEP40;
-        case NM_802_11_AP_SEC_PAIR_WEP104:
-            return WifiSecurity.PAIR_WEP104;
-        case NM_802_11_AP_SEC_PAIR_TKIP:
-            return WifiSecurity.PAIR_TKIP;
-        case NM_802_11_AP_SEC_PAIR_CCMP:
-            return WifiSecurity.PAIR_CCMP;
-        case NM_802_11_AP_SEC_GROUP_WEP40:
-            return WifiSecurity.GROUP_WEP40;
-        case NM_802_11_AP_SEC_GROUP_WEP104:
-            return WifiSecurity.GROUP_WEP104;
-        case NM_802_11_AP_SEC_GROUP_TKIP:
-            return WifiSecurity.GROUP_TKIP;
-        case NM_802_11_AP_SEC_GROUP_CCMP:
-            return WifiSecurity.GROUP_CCMP;
-        case NM_802_11_AP_SEC_KEY_MGMT_PSK:
-            return WifiSecurity.KEY_MGMT_PSK;
-        case NM_802_11_AP_SEC_KEY_MGMT_802_1X:
-            return WifiSecurity.KEY_MGMT_802_1X;
-        case NM_802_11_AP_SEC_KEY_MGMT_SAE:
-            return WifiSecurity.KEY_MGMT_SAE;
-        case NM_802_11_AP_SEC_KEY_MGMT_OWE:
-            return WifiSecurity.KEY_MGMT_OWE;
-        case NM_802_11_AP_SEC_KEY_MGMT_OWE_TM:
-            return WifiSecurity.KEY_MGMT_OWE_TM;
-        case NM_802_11_AP_SEC_KEY_MGMT_EAP_SUITE_B_192:
-            return WifiSecurity.KEY_MGMT_EAP_SUITE_B_192;
-        default:
-            throw new IllegalArgumentException(String.format("Non convertible NM80211ApSecurityFlag \"%s\"", nmFlag));
+            case NM_802_11_AP_SEC_NONE:
+                return WifiSecurity.NONE;
+            case NM_802_11_AP_SEC_PAIR_WEP40:
+                return WifiSecurity.PAIR_WEP40;
+            case NM_802_11_AP_SEC_PAIR_WEP104:
+                return WifiSecurity.PAIR_WEP104;
+            case NM_802_11_AP_SEC_PAIR_TKIP:
+                return WifiSecurity.PAIR_TKIP;
+            case NM_802_11_AP_SEC_PAIR_CCMP:
+                return WifiSecurity.PAIR_CCMP;
+            case NM_802_11_AP_SEC_GROUP_WEP40:
+                return WifiSecurity.GROUP_WEP40;
+            case NM_802_11_AP_SEC_GROUP_WEP104:
+                return WifiSecurity.GROUP_WEP104;
+            case NM_802_11_AP_SEC_GROUP_TKIP:
+                return WifiSecurity.GROUP_TKIP;
+            case NM_802_11_AP_SEC_GROUP_CCMP:
+                return WifiSecurity.GROUP_CCMP;
+            case NM_802_11_AP_SEC_KEY_MGMT_PSK:
+                return WifiSecurity.KEY_MGMT_PSK;
+            case NM_802_11_AP_SEC_KEY_MGMT_802_1X:
+                return WifiSecurity.KEY_MGMT_802_1X;
+            case NM_802_11_AP_SEC_KEY_MGMT_SAE:
+                return WifiSecurity.KEY_MGMT_SAE;
+            case NM_802_11_AP_SEC_KEY_MGMT_OWE:
+                return WifiSecurity.KEY_MGMT_OWE;
+            case NM_802_11_AP_SEC_KEY_MGMT_OWE_TM:
+                return WifiSecurity.KEY_MGMT_OWE_TM;
+            case NM_802_11_AP_SEC_KEY_MGMT_EAP_SUITE_B_192:
+                return WifiSecurity.KEY_MGMT_EAP_SUITE_B_192;
+            default:
+                throw new IllegalArgumentException(
+                        String.format("Non convertible NM80211ApSecurityFlag \"%s\"", nmFlag));
         }
     }
 
@@ -515,18 +537,18 @@ public class NMStatusConverter {
 
     private static WifiFlag wifiFlagConvert(NM80211ApFlags nmFlag) {
         switch (nmFlag) {
-        case NM_802_11_AP_FLAGS_NONE:
-            return WifiFlag.NONE;
-        case NM_802_11_AP_FLAGS_PRIVACY:
-            return WifiFlag.PRIVACY;
-        case NM_802_11_AP_FLAGS_WPS:
-            return WifiFlag.WPS;
-        case NM_802_11_AP_FLAGS_WPS_PBC:
-            return WifiFlag.WPS_PBC;
-        case NM_802_11_AP_FLAGS_WPS_PIN:
-            return WifiFlag.WPS_PIN;
-        default:
-            throw new IllegalArgumentException(String.format("Non convertible NM80211ApFlag \"%s\"", nmFlag));
+            case NM_802_11_AP_FLAGS_NONE:
+                return WifiFlag.NONE;
+            case NM_802_11_AP_FLAGS_PRIVACY:
+                return WifiFlag.PRIVACY;
+            case NM_802_11_AP_FLAGS_WPS:
+                return WifiFlag.WPS;
+            case NM_802_11_AP_FLAGS_WPS_PBC:
+                return WifiFlag.WPS_PBC;
+            case NM_802_11_AP_FLAGS_WPS_PIN:
+                return WifiFlag.WPS_PIN;
+            default:
+                throw new IllegalArgumentException(String.format("Non convertible NM80211ApFlag \"%s\"", nmFlag));
         }
     }
 
@@ -538,49 +560,51 @@ public class NMStatusConverter {
         }
 
         return new HashSet<>(kuraCapabilities);
-
     }
 
     private static WifiCapability wifiCapabilitiesConvert(NMDeviceWifiCapabilities nmCapability) {
         switch (nmCapability) {
-        case NM_WIFI_DEVICE_CAP_NONE:
-            return WifiCapability.NONE;
-        case NM_WIFI_DEVICE_CAP_CIPHER_WEP40:
-            return WifiCapability.CIPHER_WEP40;
-        case NM_WIFI_DEVICE_CAP_CIPHER_WEP104:
-            return WifiCapability.CIPHER_WEP104;
-        case NM_WIFI_DEVICE_CAP_CIPHER_TKIP:
-            return WifiCapability.CIPHER_TKIP;
-        case NM_WIFI_DEVICE_CAP_CIPHER_CCMP:
-            return WifiCapability.CIPHER_CCMP;
-        case NM_WIFI_DEVICE_CAP_WPA:
-            return WifiCapability.WPA;
-        case NM_WIFI_DEVICE_CAP_RSN:
-            return WifiCapability.RSN;
-        case NM_WIFI_DEVICE_CAP_AP:
-            return WifiCapability.AP;
-        case NM_WIFI_DEVICE_CAP_ADHOC:
-            return WifiCapability.ADHOC;
-        case NM_WIFI_DEVICE_CAP_FREQ_VALID:
-            return WifiCapability.FREQ_VALID;
-        case NM_WIFI_DEVICE_CAP_FREQ_2GHZ:
-            return WifiCapability.FREQ_2GHZ;
-        case NM_WIFI_DEVICE_CAP_FREQ_5GHZ:
-            return WifiCapability.FREQ_5GHZ;
-        case NM_WIFI_DEVICE_CAP_MESH:
-            return WifiCapability.MESH;
-        case NM_WIFI_DEVICE_CAP_IBSS_RSN:
-            return WifiCapability.IBSS_RSN;
-        default:
-            throw new IllegalArgumentException(
-                    String.format("Non convertible NMDeviceWifiCapabilities \"%s\"", nmCapability));
+            case NM_WIFI_DEVICE_CAP_NONE:
+                return WifiCapability.NONE;
+            case NM_WIFI_DEVICE_CAP_CIPHER_WEP40:
+                return WifiCapability.CIPHER_WEP40;
+            case NM_WIFI_DEVICE_CAP_CIPHER_WEP104:
+                return WifiCapability.CIPHER_WEP104;
+            case NM_WIFI_DEVICE_CAP_CIPHER_TKIP:
+                return WifiCapability.CIPHER_TKIP;
+            case NM_WIFI_DEVICE_CAP_CIPHER_CCMP:
+                return WifiCapability.CIPHER_CCMP;
+            case NM_WIFI_DEVICE_CAP_WPA:
+                return WifiCapability.WPA;
+            case NM_WIFI_DEVICE_CAP_RSN:
+                return WifiCapability.RSN;
+            case NM_WIFI_DEVICE_CAP_AP:
+                return WifiCapability.AP;
+            case NM_WIFI_DEVICE_CAP_ADHOC:
+                return WifiCapability.ADHOC;
+            case NM_WIFI_DEVICE_CAP_FREQ_VALID:
+                return WifiCapability.FREQ_VALID;
+            case NM_WIFI_DEVICE_CAP_FREQ_2GHZ:
+                return WifiCapability.FREQ_2GHZ;
+            case NM_WIFI_DEVICE_CAP_FREQ_5GHZ:
+                return WifiCapability.FREQ_5GHZ;
+            case NM_WIFI_DEVICE_CAP_MESH:
+                return WifiCapability.MESH;
+            case NM_WIFI_DEVICE_CAP_IBSS_RSN:
+                return WifiCapability.IBSS_RSN;
+            default:
+                throw new IllegalArgumentException(
+                        String.format("Non convertible NMDeviceWifiCapabilities \"%s\"", nmCapability));
         }
     }
 
-    private static <T extends IPAddress> void setIPGateway(Properties ipConfigProperties,
-            NetworkInterfaceIpAddressStatus.Builder<T> ipAddressStatus, Class<T> ipVersionType)
+    private static <T extends IPAddress> void setIPGateway(
+            Properties ipConfigProperties,
+            NetworkInterfaceIpAddressStatus.Builder<T> ipAddressStatus,
+            Class<T> ipVersionType)
             throws UnknownHostException {
-        String gateway = ipVersionType == IP4Address.class ? ipConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, "Gateway")
+        String gateway = ipVersionType == IP4Address.class
+                ? ipConfigProperties.Get(NM_IP4CONFIG_BUS_NAME, "Gateway")
                 : ipConfigProperties.Get(NM_IP6CONFIG_BUS_NAME, "Gateway");
 
         if (Objects.isNull(gateway) || gateway.isEmpty()) {
@@ -591,8 +615,10 @@ public class NMStatusConverter {
         ipAddressStatus.withGateway(Optional.of(address));
     }
 
-    private static <T extends IPAddress> void setIPAddresses(Properties ipConfigProperties,
-            NetworkInterfaceIpAddressStatus.Builder<T> ipAddressStatus, Class<T> ipVersionType)
+    private static <T extends IPAddress> void setIPAddresses(
+            Properties ipConfigProperties,
+            NetworkInterfaceIpAddressStatus.Builder<T> ipAddressStatus,
+            Class<T> ipVersionType)
             throws UnknownHostException {
 
         List<Map<String, Variant<?>>> addressData = ipVersionType == IP4Address.class
@@ -610,18 +636,21 @@ public class NMStatusConverter {
         ipAddressStatus.withAddresses(addresses);
     }
 
-    private static void setIP4DnsServers(Properties ip4configProperties,
-            NetworkInterfaceIpAddressStatus.Builder<IP4Address> builder) throws UnknownHostException {
+    private static void setIP4DnsServers(
+            Properties ip4configProperties, NetworkInterfaceIpAddressStatus.Builder<IP4Address> builder)
+            throws UnknownHostException {
         List<Map<String, Variant<?>>> nameserverData = ip4configProperties.Get(NM_IP4CONFIG_BUS_NAME, "NameserverData");
         final List<IP4Address> dnsAddresses = new ArrayList<>();
         for (Map<String, Variant<?>> dns : nameserverData) {
-            dnsAddresses.add((IP4Address) IPAddress.parseHostAddress(String.class.cast(dns.get("address").getValue())));
+            dnsAddresses.add((IP4Address) IPAddress.parseHostAddress(
+                    String.class.cast(dns.get("address").getValue())));
         }
         builder.withDnsServerAddresses(dnsAddresses);
     }
 
-    private static void setIP6DnsServers(Properties ip6configProperties,
-            NetworkInterfaceIpAddressStatus.Builder<IP6Address> builder) throws UnknownHostException {
+    private static void setIP6DnsServers(
+            Properties ip6configProperties, NetworkInterfaceIpAddressStatus.Builder<IP6Address> builder)
+            throws UnknownHostException {
         List<List<Byte>> nameservers = ip6configProperties.Get(NM_IP6CONFIG_BUS_NAME, "Nameservers");
 
         List<IP6Address> dnsAddresses = new ArrayList<>();
@@ -637,8 +666,11 @@ public class NMStatusConverter {
         builder.withDnsServerAddresses(dnsAddresses);
     }
 
-    private static void setModemStatus(ModemInterfaceStatusBuilder builder, Optional<Properties> modemProperties,
-            List<SimProperties> simProperties, List<Properties> bearerProperties) {
+    private static void setModemStatus(
+            ModemInterfaceStatusBuilder builder,
+            Optional<Properties> modemProperties,
+            List<SimProperties> simProperties,
+            List<Properties> bearerProperties) {
         modemProperties.ifPresent(properties -> {
             builder.withModel(properties.Get(MM_MODEM_BUS_NAME, "Model"));
             builder.withManufacturer(properties.Get(MM_MODEM_BUS_NAME, "Manufacturer"));
@@ -659,8 +691,8 @@ public class NMStatusConverter {
             builder.withSupportedGpsModes(getSupportedGpsModes(properties));
             builder.withSimLocked(isSimLocked(properties));
             builder.withConnectionStatus(MMModemState.toModemState(properties.Get(MM_MODEM_BUS_NAME, STATE)));
-            builder.withAccessTechnologies(MMModemAccessTechnology
-                    .toAccessTechnologyFromBitMask(properties.Get(MM_MODEM_BUS_NAME, "AccessTechnologies")));
+            builder.withAccessTechnologies(MMModemAccessTechnology.toAccessTechnologyFromBitMask(
+                    properties.Get(MM_MODEM_BUS_NAME, "AccessTechnologies")));
             int signalQuality = getSignalQuality(properties);
             builder.withSignalQuality(signalQuality);
             builder.withSignalStrength(convertToModemSignalStrength(signalQuality));
@@ -732,8 +764,8 @@ public class NMStatusConverter {
     private static boolean isGpsSupported(Properties properties) {
         try {
             UInt32 locationSources = properties.Get(MM_MODEM_LOCATION_BUS_NAME, "Capabilities");
-            Set<MMModemLocationSource> modemLocationSources = MMModemLocationSource
-                    .toMMModemLocationSourceFromBitMask(locationSources);
+            Set<MMModemLocationSource> modemLocationSources =
+                    MMModemLocationSource.toMMModemLocationSourceFromBitMask(locationSources);
 
             return modemLocationSources.contains(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED)
                     || (modemLocationSources.contains(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW)
@@ -747,8 +779,8 @@ public class NMStatusConverter {
     private static Set<ModemGpsMode> getSupportedGpsModes(Properties properties) {
         try {
             UInt32 locationSources = properties.Get(MM_MODEM_LOCATION_BUS_NAME, "Capabilities");
-            Set<MMModemLocationSource> modemLocationSources = MMModemLocationSource
-                    .toMMModemLocationSourceFromBitMask(locationSources);
+            Set<MMModemLocationSource> modemLocationSources =
+                    MMModemLocationSource.toMMModemLocationSourceFromBitMask(locationSources);
 
             Set<ModemGpsMode> gpsModes = new HashSet<>();
             if (modemLocationSources.contains(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED)) {
@@ -809,9 +841,17 @@ public class NMStatusConverter {
             logger.warn("SimType property not found. Only physical sims are supported.");
         }
 
-        return Sim.builder().withActive(isActive).withPrimary(isPrimary).withIccid(iccid).withImsi(imsi).withEid(eid)
-                .withOperatorName(operatorName).withOperatorIdentifier(operatorIdentifier).withSimType(simType)
-                .withESimStatus(eSimStatus).build();
+        return Sim.builder()
+                .withActive(isActive)
+                .withPrimary(isPrimary)
+                .withIccid(iccid)
+                .withImsi(imsi)
+                .withEid(eid)
+                .withOperatorName(operatorName)
+                .withOperatorIdentifier(operatorIdentifier)
+                .withSimType(simType)
+                .withESimStatus(eSimStatus)
+                .build();
     }
 
     private static List<Bearer> getBearers(List<Properties> properties) {
@@ -824,8 +864,8 @@ public class NMStatusConverter {
             // manually.
             Map<String, Object> settings = bearerProperties.Get(MM_BEARER_BUS_NAME, "Properties");
             String apn = String.class.cast(settings.get("apn"));
-            Set<BearerIpType> bearerTypes = MMBearerIpFamily
-                    .toBearerIpTypeFromBitMask(UInt32.class.cast(settings.get("ip-type")));
+            Set<BearerIpType> bearerTypes =
+                    MMBearerIpFamily.toBearerIpTypeFromBitMask(UInt32.class.cast(settings.get("ip-type")));
             long bytesTransmitted = 0L;
             long bytesReceived = 0L;
             try {
@@ -850,8 +890,8 @@ public class NMStatusConverter {
 
     private static void fill3gppProperties(ModemInterfaceStatusBuilder builder, Properties properties) {
         try {
-            builder.withRegistrationStatus(MMModem3gppRegistrationState
-                    .toRegistrationStatus(properties.Get(MM_MODEM_3GPP_BUS_NAME, "RegistrationState")));
+            builder.withRegistrationStatus(MMModem3gppRegistrationState.toRegistrationStatus(
+                    properties.Get(MM_MODEM_3GPP_BUS_NAME, "RegistrationState")));
             builder.withOperatorName(properties.Get(MM_MODEM_3GPP_BUS_NAME, "OperatorName"));
         } catch (DBusExecutionException e) {
             logger.warn("3gpp properties not found.");
@@ -882,49 +922,49 @@ public class NMStatusConverter {
 
     private static WifiMode wifiModeConvert(NM80211Mode mode) {
         switch (mode) {
-        case NM_802_11_MODE_ADHOC:
-            return WifiMode.ADHOC;
-        case NM_802_11_MODE_INFRA:
-            return WifiMode.INFRA;
-        case NM_802_11_MODE_AP:
-            return WifiMode.MASTER;
-        case NM_802_11_MODE_MESH:
-            return WifiMode.MESH;
-        case NM_802_11_MODE_UNKNOWN:
-        default:
-            return WifiMode.UNKNOWN;
+            case NM_802_11_MODE_ADHOC:
+                return WifiMode.ADHOC;
+            case NM_802_11_MODE_INFRA:
+                return WifiMode.INFRA;
+            case NM_802_11_MODE_AP:
+                return WifiMode.MASTER;
+            case NM_802_11_MODE_MESH:
+                return WifiMode.MESH;
+            case NM_802_11_MODE_UNKNOWN:
+            default:
+                return WifiMode.UNKNOWN;
         }
     }
 
     private static NetworkInterfaceState deviceStateConvert(NMDeviceState state) {
         switch (state) {
-        case NM_DEVICE_STATE_UNMANAGED:
-            return NetworkInterfaceState.UNMANAGED;
-        case NM_DEVICE_STATE_UNAVAILABLE:
-            return NetworkInterfaceState.UNAVAILABLE;
-        case NM_DEVICE_STATE_DISCONNECTED:
-            return NetworkInterfaceState.DISCONNECTED;
-        case NM_DEVICE_STATE_PREPARE:
-            return NetworkInterfaceState.PREPARE;
-        case NM_DEVICE_STATE_CONFIG:
-            return NetworkInterfaceState.CONFIG;
-        case NM_DEVICE_STATE_NEED_AUTH:
-            return NetworkInterfaceState.NEED_AUTH;
-        case NM_DEVICE_STATE_IP_CONFIG:
-            return NetworkInterfaceState.IP_CONFIG;
-        case NM_DEVICE_STATE_IP_CHECK:
-            return NetworkInterfaceState.IP_CHECK;
-        case NM_DEVICE_STATE_SECONDARIES:
-            return NetworkInterfaceState.SECONDARIES;
-        case NM_DEVICE_STATE_ACTIVATED:
-            return NetworkInterfaceState.ACTIVATED;
-        case NM_DEVICE_STATE_DEACTIVATING:
-            return NetworkInterfaceState.DEACTIVATING;
-        case NM_DEVICE_STATE_FAILED:
-            return NetworkInterfaceState.FAILED;
-        case NM_DEVICE_STATE_UNKNOWN:
-        default:
-            return NetworkInterfaceState.UNKNOWN;
+            case NM_DEVICE_STATE_UNMANAGED:
+                return NetworkInterfaceState.UNMANAGED;
+            case NM_DEVICE_STATE_UNAVAILABLE:
+                return NetworkInterfaceState.UNAVAILABLE;
+            case NM_DEVICE_STATE_DISCONNECTED:
+                return NetworkInterfaceState.DISCONNECTED;
+            case NM_DEVICE_STATE_PREPARE:
+                return NetworkInterfaceState.PREPARE;
+            case NM_DEVICE_STATE_CONFIG:
+                return NetworkInterfaceState.CONFIG;
+            case NM_DEVICE_STATE_NEED_AUTH:
+                return NetworkInterfaceState.NEED_AUTH;
+            case NM_DEVICE_STATE_IP_CONFIG:
+                return NetworkInterfaceState.IP_CONFIG;
+            case NM_DEVICE_STATE_IP_CHECK:
+                return NetworkInterfaceState.IP_CHECK;
+            case NM_DEVICE_STATE_SECONDARIES:
+                return NetworkInterfaceState.SECONDARIES;
+            case NM_DEVICE_STATE_ACTIVATED:
+                return NetworkInterfaceState.ACTIVATED;
+            case NM_DEVICE_STATE_DEACTIVATING:
+                return NetworkInterfaceState.DEACTIVATING;
+            case NM_DEVICE_STATE_FAILED:
+                return NetworkInterfaceState.FAILED;
+            case NM_DEVICE_STATE_UNKNOWN:
+            default:
+                return NetworkInterfaceState.UNKNOWN;
         }
     }
 

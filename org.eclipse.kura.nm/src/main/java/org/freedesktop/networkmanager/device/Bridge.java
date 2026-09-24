@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.device;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -34,9 +33,7 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "Slaves", type = Bridge.PropertySlavesType.class, access = Access.READ)
 public interface Bridge extends DBusInterface {
 
-    public static interface PropertySlavesType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertySlavesType extends TypeRef<List<DBusPath>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -50,6 +47,5 @@ public interface Bridge extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }

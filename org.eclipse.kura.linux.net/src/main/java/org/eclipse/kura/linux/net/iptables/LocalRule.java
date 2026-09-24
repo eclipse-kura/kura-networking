@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *  Red Hat Inc
@@ -15,7 +15,6 @@ package org.eclipse.kura.linux.net.iptables;
 
 import java.util.Objects;
 import java.util.Optional;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.IPAddress;
@@ -66,15 +65,20 @@ public class LocalRule {
      *                                 MAC address from which connection is allowed
      *                                 (such as AA:BB:CC:DD:EE:FF)
      */
-    public LocalRule(int port, String protocol, NetworkPair<? extends IPAddress> permittedNetwork,
-            String permittedInterfaceName, String unpermittedInterfaceName, String permittedMAC,
+    public LocalRule(
+            int port,
+            String protocol,
+            NetworkPair<? extends IPAddress> permittedNetwork,
+            String permittedInterfaceName,
+            String unpermittedInterfaceName,
+            String permittedMAC,
             String sourcePortRange) {
         this.port = port;
         this.portRange = Optional.empty();
         this.protocol = protocol;
         if (permittedNetwork != null) {
-            this.permittedNetworkString = Optional
-                    .of(permittedNetwork.getIpAddress().getHostAddress() + "/" + permittedNetwork.getPrefix());
+            this.permittedNetworkString =
+                    Optional.of(permittedNetwork.getIpAddress().getHostAddress() + "/" + permittedNetwork.getPrefix());
         }
         if (permittedInterfaceName != null && !permittedInterfaceName.trim().isEmpty()) {
             this.permittedInterfaceName = Optional.of(permittedInterfaceName);
@@ -115,8 +119,13 @@ public class LocalRule {
      *                                 MAC address from which connection is allowed
      *                                 (such as AA:BB:CC:DD:EE:FF)
      */
-    public LocalRule(String portRange, String protocol, NetworkPair<? extends IPAddress> permittedNetwork,
-            String permittedInterfaceName, String unpermittedInterfaceName, String permittedMAC,
+    public LocalRule(
+            String portRange,
+            String protocol,
+            NetworkPair<? extends IPAddress> permittedNetwork,
+            String permittedInterfaceName,
+            String unpermittedInterfaceName,
+            String permittedMAC,
             String sourcePortRange) {
         this.port = -1;
         if (portRange != null && !portRange.trim().isEmpty()) {
@@ -124,8 +133,8 @@ public class LocalRule {
         }
         this.protocol = protocol;
         if (permittedNetwork != null) {
-            this.permittedNetworkString = Optional
-                    .of(permittedNetwork.getIpAddress().getHostAddress() + "/" + permittedNetwork.getPrefix());
+            this.permittedNetworkString =
+                    Optional.of(permittedNetwork.getIpAddress().getHostAddress() + "/" + permittedNetwork.getPrefix());
         }
         if (permittedInterfaceName != null && !permittedInterfaceName.trim().isEmpty()) {
             this.permittedInterfaceName = Optional.of(permittedInterfaceName);
@@ -216,8 +225,8 @@ public class LocalRule {
      */
     public void setPermittedNetwork(NetworkPair<? extends IPAddress> permittedNetwork) {
         if (permittedNetwork != null) {
-            this.permittedNetworkString = Optional
-                    .of(permittedNetwork.getIpAddress().getHostAddress() + "/" + permittedNetwork.getPrefix());
+            this.permittedNetworkString =
+                    Optional.of(permittedNetwork.getIpAddress().getHostAddress() + "/" + permittedNetwork.getPrefix());
         }
     }
 
@@ -421,7 +430,7 @@ public class LocalRule {
      * <p>  -A input-kura -p {protocol} -s {permittedNetwork} --dport {port} -j ACCEPT
      * <p>  -A input-kura -p {protocol} -s {permittedNetwork} --sport {sourcePort1:sourcePort2} --dport {port} -j ACCEPT
      * <p>  -A input-kura -p {protocol} -s {permittedNetwork} -m mac --mac-source {permittedMAC} --dport {port} -j ACCEPT
-     * <p>  -A input-kura -p {protocol} -s {permittedNetwork} -m mac --mac-source {permittedMAC} --sport {sourcePort1:sourcePort2} 
+     * <p>  -A input-kura -p {protocol} -s {permittedNetwork} -m mac --mac-source {permittedMAC} --sport {sourcePort1:sourcePort2}
      *       --dport {port} -j ACCEPT
      * </code>
      */
@@ -436,7 +445,10 @@ public class LocalRule {
         if (this.permittedInterfaceName.isPresent()) {
             localRuleSB.append(" -i ").append(this.permittedInterfaceName.get()).toString();
         } else if (this.unpermittedInterfaceName.isPresent()) {
-            localRuleSB.append(" ! -i ").append(this.unpermittedInterfaceName.get()).toString();
+            localRuleSB
+                    .append(" ! -i ")
+                    .append(this.unpermittedInterfaceName.get())
+                    .toString();
         }
 
         this.permittedMAC.ifPresent(macAddress -> {
@@ -481,7 +493,8 @@ public class LocalRule {
             return false;
         }
         LocalRule other = (LocalRule) obj;
-        return this.port == other.port && Objects.equals(this.portRange, other.portRange)
+        return this.port == other.port
+                && Objects.equals(this.portRange, other.portRange)
                 && Objects.equals(this.protocol, other.protocol)
                 && Objects.equals(this.permittedNetworkString, other.permittedNetworkString)
                 && Objects.equals(this.permittedInterfaceName, other.permittedInterfaceName)
@@ -492,8 +505,14 @@ public class LocalRule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.port, this.portRange, this.protocol, this.permittedNetworkString,
-                this.permittedInterfaceName, this.unpermittedInterfaceName, this.permittedMAC, this.sourcePortRange);
+        return Objects.hash(
+                this.port,
+                this.portRange,
+                this.protocol,
+                this.permittedNetworkString,
+                this.permittedInterfaceName,
+                this.unpermittedInterfaceName,
+                this.permittedMAC,
+                this.sourcePortRange);
     }
-
 }

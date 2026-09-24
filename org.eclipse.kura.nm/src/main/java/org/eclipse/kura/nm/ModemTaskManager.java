@@ -14,7 +14,6 @@ package org.eclipse.kura.nm;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.kura.nm.signal.handlers.NMModemSignalHandler;
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
@@ -55,14 +54,15 @@ public class ModemTaskManager {
 
             this.modemTaskHandlers.put(deviceId, modemConnectionHandler);
 
-            this.dbusConnection.addSigHandler(org.freedesktop.networkmanager.Device.StateChanged.class,
-                    modemConnectionHandler);
+            this.dbusConnection.addSigHandler(
+                    org.freedesktop.networkmanager.Device.StateChanged.class, modemConnectionHandler);
         }
     }
 
     private boolean isModemTaskAlreadyActivated(String deviceId, int resetDelayMinutes, boolean autoconnect) {
-        return isModemTaskHandlerPresent(deviceId) && (isModemTaskHandlerResetActivated(deviceId, resetDelayMinutes)
-                || isModemTaskHandlerAutoconnectActivated(deviceId, autoconnect));
+        return isModemTaskHandlerPresent(deviceId)
+                && (isModemTaskHandlerResetActivated(deviceId, resetDelayMinutes)
+                        || isModemTaskHandlerAutoconnectActivated(deviceId, autoconnect));
     }
 
     protected boolean isModemTaskHandlerPresent(String deviceId) {
@@ -71,12 +71,18 @@ public class ModemTaskManager {
 
     private boolean isModemTaskHandlerResetActivated(String deviceId, int resetDelayMinutes) {
         return resetDelayMinutes > 0
-                && this.modemTaskHandlers.get(deviceId).getModemConnectionScheduler().isResetScheduled();
+                && this.modemTaskHandlers
+                        .get(deviceId)
+                        .getModemConnectionScheduler()
+                        .isResetScheduled();
     }
 
     private boolean isModemTaskHandlerAutoconnectActivated(String deviceId, boolean autoconnect) {
         return autoconnect
-                && this.modemTaskHandlers.get(deviceId).getModemConnectionScheduler().isConnectionScheduled();
+                && this.modemTaskHandlers
+                        .get(deviceId)
+                        .getModemConnectionScheduler()
+                        .isConnectionScheduled();
     }
 
     protected void modemTaskHandlerDisable(String deviceId) {
@@ -98,5 +104,4 @@ public class ModemTaskManager {
         }
         this.modemTaskHandlers.clear();
     }
-
 }

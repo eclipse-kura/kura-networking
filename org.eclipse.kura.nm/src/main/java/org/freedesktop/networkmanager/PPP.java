@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.interfaces.DBusInterface;
 import org.freedesktop.dbus.types.UInt32;
@@ -34,5 +33,4 @@ public interface PPP extends DBusInterface {
     public void SetState(UInt32 state);
 
     public void SetIfindex(int ifindex);
-
 }

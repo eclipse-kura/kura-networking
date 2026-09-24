@@ -17,12 +17,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import fi.w1.wpa_supplicant1.Interface;
 import java.util.concurrent.CountDownLatch;
-
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.junit.Test;
-
-import fi.w1.wpa_supplicant1.Interface;
 
 public class WpaScanDoneHandlerTest {
 

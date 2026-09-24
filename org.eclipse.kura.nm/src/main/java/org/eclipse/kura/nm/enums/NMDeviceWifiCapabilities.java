@@ -15,11 +15,9 @@ package org.eclipse.kura.nm.enums;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.freedesktop.dbus.types.UInt32;
 
 public enum NMDeviceWifiCapabilities {
-
     NM_WIFI_DEVICE_CAP_NONE(0x00000000),
     NM_WIFI_DEVICE_CAP_CIPHER_WEP40(0x00000001),
     NM_WIFI_DEVICE_CAP_CIPHER_WEP104(0x00000002),

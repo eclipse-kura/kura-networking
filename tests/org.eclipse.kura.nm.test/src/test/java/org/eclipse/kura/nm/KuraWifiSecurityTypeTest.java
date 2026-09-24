@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -26,9 +25,9 @@ public class KuraWifiSecurityTypeTest {
         @Parameters
         public static Collection<Object[]> SimTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { "UNKNOWN" });
-            params.add(new Object[] { null });
-            params.add(new Object[] { "" });
+            params.add(new Object[] {"UNKNOWN"});
+            params.add(new Object[] {null});
+            params.add(new Object[] {""});
             return params;
         }
 
@@ -66,11 +65,11 @@ public class KuraWifiSecurityTypeTest {
         @Parameters
         public static Collection<Object[]> SimTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { "NONE", KuraWifiSecurityType.SECURITY_NONE });
-            params.add(new Object[] { "SECURITY_WEP", KuraWifiSecurityType.SECURITY_WEP });
-            params.add(new Object[] { "SECURITY_WPA", KuraWifiSecurityType.SECURITY_WPA });
-            params.add(new Object[] { "SECURITY_WPA2", KuraWifiSecurityType.SECURITY_WPA2 });
-            params.add(new Object[] { "SECURITY_WPA_WPA2", KuraWifiSecurityType.SECURITY_WPA_WPA2 });
+            params.add(new Object[] {"NONE", KuraWifiSecurityType.SECURITY_NONE});
+            params.add(new Object[] {"SECURITY_WEP", KuraWifiSecurityType.SECURITY_WEP});
+            params.add(new Object[] {"SECURITY_WPA", KuraWifiSecurityType.SECURITY_WPA});
+            params.add(new Object[] {"SECURITY_WPA2", KuraWifiSecurityType.SECURITY_WPA2});
+            params.add(new Object[] {"SECURITY_WPA_WPA2", KuraWifiSecurityType.SECURITY_WPA_WPA2});
             return params;
         }
 

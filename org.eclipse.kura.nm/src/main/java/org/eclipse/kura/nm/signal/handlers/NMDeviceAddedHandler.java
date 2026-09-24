@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.signal.handlers;
 
 import java.util.Objects;
-
 import org.eclipse.kura.nm.NMDbusConnector;
 import org.freedesktop.NetworkManager;
 import org.freedesktop.dbus.exceptions.DBusException;

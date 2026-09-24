@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.kura.net.status.modem.ModemPowerState;
 import org.freedesktop.dbus.types.UInt32;
 import org.junit.Test;
@@ -35,11 +34,11 @@ public class MMModemPowerStateTest {
         @Parameters
         public static Collection<Object[]> ModemPowerStateParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00), MMModemPowerState.MM_MODEM_POWER_STATE_UNKNOWN });
-            params.add(new Object[] { new UInt32(0x01), MMModemPowerState.MM_MODEM_POWER_STATE_OFF });
-            params.add(new Object[] { new UInt32(0x02), MMModemPowerState.MM_MODEM_POWER_STATE_LOW });
-            params.add(new Object[] { new UInt32(0x03), MMModemPowerState.MM_MODEM_POWER_STATE_ON });
-            params.add(new Object[] { new UInt32(0x13), MMModemPowerState.MM_MODEM_POWER_STATE_UNKNOWN });
+            params.add(new Object[] {new UInt32(0x00), MMModemPowerState.MM_MODEM_POWER_STATE_UNKNOWN});
+            params.add(new Object[] {new UInt32(0x01), MMModemPowerState.MM_MODEM_POWER_STATE_OFF});
+            params.add(new Object[] {new UInt32(0x02), MMModemPowerState.MM_MODEM_POWER_STATE_LOW});
+            params.add(new Object[] {new UInt32(0x03), MMModemPowerState.MM_MODEM_POWER_STATE_ON});
+            params.add(new Object[] {new UInt32(0x13), MMModemPowerState.MM_MODEM_POWER_STATE_UNKNOWN});
             return params;
         }
 
@@ -73,11 +72,11 @@ public class MMModemPowerStateTest {
         @Parameters
         public static Collection<Object[]> ModemPowerStateParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00), ModemPowerState.UNKNOWN });
-            params.add(new Object[] { new UInt32(0x01), ModemPowerState.OFF });
-            params.add(new Object[] { new UInt32(0x02), ModemPowerState.LOW });
-            params.add(new Object[] { new UInt32(0x03), ModemPowerState.ON });
-            params.add(new Object[] { new UInt32(0x13), ModemPowerState.UNKNOWN });
+            params.add(new Object[] {new UInt32(0x00), ModemPowerState.UNKNOWN});
+            params.add(new Object[] {new UInt32(0x01), ModemPowerState.OFF});
+            params.add(new Object[] {new UInt32(0x02), ModemPowerState.LOW});
+            params.add(new Object[] {new UInt32(0x03), ModemPowerState.ON});
+            params.add(new Object[] {new UInt32(0x13), ModemPowerState.UNKNOWN});
             return params;
         }
 
@@ -111,10 +110,10 @@ public class MMModemPowerStateTest {
         @Parameters
         public static Collection<Object[]> ModemPowerStateParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { MMModemPowerState.MM_MODEM_POWER_STATE_UNKNOWN, new UInt32(0x00) });
-            params.add(new Object[] { MMModemPowerState.MM_MODEM_POWER_STATE_OFF, new UInt32(0x01) });
-            params.add(new Object[] { MMModemPowerState.MM_MODEM_POWER_STATE_LOW, new UInt32(0x02) });
-            params.add(new Object[] { MMModemPowerState.MM_MODEM_POWER_STATE_ON, new UInt32(0x03) });
+            params.add(new Object[] {MMModemPowerState.MM_MODEM_POWER_STATE_UNKNOWN, new UInt32(0x00)});
+            params.add(new Object[] {MMModemPowerState.MM_MODEM_POWER_STATE_OFF, new UInt32(0x01)});
+            params.add(new Object[] {MMModemPowerState.MM_MODEM_POWER_STATE_LOW, new UInt32(0x02)});
+            params.add(new Object[] {MMModemPowerState.MM_MODEM_POWER_STATE_ON, new UInt32(0x03)});
             return params;
         }
 

@@ -27,5 +27,4 @@ public interface AgentManager extends DBusInterface {
     public void RegisterWithCapabilities(String identifier, UInt32 capabilities);
 
     public void Unregister();
-
 }

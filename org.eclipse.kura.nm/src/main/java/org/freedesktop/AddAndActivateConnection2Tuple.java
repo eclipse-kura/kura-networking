@@ -13,7 +13,6 @@
 package org.freedesktop;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.Tuple;
 import org.freedesktop.dbus.annotations.Position;
@@ -26,8 +25,10 @@ public class AddAndActivateConnection2Tuple extends Tuple {
 
     @Position(0)
     private DBusPath path;
+
     @Position(1)
     private DBusPath activeConnection;
+
     @Position(2)
     private Map<String, Variant<?>> result;
 
@@ -60,5 +61,4 @@ public class AddAndActivateConnection2Tuple extends Tuple {
     public Map<String, Variant<?>> getResult() {
         return this.result;
     }
-
 }

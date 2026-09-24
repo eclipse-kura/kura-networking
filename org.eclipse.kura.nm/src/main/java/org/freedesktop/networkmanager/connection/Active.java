@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.connection;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -48,9 +47,7 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "Master", type = DBusPath.class, access = Access.READ)
 public interface Active extends DBusInterface {
 
-    public static interface PropertyDevicesType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyDevicesType extends TypeRef<List<DBusPath>> {}
 
     public static class StateChanged extends DBusSignal {
 
@@ -70,7 +67,6 @@ public interface Active extends DBusInterface {
         public UInt32 getReason() {
             return this.reason;
         }
-
     }
 
     public static class PropertiesChanged extends DBusSignal {
@@ -85,6 +81,5 @@ public interface Active extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }

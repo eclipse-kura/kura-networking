@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager.vpn;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
 import org.freedesktop.dbus.annotations.DBusProperty.Access;
@@ -43,7 +42,6 @@ public interface Connection extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class VpnStateChanged extends DBusSignal {
@@ -64,6 +62,5 @@ public interface Connection extends DBusInterface {
         public UInt32 getReason() {
             return this.reason;
         }
-
     }
 }

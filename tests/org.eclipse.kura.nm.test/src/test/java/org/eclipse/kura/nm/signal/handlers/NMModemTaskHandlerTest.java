@@ -37,7 +37,9 @@ public class NMModemTaskHandlerTest {
     @Test
     public void shouldScheduleResetAndConnectionIfFailedDisconnectedStates() throws DBusException {
         givenModemTaskScheduler(MOCK_DEVICE_DBUSPATH_9);
-        givenDeviceStateChanged(MOCK_DEVICE_DBUSPATH_9, NMDeviceState.NM_DEVICE_STATE_FAILED,
+        givenDeviceStateChanged(
+                MOCK_DEVICE_DBUSPATH_9,
+                NMDeviceState.NM_DEVICE_STATE_FAILED,
                 NMDeviceState.NM_DEVICE_STATE_DISCONNECTED);
 
         whenHandleIsCalled();
@@ -48,8 +50,8 @@ public class NMModemTaskHandlerTest {
     @Test
     public void shouldCancelSchedulerIfActivatedState() throws DBusException {
         givenModemTaskScheduler(MOCK_DEVICE_DBUSPATH_9);
-        givenDeviceStateChanged(MOCK_DEVICE_DBUSPATH_9, NMDeviceState.NM_DEVICE_STATE_FAILED,
-                NMDeviceState.NM_DEVICE_STATE_ACTIVATED);
+        givenDeviceStateChanged(
+                MOCK_DEVICE_DBUSPATH_9, NMDeviceState.NM_DEVICE_STATE_FAILED, NMDeviceState.NM_DEVICE_STATE_ACTIVATED);
 
         whenHandleIsCalled();
 
@@ -59,8 +61,8 @@ public class NMModemTaskHandlerTest {
     @Test
     public void shouldDoNothingIfWrongDevicePath() throws DBusException {
         givenModemTaskScheduler(MOCK_DEVICE_DBUSPATH_9);
-        givenDeviceStateChanged(MOCK_DEVICE_DBUSPATH_5, NMDeviceState.NM_DEVICE_STATE_FAILED,
-                NMDeviceState.NM_DEVICE_STATE_ACTIVATED);
+        givenDeviceStateChanged(
+                MOCK_DEVICE_DBUSPATH_5, NMDeviceState.NM_DEVICE_STATE_FAILED, NMDeviceState.NM_DEVICE_STATE_ACTIVATED);
 
         whenHandleIsCalled();
 
@@ -82,8 +84,11 @@ public class NMModemTaskHandlerTest {
 
     private void givenDeviceStateChanged(String devicePath, NMDeviceState oldState, NMDeviceState newState)
             throws DBusException {
-        this.signal = new Device.StateChanged(devicePath, NMDeviceState.toUInt32(newState),
-                NMDeviceState.toUInt32(oldState), NMDeviceStateReason.NM_DEVICE_STATE_REASON_NONE.toUInt32());
+        this.signal = new Device.StateChanged(
+                devicePath,
+                NMDeviceState.toUInt32(newState),
+                NMDeviceState.toUInt32(oldState),
+                NMDeviceStateReason.NM_DEVICE_STATE_REASON_NONE.toUInt32());
     }
 
     /*

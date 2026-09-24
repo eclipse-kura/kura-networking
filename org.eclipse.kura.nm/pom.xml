@@ -13,9 +13,7 @@
      Eurotech
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -27,9 +25,7 @@
     <artifactId>org.eclipse.kura.nm</artifactId>
 
     <properties>
-        <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/../tests/org.eclipse.kura.nm.test/target/site/jacoco-aggregate/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../tests/org.eclipse.kura.nm.test/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencies>
@@ -163,15 +159,14 @@
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                         <configuration>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
                             <stripVersion>true</stripVersion>
-                            <includeArtifactIds>
-                                dbus-java,
+                            <includeArtifactIds>dbus-java,
                                 jnr-unixsocket,
                                 jnr-ffi,
                                 jnr-constants,
@@ -180,8 +175,7 @@
                                 jnr-a64asm,
                                 jnr-x86asm,
                                 jffi,
-                                jffi-native
-                            </includeArtifactIds>
+                                jffi-native</includeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>

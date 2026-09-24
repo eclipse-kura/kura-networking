@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -63,7 +62,6 @@ public interface Call extends DBusInterface {
         public String getDtmf() {
             return this.dtmf;
         }
-
     }
 
     public static class StateChanged extends DBusSignal {
@@ -90,10 +88,7 @@ public interface Call extends DBusInterface {
         public UInt32 getReason() {
             return this.reason;
         }
-
     }
 
-    public static interface PropertyAudioFormatType extends TypeRef<Map<String, Variant>> {
-
-    }
+    public static interface PropertyAudioFormatType extends TypeRef<Map<String, Variant>> {}
 }

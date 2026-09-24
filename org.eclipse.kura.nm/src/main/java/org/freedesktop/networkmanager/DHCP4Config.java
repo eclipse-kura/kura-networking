@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -30,9 +29,7 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "Options", type = DHCP4Config.PropertyOptionsType.class, access = Access.READ)
 public interface DHCP4Config extends DBusInterface {
 
-    public static interface PropertyOptionsType extends TypeRef<Map<String, Variant>> {
-
-    }
+    public static interface PropertyOptionsType extends TypeRef<Map<String, Variant>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -46,6 +43,5 @@ public interface DHCP4Config extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }

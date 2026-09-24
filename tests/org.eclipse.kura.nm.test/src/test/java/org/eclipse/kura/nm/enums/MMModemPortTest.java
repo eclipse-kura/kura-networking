@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.kura.net.status.modem.ModemPortType;
 import org.freedesktop.dbus.types.UInt32;
 import org.junit.Test;
@@ -35,15 +34,15 @@ public class MMModemPortTest {
         @Parameters
         public static Collection<Object[]> ModemPortTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x01), MMModemPortType.MM_MODEM_PORT_TYPE_UNKNOWN });
-            params.add(new Object[] { new UInt32(0x02), MMModemPortType.MM_MODEM_PORT_TYPE_NET });
-            params.add(new Object[] { new UInt32(0x03), MMModemPortType.MM_MODEM_PORT_TYPE_AT });
-            params.add(new Object[] { new UInt32(0x04), MMModemPortType.MM_MODEM_PORT_TYPE_QCDM });
-            params.add(new Object[] { new UInt32(0x05), MMModemPortType.MM_MODEM_PORT_TYPE_GPS });
-            params.add(new Object[] { new UInt32(0x06), MMModemPortType.MM_MODEM_PORT_TYPE_QMI });
-            params.add(new Object[] { new UInt32(0x07), MMModemPortType.MM_MODEM_PORT_TYPE_MBIM });
-            params.add(new Object[] { new UInt32(0x08), MMModemPortType.MM_MODEM_PORT_TYPE_AUDIO });
-            params.add(new Object[] { new UInt32(0x09), MMModemPortType.MM_MODEM_PORT_TYPE_IGNORED });
+            params.add(new Object[] {new UInt32(0x01), MMModemPortType.MM_MODEM_PORT_TYPE_UNKNOWN});
+            params.add(new Object[] {new UInt32(0x02), MMModemPortType.MM_MODEM_PORT_TYPE_NET});
+            params.add(new Object[] {new UInt32(0x03), MMModemPortType.MM_MODEM_PORT_TYPE_AT});
+            params.add(new Object[] {new UInt32(0x04), MMModemPortType.MM_MODEM_PORT_TYPE_QCDM});
+            params.add(new Object[] {new UInt32(0x05), MMModemPortType.MM_MODEM_PORT_TYPE_GPS});
+            params.add(new Object[] {new UInt32(0x06), MMModemPortType.MM_MODEM_PORT_TYPE_QMI});
+            params.add(new Object[] {new UInt32(0x07), MMModemPortType.MM_MODEM_PORT_TYPE_MBIM});
+            params.add(new Object[] {new UInt32(0x08), MMModemPortType.MM_MODEM_PORT_TYPE_AUDIO});
+            params.add(new Object[] {new UInt32(0x09), MMModemPortType.MM_MODEM_PORT_TYPE_IGNORED});
             return params;
         }
 
@@ -77,15 +76,15 @@ public class MMModemPortTest {
         @Parameters
         public static Collection<Object[]> ModemPortTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x01), ModemPortType.UNKNOWN });
-            params.add(new Object[] { new UInt32(0x02), ModemPortType.NET });
-            params.add(new Object[] { new UInt32(0x03), ModemPortType.AT });
-            params.add(new Object[] { new UInt32(0x04), ModemPortType.QCDM });
-            params.add(new Object[] { new UInt32(0x05), ModemPortType.GPS });
-            params.add(new Object[] { new UInt32(0x06), ModemPortType.QMI });
-            params.add(new Object[] { new UInt32(0x07), ModemPortType.MBIM });
-            params.add(new Object[] { new UInt32(0x08), ModemPortType.AUDIO });
-            params.add(new Object[] { new UInt32(0x09), ModemPortType.IGNORED });
+            params.add(new Object[] {new UInt32(0x01), ModemPortType.UNKNOWN});
+            params.add(new Object[] {new UInt32(0x02), ModemPortType.NET});
+            params.add(new Object[] {new UInt32(0x03), ModemPortType.AT});
+            params.add(new Object[] {new UInt32(0x04), ModemPortType.QCDM});
+            params.add(new Object[] {new UInt32(0x05), ModemPortType.GPS});
+            params.add(new Object[] {new UInt32(0x06), ModemPortType.QMI});
+            params.add(new Object[] {new UInt32(0x07), ModemPortType.MBIM});
+            params.add(new Object[] {new UInt32(0x08), ModemPortType.AUDIO});
+            params.add(new Object[] {new UInt32(0x09), ModemPortType.IGNORED});
             return params;
         }
 
@@ -119,15 +118,17 @@ public class MMModemPortTest {
         @Parameters
         public static Collection<Object[]> ModemPortTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_UNKNOWN, new UInt32(0x01), });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_NET, new UInt32(0x02) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_AT, new UInt32(0x03) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_QCDM, new UInt32(0x04) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_GPS, new UInt32(0x05) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_QMI, new UInt32(0x06) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_MBIM, new UInt32(0x07) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_AUDIO, new UInt32(0x08) });
-            params.add(new Object[] { MMModemPortType.MM_MODEM_PORT_TYPE_IGNORED, new UInt32(0x09) });
+            params.add(new Object[] {
+                MMModemPortType.MM_MODEM_PORT_TYPE_UNKNOWN, new UInt32(0x01),
+            });
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_NET, new UInt32(0x02)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_AT, new UInt32(0x03)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_QCDM, new UInt32(0x04)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_GPS, new UInt32(0x05)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_QMI, new UInt32(0x06)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_MBIM, new UInt32(0x07)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_AUDIO, new UInt32(0x08)});
+            params.add(new Object[] {MMModemPortType.MM_MODEM_PORT_TYPE_IGNORED, new UInt32(0x09)});
             return params;
         }
 

@@ -70,5 +70,4 @@ public class NM80211ModeTest {
     private void thenModeShouldBeEqualTo(NM80211Mode result) {
         assertEquals(this.mode, result);
     }
-
 }

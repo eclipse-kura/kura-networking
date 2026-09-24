@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -15,7 +15,6 @@ package org.eclipse.kura.net.configuration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +22,10 @@ public class NetworkConfigurationMessages {
 
     private static final Logger logger = LoggerFactory.getLogger(NetworkConfigurationMessages.class);
 
-    private static final String NETWORK_CONFIGURATION_MESSAGES_BUNDLE = "org.eclipse.kura.net.configuration.messages.NetworkConfigurationMessagesBundle";
+    private static final String NETWORK_CONFIGURATION_MESSAGES_BUNDLE =
+            "org.eclipse.kura.net.configuration.messages.NetworkConfigurationMessagesBundle";
 
-    private NetworkConfigurationMessages() {
-
-    }
+    private NetworkConfigurationMessages() {}
 
     public static String getMessage(NetworkConfigurationPropertyNames code) {
         return getLocalizedMessage(Locale.getDefault(), code);

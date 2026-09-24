@@ -48,9 +48,11 @@ public class NetworkInterfaceStatusDTO {
         this.state = status.getState();
         this.autoConnect = status.isAutoConnect();
         this.mtu = status.getMtu();
-        this.interfaceIp4Addresses = status.getInterfaceIp4Addresses().map(NetworkInterfaceIpAddressStatusDTO::new)
+        this.interfaceIp4Addresses = status.getInterfaceIp4Addresses()
+                .map(NetworkInterfaceIpAddressStatusDTO::new)
                 .orElse(null);
-        this.interfaceIp6Addresses = status.getInterfaceIp6Addresses().map(NetworkInterfaceIpAddressStatusDTO::new)
+        this.interfaceIp6Addresses = status.getInterfaceIp6Addresses()
+                .map(NetworkInterfaceIpAddressStatusDTO::new)
                 .orElse(null);
     }
 

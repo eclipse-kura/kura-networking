@@ -11,14 +11,12 @@
  *  Sterwen-Technology
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.linux.net.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
@@ -30,14 +28,14 @@ import org.junit.Test;
 
 public class IwCapabilityToolTest {
 
-    protected static final CommandStatus successStatus = new CommandStatus(new Command(new String[] {}),
-            new LinuxExitStatus(0));
+    protected static final CommandStatus successStatus =
+            new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(0));
 
-    static private final int PHY0 = 0;
-    static private final int WIFI_2G_CHANNELS = 14;
-    static private final int WIFI_5G_CHANNELS = 29;
-    static private final String COUNTRY_CODE_00 = "00";
-    static private final String COUNTRY_CODE_FR = "FR";
+    private static final int PHY0 = 0;
+    private static final int WIFI_2G_CHANNELS = 14;
+    private static final int WIFI_5G_CHANNELS = 29;
+    private static final String COUNTRY_CODE_00 = "00";
+    private static final String COUNTRY_CODE_FR = "FR";
 
     private String getWifiCountryCode00() {
         return "global\n" + "country 00: DFS-UNSET\n" + "        (2402 - 2472 @ 40), (N/A, 20), (N/A)\n"
@@ -118,10 +116,10 @@ public class IwCapabilityToolTest {
         String commandOutput = getPhyInfo();
         CommandExecutorServiceStub executorServiceStub = new CommandExecutorServiceStub(successStatus);
         executorServiceStub.writeOutput(commandOutput);
-        final int phy = IwCapabilityTool
-                .parseWiphyIndex(IwCapabilityTool.exec(new String[] { "iw", "wlan0", "info" }, executorServiceStub))
-                .orElseThrow(() -> new KuraException(KuraErrorCode.PROCESS_EXECUTION_ERROR,
-                        "failed to get phy index for " + "wlan0"));
+        final int phy = IwCapabilityTool.parseWiphyIndex(
+                        IwCapabilityTool.exec(new String[] {"iw", "wlan0", "info"}, executorServiceStub))
+                .orElseThrow(() -> new KuraException(
+                        KuraErrorCode.PROCESS_EXECUTION_ERROR, "failed to get phy index for " + "wlan0"));
         assertEquals(PHY0, phy);
     }
 

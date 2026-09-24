@@ -23,6 +23,7 @@ public class DisableFacilityLockStruct extends Struct {
 
     @Position(0)
     private final UInt32 member0;
+
     @Position(1)
     private final String member1;
 
@@ -38,5 +39,4 @@ public class DisableFacilityLockStruct extends Struct {
     public String getMember1() {
         return this.member1;
     }
-
 }

@@ -27,30 +27,52 @@ public class DnsmasqConfigConverter implements DhcpServerConfigConverter {
         StringBuilder sb = new StringBuilder();
         sb.append("interface=").append(config.getInterfaceName()).append("\n");
 
-        StringBuilder dhcpRangeProp = new StringBuilder("dhcp-range=").append(config.getInterfaceName()).append(",")
-                .append(config.getRangeStart()).append(",").append(config.getRangeEnd()).append(",")
-                .append(config.getDefaultLeaseTime()).append("s");
+        StringBuilder dhcpRangeProp = new StringBuilder("dhcp-range=")
+                .append(config.getInterfaceName())
+                .append(",")
+                .append(config.getRangeStart())
+                .append(",")
+                .append(config.getRangeEnd())
+                .append(",")
+                .append(config.getDefaultLeaseTime())
+                .append("s");
         sb.append(dhcpRangeProp.toString()).append("\n");
 
-        sb.append(DHCP_OPTION_KEY + config.getInterfaceName()).append(",1,")
-                .append(NetworkUtil.getNetmaskStringForm(config.getPrefix())).append("\n");
+        sb.append(DHCP_OPTION_KEY + config.getInterfaceName())
+                .append(",1,")
+                .append(NetworkUtil.getNetmaskStringForm(config.getPrefix()))
+                .append("\n");
         // router property
-        String routerAddress = isNull(config.getRouterAddress()) ? "" : "," + config.getRouterAddress().toString();
-        sb.append(DHCP_OPTION_KEY).append(config.getInterfaceName()).append(",3").append(routerAddress).append("\n");
+        String routerAddress = isNull(config.getRouterAddress())
+                ? ""
+                : "," + config.getRouterAddress().toString();
+        sb.append(DHCP_OPTION_KEY)
+                .append(config.getInterfaceName())
+                .append(",3")
+                .append(routerAddress)
+                .append("\n");
 
         if (config.isPassDns() && !isNull(config.getRouterAddress())) {
             // announce DNS servers on this device
-            sb.append(DHCP_OPTION_KEY).append(config.getInterfaceName()).append(",6,0.0.0.0").append("\n");
+            sb.append(DHCP_OPTION_KEY)
+                    .append(config.getInterfaceName())
+                    .append(",6,0.0.0.0")
+                    .append("\n");
         } else {
             // leaving the option without value disables it
-            sb.append(DHCP_OPTION_KEY).append(config.getInterfaceName()).append(",6").append("\n");
+            sb.append(DHCP_OPTION_KEY)
+                    .append(config.getInterfaceName())
+                    .append(",6")
+                    .append("\n");
             sb.append("dhcp-ignore-names=").append(config.getInterfaceName()).append("\n");
         }
 
         // all subnets are local
-        sb.append(DHCP_OPTION_KEY).append(config.getInterfaceName()).append(",27,1").append("\n");
+        sb.append(DHCP_OPTION_KEY)
+                .append(config.getInterfaceName())
+                .append(",27,1")
+                .append("\n");
 
         return sb.toString();
     }
-
 }

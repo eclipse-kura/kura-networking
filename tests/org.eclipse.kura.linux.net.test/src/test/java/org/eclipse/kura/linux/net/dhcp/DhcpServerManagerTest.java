@@ -21,7 +21,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
 import org.eclipse.kura.core.testutil.TestUtil;
@@ -214,9 +213,12 @@ public class DhcpServerManagerTest {
 
     private void givenLinuxNetworkUtil(String toolName, Optional<String> unitName) {
         this.mockedLinuxNetworkUtil = Mockito.mockStatic(LinuxNetworkUtil.class);
-        this.mockedLinuxNetworkUtil.when(() -> LinuxNetworkUtil.toolExists(toolName)).thenReturn(true);
+        this.mockedLinuxNetworkUtil
+                .when(() -> LinuxNetworkUtil.toolExists(toolName))
+                .thenReturn(true);
         if (unitName.isPresent()) {
-            this.mockedLinuxNetworkUtil.when(() -> LinuxNetworkUtil.systemdSystemUnitExists(unitName.get()))
+            this.mockedLinuxNetworkUtil
+                    .when(() -> LinuxNetworkUtil.systemdSystemUnitExists(unitName.get()))
                     .thenReturn(true);
         }
     }
@@ -294,7 +296,8 @@ public class DhcpServerManagerTest {
     }
 
     private void thenReturnedConfigConverterIs(Class<?> dhcpServerConfigConverter) {
-        assertEquals(dhcpServerConfigConverter, this.returnedConfigConverter.get().getClass());
+        assertEquals(
+                dhcpServerConfigConverter, this.returnedConfigConverter.get().getClass());
     }
 
     private void thenReturnedLeaseReaderIsPresent() {
@@ -316,5 +319,4 @@ public class DhcpServerManagerTest {
     private void thenDhcpServerManagerRunningStatusIs(boolean expectedStatus) {
         assertEquals(expectedStatus, this.serverManagerStatus);
     }
-
 }

@@ -14,7 +14,6 @@ package org.eclipse.kura.network.status.provider.api;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.net.status.NetworkInterfaceStatus;
 
 @SuppressWarnings("unused")
@@ -24,9 +23,9 @@ public class InterfaceStatusListDTO {
     private final List<FailureDTO> failures;
 
     public InterfaceStatusListDTO(final List<NetworkInterfaceStatus> interfaces, final List<FailureDTO> failures) {
-        this.interfaces = interfaces.stream().map(NetworkInterfaceStatusDTO::fromNetworkInterfaceStatus)
+        this.interfaces = interfaces.stream()
+                .map(NetworkInterfaceStatusDTO::fromNetworkInterfaceStatus)
                 .collect(Collectors.toList());
         this.failures = failures;
     }
-
 }

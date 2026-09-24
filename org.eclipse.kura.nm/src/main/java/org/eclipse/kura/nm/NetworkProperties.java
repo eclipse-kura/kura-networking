@@ -19,7 +19,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import org.eclipse.kura.configuration.Password;
 
 public class NetworkProperties {
@@ -48,9 +47,9 @@ public class NetworkProperties {
 
         if (!clazz.isAssignableFrom(rawValue.getClass())) {
             // Criteria: there's no such element in the map that matches the requested type (clazz)
-            throw new NoSuchElementException(
-                    String.format("The \"%s\" key contains a value of type \"%s\" (requested type: \"%s\").",
-                            formattedKey, rawValue.getClass().getName(), clazz.getName()));
+            throw new NoSuchElementException(String.format(
+                    "The \"%s\" key contains a value of type \"%s\" (requested type: \"%s\").",
+                    formattedKey, rawValue.getClass().getName(), clazz.getName()));
         }
 
         if (clazz == String.class || clazz == Password.class) {
@@ -113,7 +112,9 @@ public class NetworkProperties {
         List<String> stringList = new ArrayList<>();
         Pattern comma = Pattern.compile(",");
         if (Objects.nonNull(commaSeparatedString) && !commaSeparatedString.isEmpty()) {
-            comma.splitAsStream(commaSeparatedString).filter(s -> !s.trim().isEmpty()).map(String::trim)
+            comma.splitAsStream(commaSeparatedString)
+                    .filter(s -> !s.trim().isEmpty())
+                    .map(String::trim)
                     .forEach(stringList::add);
         }
 
@@ -128,7 +129,9 @@ public class NetworkProperties {
 
         List<String> stringList = new ArrayList<>();
         Pattern comma = Pattern.compile(",");
-        comma.splitAsStream(commaSeparatedString.get()).filter(s -> !s.trim().isEmpty()).map(String::trim)
+        comma.splitAsStream(commaSeparatedString.get())
+                .filter(s -> !s.trim().isEmpty())
+                .map(String::trim)
                 .forEach(stringList::add);
 
         if (stringList.isEmpty()) {

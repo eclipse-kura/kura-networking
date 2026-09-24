@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1.modem;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -41,27 +40,15 @@ public interface Signal extends DBusInterface {
 
     public void SetupThresholds(Map<String, Variant<?>> settings);
 
-    public static interface PropertyCdmaType extends TypeRef<Map<String, Variant>> {
+    public static interface PropertyCdmaType extends TypeRef<Map<String, Variant>> {}
 
-    }
+    public static interface PropertyEvdoType extends TypeRef<Map<String, Variant>> {}
 
-    public static interface PropertyEvdoType extends TypeRef<Map<String, Variant>> {
+    public static interface PropertyGsmType extends TypeRef<Map<String, Variant>> {}
 
-    }
+    public static interface PropertyUmtsType extends TypeRef<Map<String, Variant>> {}
 
-    public static interface PropertyGsmType extends TypeRef<Map<String, Variant>> {
+    public static interface PropertyLteType extends TypeRef<Map<String, Variant>> {}
 
-    }
-
-    public static interface PropertyUmtsType extends TypeRef<Map<String, Variant>> {
-
-    }
-
-    public static interface PropertyLteType extends TypeRef<Map<String, Variant>> {
-
-    }
-
-    public static interface PropertyNr5gType extends TypeRef<Map<String, Variant>> {
-
-    }
+    public static interface PropertyNr5gType extends TypeRef<Map<String, Variant>> {}
 }

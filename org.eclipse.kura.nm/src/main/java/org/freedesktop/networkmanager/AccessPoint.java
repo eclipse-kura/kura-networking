@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -41,9 +40,7 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "LastSeen", type = Integer.class, access = Access.READ)
 public interface AccessPoint extends DBusInterface {
 
-    public static interface PropertySsidType extends TypeRef<List<Byte>> {
-
-    }
+    public static interface PropertySsidType extends TypeRef<List<Byte>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -57,6 +54,5 @@ public interface AccessPoint extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }

@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager.device;
 
 import java.util.List;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -31,7 +30,5 @@ import org.freedesktop.dbus.types.UInt32;
 @DBusProperty(name = "FwMark", type = UInt32.class, access = Access.READ)
 public interface WireGuard extends DBusInterface {
 
-    public static interface PropertyPublicKeyType extends TypeRef<List<Byte>> {
-
-    }
+    public static interface PropertyPublicKeyType extends TypeRef<List<Byte>> {}
 }

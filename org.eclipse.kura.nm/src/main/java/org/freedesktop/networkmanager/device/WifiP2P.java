@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.device;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -37,9 +36,7 @@ public interface WifiP2P extends DBusInterface {
 
     public void StopFind();
 
-    public static interface PropertyPeersType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyPeersType extends TypeRef<List<DBusPath>> {}
 
     public static class PeerAdded extends DBusSignal {
 
@@ -53,7 +50,6 @@ public interface WifiP2P extends DBusInterface {
         public DBusPath getPeer() {
             return this.peer;
         }
-
     }
 
     public static class PeerRemoved extends DBusSignal {
@@ -68,6 +64,5 @@ public interface WifiP2P extends DBusInterface {
         public DBusPath getPeer() {
             return this.peer;
         }
-
     }
 }

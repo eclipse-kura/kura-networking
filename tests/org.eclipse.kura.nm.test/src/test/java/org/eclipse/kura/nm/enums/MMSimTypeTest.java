@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.kura.net.status.modem.SimType;
 import org.freedesktop.dbus.types.UInt32;
 import org.junit.Test;
@@ -35,10 +34,10 @@ public class MMSimTypeTest {
         @Parameters
         public static Collection<Object[]> SimTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00), MMSimType.MM_SIM_TYPE_UNKNOWN });
-            params.add(new Object[] { new UInt32(0x01), MMSimType.MM_SIM_TYPE_PHYSICAL });
-            params.add(new Object[] { new UInt32(0x02), MMSimType.MM_SIM_TYPE_ESIM });
-            params.add(new Object[] { new UInt32(0x14), MMSimType.MM_SIM_TYPE_UNKNOWN });
+            params.add(new Object[] {new UInt32(0x00), MMSimType.MM_SIM_TYPE_UNKNOWN});
+            params.add(new Object[] {new UInt32(0x01), MMSimType.MM_SIM_TYPE_PHYSICAL});
+            params.add(new Object[] {new UInt32(0x02), MMSimType.MM_SIM_TYPE_ESIM});
+            params.add(new Object[] {new UInt32(0x14), MMSimType.MM_SIM_TYPE_UNKNOWN});
             return params;
         }
 
@@ -72,10 +71,10 @@ public class MMSimTypeTest {
         @Parameters
         public static Collection<Object[]> SimTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00), SimType.UNKNOWN });
-            params.add(new Object[] { new UInt32(0x01), SimType.PHYSICAL });
-            params.add(new Object[] { new UInt32(0x02), SimType.ESIM });
-            params.add(new Object[] { new UInt32(0x14), SimType.UNKNOWN });
+            params.add(new Object[] {new UInt32(0x00), SimType.UNKNOWN});
+            params.add(new Object[] {new UInt32(0x01), SimType.PHYSICAL});
+            params.add(new Object[] {new UInt32(0x02), SimType.ESIM});
+            params.add(new Object[] {new UInt32(0x14), SimType.UNKNOWN});
             return params;
         }
 
@@ -109,9 +108,11 @@ public class MMSimTypeTest {
         @Parameters
         public static Collection<Object[]> SimTypeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { MMSimType.MM_SIM_TYPE_UNKNOWN, new UInt32(0x00), });
-            params.add(new Object[] { MMSimType.MM_SIM_TYPE_PHYSICAL, new UInt32(0x01) });
-            params.add(new Object[] { MMSimType.MM_SIM_TYPE_ESIM, new UInt32(0x02) });
+            params.add(new Object[] {
+                MMSimType.MM_SIM_TYPE_UNKNOWN, new UInt32(0x00),
+            });
+            params.add(new Object[] {MMSimType.MM_SIM_TYPE_PHYSICAL, new UInt32(0x01)});
+            params.add(new Object[] {MMSimType.MM_SIM_TYPE_ESIM, new UInt32(0x02)});
             return params;
         }
 

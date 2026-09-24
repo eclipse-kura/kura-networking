@@ -26,5 +26,4 @@ public class FailureDTO {
     public FailureDTO(String interfaceId, final Exception reason) {
         this(interfaceId, reason.getMessage() != null ? reason.getMessage() : "Unknown error");
     }
-
 }

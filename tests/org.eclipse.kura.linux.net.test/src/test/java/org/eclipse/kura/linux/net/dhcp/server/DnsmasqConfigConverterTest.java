@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -16,7 +16,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.net.UnknownHostException;
 import java.util.List;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IPAddress;
@@ -69,7 +68,8 @@ public class DnsmasqConfigConverterTest {
         DhcpServerCfg dhcpServerConfig = new DhcpServerCfg("eth0", false, 900, 900, false);
         DhcpServerCfgIP4 dhcpServerConfigIP4 = new DhcpServerCfgIP4(
                 (IP4Address) IPAddress.parseHostAddress("172.16.0.0"),
-                (IP4Address) IPAddress.parseHostAddress("255.255.255.0"), (short) 24,
+                (IP4Address) IPAddress.parseHostAddress("255.255.255.0"),
+                (short) 24,
                 (IP4Address) IPAddress.parseHostAddress("192.168.2.1"),
                 (IP4Address) IPAddress.parseHostAddress("172.16.0.100"),
                 (IP4Address) IPAddress.parseHostAddress("172.16.0.120"),
@@ -82,7 +82,8 @@ public class DnsmasqConfigConverterTest {
         DhcpServerCfg dhcpServerConfig = new DhcpServerCfg("eth0", false, 900, 900, true);
         DhcpServerCfgIP4 dhcpServerConfigIP4 = new DhcpServerCfgIP4(
                 (IP4Address) IPAddress.parseHostAddress("172.16.0.0"),
-                (IP4Address) IPAddress.parseHostAddress("255.255.255.0"), (short) 24,
+                (IP4Address) IPAddress.parseHostAddress("255.255.255.0"),
+                (short) 24,
                 (IP4Address) IPAddress.parseHostAddress("192.168.2.1"),
                 (IP4Address) IPAddress.parseHostAddress("172.16.0.100"),
                 (IP4Address) IPAddress.parseHostAddress("172.16.0.120"),

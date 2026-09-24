@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -63,7 +62,6 @@ public interface Voice extends DBusInterface {
         public DBusPath getDbusPath() {
             return this.dbusPath;
         }
-
     }
 
     public static class CallDeleted extends DBusSignal {
@@ -78,10 +76,7 @@ public interface Voice extends DBusInterface {
         public DBusPath getDbusPath() {
             return this.dbusPath;
         }
-
     }
 
-    public static interface PropertyCallsType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyCallsType extends TypeRef<List<DBusPath>> {}
 }

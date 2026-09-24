@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -40,37 +39,21 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "DnsPriority", type = Integer.class, access = Access.READ)
 public interface IP6Config extends DBusInterface {
 
-    public static interface PropertyAddressesType extends TypeRef<List<PropertyAddressesStruct>> {
+    public static interface PropertyAddressesType extends TypeRef<List<PropertyAddressesStruct>> {}
 
-    }
+    public static interface PropertyAddressDataType extends TypeRef<List<Map<String, Variant>>> {}
 
-    public static interface PropertyAddressDataType extends TypeRef<List<Map<String, Variant>>> {
+    public static interface PropertyRoutesType extends TypeRef<List<PropertyRoutesStruct>> {}
 
-    }
+    public static interface PropertyRouteDataType extends TypeRef<List<Map<String, Variant>>> {}
 
-    public static interface PropertyRoutesType extends TypeRef<List<PropertyRoutesStruct>> {
+    public static interface PropertyNameserversType extends TypeRef<List<List<Byte>>> {}
 
-    }
+    public static interface PropertyDomainsType extends TypeRef<List<String>> {}
 
-    public static interface PropertyRouteDataType extends TypeRef<List<Map<String, Variant>>> {
+    public static interface PropertySearchesType extends TypeRef<List<String>> {}
 
-    }
-
-    public static interface PropertyNameserversType extends TypeRef<List<List<Byte>>> {
-
-    }
-
-    public static interface PropertyDomainsType extends TypeRef<List<String>> {
-
-    }
-
-    public static interface PropertySearchesType extends TypeRef<List<String>> {
-
-    }
-
-    public static interface PropertyDnsOptionsType extends TypeRef<List<String>> {
-
-    }
+    public static interface PropertyDnsOptionsType extends TypeRef<List<String>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -84,6 +67,5 @@ public interface IP6Config extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }

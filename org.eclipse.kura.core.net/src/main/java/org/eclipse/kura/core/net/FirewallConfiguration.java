@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2016, 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.NetConfig;
@@ -104,8 +103,8 @@ public class FirewallConfiguration {
                 dst = rulesItems[4];
             }
             boolean masquerade = Boolean.parseBoolean(rulesItems[5]);
-            FirewallNatConfig natEntry = new FirewallNatConfig(srcIface, dstIface, protocol, src, dst, masquerade,
-                    RuleType.IP_FORWARDING);
+            FirewallNatConfig natEntry =
+                    new FirewallNatConfig(srcIface, dstIface, protocol, src, dst, masquerade, RuleType.IP_FORWARDING);
             this.natConfigs.add(natEntry);
         }
     }
@@ -165,10 +164,16 @@ public class FirewallConfiguration {
             sourcePortRange = rulesItems[9];
         }
         FirewallPortForwardConfigIP4Builder builder = FirewallPortForwardConfigIP4.builder();
-        builder.withInboundIface(inboundIface).withOutboundIface(outboundIface).withAddress((IP4Address) address)
-                .withProtocol(protocol).withInPort(inPort).withOutPort(outPort).withMasquerade(masquerade)
+        builder.withInboundIface(inboundIface)
+                .withOutboundIface(outboundIface)
+                .withAddress((IP4Address) address)
+                .withProtocol(protocol)
+                .withInPort(inPort)
+                .withOutPort(outPort)
+                .withMasquerade(masquerade)
                 .withPermittedNetwork(convertNetworkPairIPv4(permittedNetwork + "/" + permittedNetworkMask))
-                .withPermittedMac(permittedMAC).withSourcePortRange(sourcePortRange);
+                .withPermittedMac(permittedMAC)
+                .withSourcePortRange(sourcePortRange);
 
         return builder.build();
     }
@@ -229,17 +234,23 @@ public class FirewallConfiguration {
         String portRange = null;
         if (openPortRuleItems[0].contains(":")) {
             portRange = openPortRuleItems[0];
-            builder.withPortRange(portRange).withProtocol(protocol)
+            builder.withPortRange(portRange)
+                    .withProtocol(protocol)
                     .withPermittedNetwork(convertNetworkPairIPv4(permittedNetwork + "/" + permittedNetworkMask))
-                    .withPermittedInterfaceName(permittedIface).withUnpermittedInterfaceName(unpermittedIface)
-                    .withPermittedMac(permittedMAC).withSourcePortRange(sourcePortRange);
+                    .withPermittedInterfaceName(permittedIface)
+                    .withUnpermittedInterfaceName(unpermittedIface)
+                    .withPermittedMac(permittedMAC)
+                    .withSourcePortRange(sourcePortRange);
             openPortEntry = builder.build();
         } else {
             port = Integer.parseInt(openPortRuleItems[0]);
-            builder.withPort(port).withProtocol(protocol)
+            builder.withPort(port)
+                    .withProtocol(protocol)
                     .withPermittedNetwork(convertNetworkPairIPv4(permittedNetwork + "/" + permittedNetworkMask))
-                    .withPermittedInterfaceName(permittedIface).withUnpermittedInterfaceName(unpermittedIface)
-                    .withPermittedMac(permittedMAC).withSourcePortRange(sourcePortRange);
+                    .withPermittedInterfaceName(permittedIface)
+                    .withUnpermittedInterfaceName(unpermittedIface)
+                    .withPermittedMac(permittedMAC)
+                    .withSourcePortRange(sourcePortRange);
             openPortEntry = builder.build();
         }
         return openPortEntry;

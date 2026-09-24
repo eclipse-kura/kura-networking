@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -27,8 +26,8 @@ import org.eclipse.kura.executor.CommandStatus;
 public class FirewallTestUtils {
 
     protected static CommandExecutorService executorServiceMock;
-    protected static final CommandStatus successStatus = new CommandStatus(new Command(new String[] {}),
-            new LinuxExitStatus(0));
+    protected static final CommandStatus successStatus =
+            new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(0));
     protected static Command commandRestore;
     protected static Command commandRestoreTmp;
     protected static Command commandSave;
@@ -58,75 +57,72 @@ public class FirewallTestUtils {
     protected static void setUpMock() {
         executorServiceMock = mock(CommandExecutorService.class);
         IptablesConfig iptablesConfig = new IptablesConfig();
-        commandRestore = new Command(
-                new String[] { "iptables-restore", "-w", "-n", iptablesConfig.getFirewallConfigFileName() });
+        commandRestore =
+                new Command(new String[] {"iptables-restore", "-w", "-n", iptablesConfig.getFirewallConfigFileName()});
         commandRestore.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandRestore)).thenReturn(successStatus);
         commandRestoreTmp = new Command(
-                new String[] { "iptables-restore", "-w", "-n", iptablesConfig.getFirewallConfigTmpFileName() });
+                new String[] {"iptables-restore", "-w", "-n", iptablesConfig.getFirewallConfigTmpFileName()});
         commandRestoreTmp.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandRestoreTmp)).thenReturn(successStatus);
-        commandSave = new Command(new String[] { "iptables-save", ">", iptablesConfig.getFirewallConfigFileName() });
+        commandSave = new Command(new String[] {"iptables-save", ">", iptablesConfig.getFirewallConfigFileName()});
         commandSave.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandSave)).thenReturn(successStatus);
-        commandSaveTmp = new Command(
-                new String[] { "iptables-save", ">", iptablesConfig.getFirewallConfigTmpFileName() });
+        commandSaveTmp =
+                new Command(new String[] {"iptables-save", ">", iptablesConfig.getFirewallConfigTmpFileName()});
         commandSaveTmp.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandSaveTmp)).thenReturn(successStatus);
-        commandFlushInputFilter = new Command(new String[] { "iptables", "-F", "input-kura", "-t", "filter" });
+        commandFlushInputFilter = new Command(new String[] {"iptables", "-F", "input-kura", "-t", "filter"});
         commandFlushInputFilter.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushInputFilter)).thenReturn(successStatus);
-        commandFlushOutputFilter = new Command(new String[] { "iptables", "-F", "output-kura", "-t", "filter" });
+        commandFlushOutputFilter = new Command(new String[] {"iptables", "-F", "output-kura", "-t", "filter"});
         commandFlushOutputFilter.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushOutputFilter)).thenReturn(successStatus);
-        commandFlushForwardFilter = new Command(new String[] { "iptables", "-F", "forward-kura", "-t", "filter" });
+        commandFlushForwardFilter = new Command(new String[] {"iptables", "-F", "forward-kura", "-t", "filter"});
         commandFlushForwardFilter.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushForwardFilter)).thenReturn(successStatus);
-        commandFlushForwardPfFilter = new Command(new String[] { "iptables", "-F", "forward-kura-pf", "-t", "filter" });
+        commandFlushForwardPfFilter = new Command(new String[] {"iptables", "-F", "forward-kura-pf", "-t", "filter"});
         commandFlushForwardPfFilter.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushForwardPfFilter)).thenReturn(successStatus);
-        commandFlushForwardIpfFilter = new Command(
-                new String[] { "iptables", "-F", "forward-kura-ipf", "-t", "filter" });
+        commandFlushForwardIpfFilter = new Command(new String[] {"iptables", "-F", "forward-kura-ipf", "-t", "filter"});
         commandFlushForwardIpfFilter.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushForwardIpfFilter)).thenReturn(successStatus);
-        commandFlushInputNat = new Command(new String[] { "iptables", "-F", "input-kura", "-t", "nat" });
+        commandFlushInputNat = new Command(new String[] {"iptables", "-F", "input-kura", "-t", "nat"});
         commandFlushInputNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushInputNat)).thenReturn(successStatus);
-        commandFlushOutputNat = new Command(new String[] { "iptables", "-F", "output-kura", "-t", "nat" });
+        commandFlushOutputNat = new Command(new String[] {"iptables", "-F", "output-kura", "-t", "nat"});
         commandFlushOutputNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushOutputNat)).thenReturn(successStatus);
-        commandFlushPreroutingNat = new Command(new String[] { "iptables", "-F", "prerouting-kura", "-t", "nat" });
+        commandFlushPreroutingNat = new Command(new String[] {"iptables", "-F", "prerouting-kura", "-t", "nat"});
         commandFlushPreroutingNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPreroutingNat)).thenReturn(successStatus);
-        commandFlushPreroutingPfNat = new Command(new String[] { "iptables", "-F", "prerouting-kura-pf", "-t", "nat" });
+        commandFlushPreroutingPfNat = new Command(new String[] {"iptables", "-F", "prerouting-kura-pf", "-t", "nat"});
         commandFlushPreroutingPfNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPreroutingPfNat)).thenReturn(successStatus);
-        commandFlushPostroutingNat = new Command(new String[] { "iptables", "-F", "postrouting-kura", "-t", "nat" });
+        commandFlushPostroutingNat = new Command(new String[] {"iptables", "-F", "postrouting-kura", "-t", "nat"});
         commandFlushPostroutingNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPostroutingNat)).thenReturn(successStatus);
-        commandFlushPostroutingPfNat = new Command(
-                new String[] { "iptables", "-F", "postrouting-kura-pf", "-t", "nat" });
+        commandFlushPostroutingPfNat = new Command(new String[] {"iptables", "-F", "postrouting-kura-pf", "-t", "nat"});
         commandFlushPostroutingPfNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPostroutingPfNat)).thenReturn(successStatus);
-        commandFlushPostroutingIpfNat = new Command(
-                new String[] { "iptables", "-F", "postrouting-kura-ipf", "-t", "nat" });
+        commandFlushPostroutingIpfNat =
+                new Command(new String[] {"iptables", "-F", "postrouting-kura-ipf", "-t", "nat"});
         commandFlushPostroutingIpfNat.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPostroutingIpfNat)).thenReturn(successStatus);
-        commandFlushPreroutingMangle = new Command(
-                new String[] { "iptables", "-F", "prerouting-kura", "-t", "mangle" });
+        commandFlushPreroutingMangle = new Command(new String[] {"iptables", "-F", "prerouting-kura", "-t", "mangle"});
         commandFlushPreroutingMangle.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPreroutingMangle)).thenReturn(successStatus);
-        commandFlushPostroutingMangle = new Command(
-                new String[] { "iptables", "-F", "postrouting-kura", "-t", "mangle" });
+        commandFlushPostroutingMangle =
+                new Command(new String[] {"iptables", "-F", "postrouting-kura", "-t", "mangle"});
         commandFlushPostroutingMangle.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushPostroutingMangle)).thenReturn(successStatus);
-        commandFlushInputMangle = new Command(new String[] { "iptables", "-F", "input-kura", "-t", "mangle" });
+        commandFlushInputMangle = new Command(new String[] {"iptables", "-F", "input-kura", "-t", "mangle"});
         commandFlushInputMangle.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushInputMangle)).thenReturn(successStatus);
-        commandFlushOutputMangle = new Command(new String[] { "iptables", "-F", "output-kura", "-t", "mangle" });
+        commandFlushOutputMangle = new Command(new String[] {"iptables", "-F", "output-kura", "-t", "mangle"});
         commandFlushOutputMangle.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushOutputMangle)).thenReturn(successStatus);
-        commandFlushForwardMangle = new Command(new String[] { "iptables", "-F", "forward-kura", "-t", "mangle" });
+        commandFlushForwardMangle = new Command(new String[] {"iptables", "-F", "forward-kura", "-t", "mangle"});
         commandFlushForwardMangle.setExecuteInAShell(true);
         when(executorServiceMock.execute(commandFlushForwardMangle)).thenReturn(successStatus);
         commandIcmpAccept1 = new Command(
@@ -183,7 +179,8 @@ public class FirewallTestUtils {
         // applied via
         // commandRestoreTmp, already added at the top of this list.
         commandApplyList.stream().forEach(c -> c.setExecuteInAShell(true));
-        commandApplyList.stream().forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
+        commandApplyList.stream()
+                .forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
 
         testCommandList = new ArrayList<>();
         testCommandList.add(new Command("iptables -t nat -A postrouting-kura -o eth1 -j MASQUERADE".split(" ")));
@@ -239,7 +236,8 @@ public class FirewallTestUtils {
                 "iptables -A input-kura -p tcp -s 0.0.0.0/0 -i eth0 -m mac --mac-source 00:11:22:33:44:55:66 --sport 10100 --dport 5400 -j ACCEPT"
                         .split(" ")));
         testCommandList.stream().forEach(c -> c.setExecuteInAShell(true));
-        testCommandList.stream().forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
+        testCommandList.stream()
+                .forEach(c -> when(executorServiceMock.execute(c)).thenReturn(successStatus));
     }
 
     protected static final String IPTABLES_FILE_CONTENT = "*filter\n"
@@ -335,5 +333,4 @@ public class FirewallTestUtils {
             + "-A output-kura -j RETURN\n"
             + "-A forward-kura -j RETURN\n"
             + "COMMIT\n";
-
 }

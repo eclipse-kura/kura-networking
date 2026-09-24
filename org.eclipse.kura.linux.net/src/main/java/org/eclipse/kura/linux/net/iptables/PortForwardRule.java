@@ -13,7 +13,6 @@
 package org.eclipse.kura.linux.net.iptables;
 
 import java.util.List;
-
 import org.eclipse.kura.net.firewall.RuleType;
 
 /**
@@ -166,30 +165,54 @@ public class PortForwardRule {
      * @return A boolean representing whether all parameters have been set.
      */
     public boolean isComplete() {
-        return this.protocol != null && this.inboundIface != null && this.outboundIface != null && this.address != null
-                && this.inPort != 0 && this.outPort != 0;
+        return this.protocol != null
+                && this.inboundIface != null
+                && this.outboundIface != null
+                && this.address != null
+                && this.inPort != 0
+                && this.outPort != 0;
     }
 
     public NatPreroutingChainRule getNatPreroutingChainRule() {
-        return new NatPreroutingChainRule().inputInterface(this.inboundIface).protocol(this.protocol)
-                .externalPort(this.inPort).internalPort(this.outPort).srcPortFirst(this.sourcePortStart)
-                .srcPortLast(this.sourcePortEnd).dstIpAddress(this.address).permittedNetwork(this.permittedNetwork)
-                .permittedNetworkMask(this.permittedNetworkMask).permittedMacAddress(this.permittedMAC)
+        return new NatPreroutingChainRule()
+                .inputInterface(this.inboundIface)
+                .protocol(this.protocol)
+                .externalPort(this.inPort)
+                .internalPort(this.outPort)
+                .srcPortFirst(this.sourcePortStart)
+                .srcPortLast(this.sourcePortEnd)
+                .dstIpAddress(this.address)
+                .permittedNetwork(this.permittedNetwork)
+                .permittedNetworkMask(this.permittedNetworkMask)
+                .permittedMacAddress(this.permittedMAC)
                 .type(RuleType.PORT_FORWARDING);
     }
 
     public NatPostroutingChainRule getNatPostroutingChainRule() {
-        return new NatPostroutingChainRule().dstNetwork(this.address).dstMask((short) this.addressMask)
-                .srcNetwork(this.permittedNetwork).srcMask((short) this.permittedNetworkMask)
-                .dstInterface(this.outboundIface).protocol(this.protocol).masquerade(this.masquerade)
+        return new NatPostroutingChainRule()
+                .dstNetwork(this.address)
+                .dstMask((short) this.addressMask)
+                .srcNetwork(this.permittedNetwork)
+                .srcMask((short) this.permittedNetworkMask)
+                .dstInterface(this.outboundIface)
+                .protocol(this.protocol)
+                .masquerade(this.masquerade)
                 .type(RuleType.PORT_FORWARDING);
     }
 
     public FilterForwardChainRule getFilterForwardChainRule() {
-        return new FilterForwardChainRule().inputInterface(this.inboundIface).outputInterface(this.outboundIface)
-                .srcNetwork(this.permittedNetwork).srcMask((short) this.permittedNetworkMask).dstNetwork(this.address)
-                .dstMask((short) this.addressMask).protocol(this.protocol).permittedMacAddress(this.permittedMAC)
-                .srcPortFirst(this.sourcePortStart).srcPortLast(this.sourcePortEnd).type(RuleType.PORT_FORWARDING);
+        return new FilterForwardChainRule()
+                .inputInterface(this.inboundIface)
+                .outputInterface(this.outboundIface)
+                .srcNetwork(this.permittedNetwork)
+                .srcMask((short) this.permittedNetworkMask)
+                .dstNetwork(this.address)
+                .dstMask((short) this.addressMask)
+                .protocol(this.protocol)
+                .permittedMacAddress(this.permittedMAC)
+                .srcPortFirst(this.sourcePortStart)
+                .srcPortLast(this.sourcePortEnd)
+                .type(RuleType.PORT_FORWARDING);
     }
 
     @Override
@@ -426,8 +449,11 @@ public class PortForwardRule {
 
         return compareObjects(this.inboundIface, other.inboundIface)
                 && compareObjects(this.outboundIface, other.outboundIface)
-                && compareObjects(this.address, other.address) && compareObjects(this.protocol, other.protocol)
-                && this.inPort == other.inPort && this.outPort == other.outPort && this.masquerade == other.masquerade
+                && compareObjects(this.address, other.address)
+                && compareObjects(this.protocol, other.protocol)
+                && this.inPort == other.inPort
+                && this.outPort == other.outPort
+                && this.masquerade == other.masquerade
                 && compareObjects(this.permittedNetwork, other.permittedNetwork)
                 && this.permittedNetworkMask == other.permittedNetworkMask
                 && compareObjects(this.permittedMAC, other.permittedMAC)

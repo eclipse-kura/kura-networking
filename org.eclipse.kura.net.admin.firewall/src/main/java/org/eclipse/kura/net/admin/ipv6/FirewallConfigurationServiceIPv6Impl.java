@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import static org.osgi.framework.Constants.SERVICE_PID;
 
 import java.net.UnknownHostException;
 import java.util.Map;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
 import org.eclipse.kura.configuration.SelfConfiguringComponent;
@@ -49,15 +48,17 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(name = "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
+@Component(
+        name = "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
         immediate = true, //
         configurationPolicy = ConfigurationPolicy.OPTIONAL, //
         property = { //
-                "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
-                "kura.ui.service.hide=true" //
+            "kura.service.pid=org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6", //
+            "kura.ui.service.hide=true" //
         })
-public class FirewallConfigurationServiceIPv6Impl extends
-        AbstractFirewallConfigurationServiceImpl<IP6Address, FirewallOpenPortConfigIP6Builder, FirewallPortForwardConfigIP6Builder>
+public class FirewallConfigurationServiceIPv6Impl
+        extends AbstractFirewallConfigurationServiceImpl<
+                IP6Address, FirewallOpenPortConfigIP6Builder, FirewallPortForwardConfigIP6Builder>
         implements FirewallConfigurationServiceIPv6, SelfConfiguringComponent {
 
     private static final Logger logger = LoggerFactory.getLogger(FirewallConfigurationServiceIPv6Impl.class);
@@ -114,7 +115,8 @@ public class FirewallConfigurationServiceIPv6Impl extends
     @Override
     public ComponentConfiguration getConfiguration() throws KuraException {
         logger.debug("getConfiguration()");
-        Map<String, Object> firewallConfigurationProperties = getFirewallConfiguration().getConfigurationProperties();
+        Map<String, Object> firewallConfigurationProperties =
+                getFirewallConfiguration().getConfigurationProperties();
         firewallConfigurationProperties.put(KURA_SERVICE_PID, PID);
         firewallConfigurationProperties.put(SERVICE_PID, PID);
         return new ComponentConfigurationImpl(PID, getDefinition(), firewallConfigurationProperties);

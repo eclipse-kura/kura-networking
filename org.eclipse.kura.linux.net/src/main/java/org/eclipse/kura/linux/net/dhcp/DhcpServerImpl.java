@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraProcessExecutionErrorException;
@@ -83,7 +82,8 @@ public class DhcpServerImpl implements DhcpServer {
 
             logger.debug("initing DHCP Server configuration for {}", this.interfaceName);
             // parse the file
-            try (FileReader fr = new FileReader(configFile); BufferedReader br = new BufferedReader(fr)) {
+            try (FileReader fr = new FileReader(configFile);
+                    BufferedReader br = new BufferedReader(fr)) {
                 IP4Address subnet = null;
                 IP4Address netmask = null;
                 IP4Address router = null;
@@ -104,7 +104,8 @@ public class DhcpServerImpl implements DhcpServer {
                         } else if ("subnet".equals(token)) {
                             subnet = (IP4Address) IPAddress.parseHostAddress(st.nextToken());
                             if (!"netmask".equals(st.nextToken())) {
-                                throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR,
+                                throw new KuraException(
+                                        KuraErrorCode.CONFIGURATION_ERROR,
                                         "invalid dhcp config file: " + this.persistentConfigFileName);
                             }
                             netmask = (IP4Address) IPAddress.parseHostAddress(st.nextToken());
@@ -139,14 +140,15 @@ public class DhcpServerImpl implements DhcpServer {
 
                 // FIXME - prefix still hardcoded
                 try {
-                    DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(ifaceName, enabled, defaultLeaseTime, maxLeaseTime,
-                            passDns);
-                    DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, netmask, (short) 24, router,
-                            rangeStart, rangeEnd, dnsList);
+                    DhcpServerCfg dhcpServerCfg =
+                            new DhcpServerCfg(ifaceName, enabled, defaultLeaseTime, maxLeaseTime, passDns);
+                    DhcpServerCfgIP4 dhcpServerCfgIP4 =
+                            new DhcpServerCfgIP4(subnet, netmask, (short) 24, router, rangeStart, rangeEnd, dnsList);
 
                     logger.debug(
                             "instantiating DHCP server configuration during init with dhcpServerCfg={} and dhcpServerCfgIP4={}",
-                            dhcpServerCfg, dhcpServerCfgIP4);
+                            dhcpServerCfg,
+                            dhcpServerCfgIP4);
 
                     this.dhcpServerConfig4 = new DhcpServerConfigIP4(dhcpServerCfg, dhcpServerCfgIP4);
                 } catch (KuraException e) {
@@ -270,8 +272,10 @@ public class DhcpServerImpl implements DhcpServer {
             pw.flush();
             fos.getFD().sync();
         } catch (Exception e) {
-            throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR,
-                    "error while building up new configuration files for dhcp servers: ", e);
+            throw new KuraException(
+                    KuraErrorCode.CONFIGURATION_ERROR,
+                    "error while building up new configuration files for dhcp servers: ",
+                    e);
         }
     }
 

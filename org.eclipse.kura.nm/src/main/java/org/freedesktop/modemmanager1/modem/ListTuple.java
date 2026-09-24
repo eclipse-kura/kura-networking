@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.Tuple;
 import org.freedesktop.dbus.annotations.Position;
 import org.freedesktop.dbus.types.Variant;
@@ -26,6 +25,7 @@ public class ListTuple extends Tuple {
 
     @Position(0)
     private String selected;
+
     @Position(1)
     private List<Map<String, Variant<?>>> installed;
 
@@ -49,5 +49,4 @@ public class ListTuple extends Tuple {
     public List<Map<String, Variant<?>>> getInstalled() {
         return this.installed;
     }
-
 }

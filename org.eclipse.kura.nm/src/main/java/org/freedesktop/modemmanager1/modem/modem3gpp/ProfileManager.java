@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem.modem3gpp;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
 import org.freedesktop.dbus.annotations.DBusProperty.Access;
@@ -33,5 +32,4 @@ public interface ProfileManager extends DBusInterface {
     public Map<String, Variant<?>> Set(Map<String, Variant<?>> requestedProperties);
 
     public void Delete(Map<String, Variant<?>> properties);
-
 }

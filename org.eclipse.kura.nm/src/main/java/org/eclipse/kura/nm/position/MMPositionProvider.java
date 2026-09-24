@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.nm.position;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,6 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.eclipse.kura.linux.position.options.PositionServiceOptions;
 import org.eclipse.kura.linux.position.provider.GpsDeviceAvailabilityListener;
 import org.eclipse.kura.linux.position.provider.LinuxPositionProviderConstants;
@@ -43,19 +41,24 @@ import org.osgi.util.position.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(name = "ModemManagerPositionProvider", //
+@Component(
+        name = "ModemManagerPositionProvider", //
         property = "service.pid=org.eclipse.kura.nm.position.MMPositionProvider", //
-        reference = @Reference(name = "LinuxPositionProviderCondition", service = Condition.class, //
-                target = "(" + Condition.CONDITION_ID + "=" + LinuxPositionProviderConstants.CONDITION_ID + ")" //
-        ))
+        reference =
+                @Reference(
+                        name = "LinuxPositionProviderCondition",
+                        service = Condition.class, //
+                        target = "(" + Condition.CONDITION_ID + "=" + LinuxPositionProviderConstants.CONDITION_ID
+                                + ")" //
+                        ))
 public class MMPositionProvider implements PositionProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(MMPositionProvider.class);
 
-    private static final UInt32 NMEA_LOCATION_SOURCE = new UInt32(
-            MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA.getValue());
-    private static final UInt32 RAW_LOCATION_SOURCE = new UInt32(
-            MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW.getValue());
+    private static final UInt32 NMEA_LOCATION_SOURCE =
+            new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA.getValue());
+    private static final UInt32 RAW_LOCATION_SOURCE =
+            new UInt32(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW.getValue());
 
     private final NMDbusConnector nmDbusConnector;
 
@@ -83,8 +86,8 @@ public class MMPositionProvider implements PositionProvider {
         }
 
         this.positionRefreshTask = Executors.newSingleThreadScheduledExecutor();
-        this.positionRefreshTask.scheduleAtFixedRate(this::getModemManagerLocation, 0, this.refreshRate,
-                TimeUnit.SECONDS);
+        this.positionRefreshTask.scheduleAtFixedRate(
+                this::getModemManagerLocation, 0, this.refreshRate, TimeUnit.SECONDS);
     }
 
     @Override
@@ -96,7 +99,6 @@ public class MMPositionProvider implements PositionProvider {
             Thread.currentThread().interrupt();
             this.positionRefreshTask = null;
         }
-
     }
 
     @Override
@@ -135,12 +137,13 @@ public class MMPositionProvider implements PositionProvider {
     }
 
     @Override
-    public void init(PositionServiceOptions configuration, LockStatusListener gpsDeviceListener,
+    public void init(
+            PositionServiceOptions configuration,
+            LockStatusListener gpsDeviceListener,
             GpsDeviceAvailabilityListener gpsDeviceAvailabilityListener) {
 
         this.gpsDeviceListener = gpsDeviceListener;
         this.refreshRate = configuration.getModemManagerRefreshRate();
-
     }
 
     @Override
@@ -185,5 +188,4 @@ public class MMPositionProvider implements PositionProvider {
             logger.info("Lock Status changed: {}", this.mmLocationParser);
         }
     }
-
 }

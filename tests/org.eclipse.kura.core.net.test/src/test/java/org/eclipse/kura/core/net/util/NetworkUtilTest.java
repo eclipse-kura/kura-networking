@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2016, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -278,19 +278,19 @@ public class NetworkUtilTest {
 
     @Test
     public void testPackIp4AddressBytes() throws IllegalArgumentException {
-        int result = NetworkUtil.packIp4AddressBytes(new short[] { 255, 255, 255, 255 });
+        int result = NetworkUtil.packIp4AddressBytes(new short[] {255, 255, 255, 255});
         assertEquals(0xFFFFFFFF, result);
 
-        result = NetworkUtil.packIp4AddressBytes(new short[] { 255, 255, 255, 0 });
+        result = NetworkUtil.packIp4AddressBytes(new short[] {255, 255, 255, 0});
         assertEquals(0xFFFFFF00, result);
 
-        result = NetworkUtil.packIp4AddressBytes(new short[] { 255, 255, 18, 0 });
+        result = NetworkUtil.packIp4AddressBytes(new short[] {255, 255, 18, 0});
         assertEquals(0xFFFF1200, result);
 
-        result = NetworkUtil.packIp4AddressBytes(new short[] { 128, 0, 0, 0 });
+        result = NetworkUtil.packIp4AddressBytes(new short[] {128, 0, 0, 0});
         assertEquals(0x80000000, result);
 
-        result = NetworkUtil.packIp4AddressBytes(new short[] { 0, 0, 0, 0 });
+        result = NetworkUtil.packIp4AddressBytes(new short[] {0, 0, 0, 0});
         assertEquals(0x00000000, result);
     }
 
@@ -306,47 +306,63 @@ public class NetworkUtilTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testPackIp4AddressBytesTooShortValue() {
-        NetworkUtil.packIp4AddressBytes(new short[] { 192, 168, 1 });
+        NetworkUtil.packIp4AddressBytes(new short[] {192, 168, 1});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testPackIp4AddressBytesTooLongValue() {
-        NetworkUtil.packIp4AddressBytes(new short[] { 192, 168, 1, 123, 1 });
+        NetworkUtil.packIp4AddressBytes(new short[] {192, 168, 1, 123, 1});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testPackIp4AddressBytesInvalidValue1() {
-        NetworkUtil.packIp4AddressBytes(new short[] { 256, 168, 1, 123 });
+        NetworkUtil.packIp4AddressBytes(new short[] {256, 168, 1, 123});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testPackIp4AddressBytesInvalidValue2() {
-        NetworkUtil.packIp4AddressBytes(new short[] { -1, 168, 1, 123 });
+        NetworkUtil.packIp4AddressBytes(new short[] {-1, 168, 1, 123});
     }
 
     @Test
     public void testUnpackIP4AddressInt() {
         short[] result = NetworkUtil.unpackIP4AddressInt(0xFFFFFFFF);
-        assertArrayEquals(new short[] { 255, 255, 255, 255 }, result);
+        assertArrayEquals(new short[] {255, 255, 255, 255}, result);
 
         result = NetworkUtil.unpackIP4AddressInt(0xFFFFFF00);
-        assertArrayEquals(new short[] { 255, 255, 255, 0 }, result);
+        assertArrayEquals(new short[] {255, 255, 255, 0}, result);
 
         result = NetworkUtil.unpackIP4AddressInt(0xFFFF1200);
-        assertArrayEquals(new short[] { 255, 255, 18, 0 }, result);
+        assertArrayEquals(new short[] {255, 255, 18, 0}, result);
 
         result = NetworkUtil.unpackIP4AddressInt(0x80000000);
-        assertArrayEquals(new short[] { 128, 0, 0, 0 }, result);
+        assertArrayEquals(new short[] {128, 0, 0, 0}, result);
 
         result = NetworkUtil.unpackIP4AddressInt(0x00000000);
-        assertArrayEquals(new short[] { 0, 0, 0, 0 }, result);
+        assertArrayEquals(new short[] {0, 0, 0, 0}, result);
     }
 
     @Test
     public void testConvertIP6AddressStringFullFormat() throws IllegalArgumentException {
         byte[] result = NetworkUtil.convertIP6Address("2001:db8:85a3:0:0:8a2e:370:7334");
-        byte[] expected = { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x00, 0x00, 0x00, 0x00,
-                (byte) 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x34 };
+        byte[] expected = {
+            0x20,
+            0x01,
+            0x0d,
+            (byte) 0xb8,
+            (byte) 0x85,
+            (byte) 0xa3,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            (byte) 0x8a,
+            0x2e,
+            0x03,
+            0x70,
+            0x73,
+            0x34
+        };
         assertArrayEquals(expected, result);
     }
 
@@ -388,8 +404,24 @@ public class NetworkUtilTest {
 
     @Test
     public void testConvertIP6AddressByteArray() throws IllegalArgumentException {
-        byte[] input = { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x00, 0x00, 0x00, 0x00, (byte) 0x8a,
-                0x2e, 0x03, 0x70, 0x73, 0x34 };
+        byte[] input = {
+            0x20,
+            0x01,
+            0x0d,
+            (byte) 0xb8,
+            (byte) 0x85,
+            (byte) 0xa3,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            (byte) 0x8a,
+            0x2e,
+            0x03,
+            0x70,
+            0x73,
+            0x34
+        };
         String result = NetworkUtil.convertIP6Address(input);
         assertEquals("2001:db8:85a3:0:0:8a2e:370:7334", result);
     }
@@ -407,21 +439,53 @@ public class NetworkUtilTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConvertIP6AddressByteArrayNotEnoughElements() {
-        byte[] input = { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x00, 0x00, 0x00, 0x00, (byte) 0x8a,
-                0x2e, 0x03, 0x70, 0x73 };
+        byte[] input = {
+            0x20,
+            0x01,
+            0x0d,
+            (byte) 0xb8,
+            (byte) 0x85,
+            (byte) 0xa3,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            (byte) 0x8a,
+            0x2e,
+            0x03,
+            0x70,
+            0x73
+        };
         NetworkUtil.convertIP6Address(input);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConvertIP6AddressByteArrayTooManyElements() {
-        byte[] input = { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x00, 0x00, 0x00, 0x00, (byte) 0x8a,
-                0x2e, 0x03, 0x70, 0x73, 0x34, 0x34 };
+        byte[] input = {
+            0x20,
+            0x01,
+            0x0d,
+            (byte) 0xb8,
+            (byte) 0x85,
+            (byte) 0xa3,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            (byte) 0x8a,
+            0x2e,
+            0x03,
+            0x70,
+            0x73,
+            0x34,
+            0x34
+        };
         NetworkUtil.convertIP6Address(input);
     }
 
     @Test
     public void testMacToString() throws IllegalArgumentException {
-        byte[] input = { 0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xAB };
+        byte[] input = {0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xAB};
         String result = NetworkUtil.macToString(input);
         assertEquals("01:23:45:67:89:AB", result);
     }
@@ -438,20 +502,20 @@ public class NetworkUtilTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testMacToStringNotEnoughElements() {
-        byte[] input = { 0x01, 0x23, 0x45, 0x67, (byte) 0x89 };
+        byte[] input = {0x01, 0x23, 0x45, 0x67, (byte) 0x89};
         NetworkUtil.macToString(input);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testMacToStringTooManyElements() {
-        byte[] input = { 0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xAB, 0x42 };
+        byte[] input = {0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xAB, 0x42};
         NetworkUtil.macToString(input);
     }
 
     @Test
     public void testMacToBytes() throws IllegalArgumentException {
         byte[] result = NetworkUtil.macToBytes("01:23:45:67:89:AB");
-        byte[] expected = { 0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xAB };
+        byte[] expected = {0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xAB};
         assertArrayEquals(expected, result);
     }
 

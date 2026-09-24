@@ -23,6 +23,7 @@ public class PropertySignalQualityStruct extends Struct {
 
     @Position(0)
     private final UInt32 member0;
+
     @Position(1)
     private final boolean member1;
 
@@ -38,5 +39,4 @@ public class PropertySignalQualityStruct extends Struct {
     public boolean getMember1() {
         return this.member1;
     }
-
 }

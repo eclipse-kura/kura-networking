@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.status;
 
 import java.util.Optional;
-
 import org.eclipse.kura.nm.enums.NMDeviceType;
 import org.freedesktop.dbus.interfaces.Properties;
 
@@ -23,8 +22,8 @@ public class DevicePropertiesWrapper {
     private final Optional<Properties> deviceSpecificProperties;
     private final NMDeviceType deviceType;
 
-    public DevicePropertiesWrapper(Properties deviceProps, Optional<Properties> specificProperties,
-            NMDeviceType deviceType) {
+    public DevicePropertiesWrapper(
+            Properties deviceProps, Optional<Properties> specificProperties, NMDeviceType deviceType) {
         this.deviceProperties = deviceProps;
         this.deviceSpecificProperties = specificProperties;
         this.deviceType = deviceType;
@@ -41,5 +40,4 @@ public class DevicePropertiesWrapper {
     public NMDeviceType getDeviceType() {
         return this.deviceType;
     }
-
 }

@@ -19,7 +19,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.modemmanager1.Modem;
@@ -79,7 +78,10 @@ public class ModemTaskScheduler {
 
     private void tryConnection(int attemptNumber) {
         try {
-            logger.debug("Connection attempt {} for modem {} with path {} ...", attemptNumber, this.deviceId,
+            logger.debug(
+                    "Connection attempt {} for modem {} with path {} ...",
+                    attemptNumber,
+                    this.deviceId,
                     this.device.getObjectPath());
             if (this.nmDbusConnector.isPresent()) {
                 this.nmDbusConnector.get().apply(deviceId);
@@ -93,21 +95,26 @@ public class ModemTaskScheduler {
                 }
                 this.isConnectionScheduled.set(false);
             } else {
-                logger.warn("Could not activate connection for modem {} with path {}", this.deviceId,
+                logger.warn(
+                        "Could not activate connection for modem {} with path {}",
+                        this.deviceId,
                         this.device.getObjectPath());
                 scheduleConnectInternal(attemptNumber);
             }
         } catch (DBusException | DBusExecutionException e) {
-            logger.warn("Could not activate connection for modem {} with path {} because: ", this.deviceId,
-                    this.device.getObjectPath(), e);
+            logger.warn(
+                    "Could not activate connection for modem {} with path {} because: ",
+                    this.deviceId,
+                    this.device.getObjectPath(),
+                    e);
             scheduleConnectInternal(attemptNumber);
         }
     }
 
     private void scheduleConnectInternal(int attemptNumber) {
         if (attemptNumber < this.maxFail) {
-            this.connectionHandler = this.scheduler.schedule(() -> this.tryConnection(attemptNumber + 1), this.holdoff,
-                    TimeUnit.SECONDS);
+            this.connectionHandler = this.scheduler.schedule(
+                    () -> this.tryConnection(attemptNumber + 1), this.holdoff, TimeUnit.SECONDS);
         } else {
             this.connectionHandler = this.scheduler.schedule(() -> tryConnection(1), this.delay, TimeUnit.SECONDS);
         }
@@ -137,13 +144,15 @@ public class ModemTaskScheduler {
                 }
                 if (modem.isPresent()) {
                     modem.get().Reset();
-                    logger.info("Modem reset successful for modem {} with path {}", this.deviceId,
+                    logger.info(
+                            "Modem reset successful for modem {} with path {}",
+                            this.deviceId,
                             this.device.getObjectPath());
                 }
             }
         } catch (DBusException | DBusExecutionException e) {
-            logger.warn("Could not reset modem {} with path {} because: ", this.deviceId, this.device.getObjectPath(),
-                    e);
+            logger.warn(
+                    "Could not reset modem {} with path {} because: ", this.deviceId, this.device.getObjectPath(), e);
         }
         this.isResetScheduled.set(false);
     }
@@ -185,8 +194,11 @@ public class ModemTaskScheduler {
                 isActivated = this.nmDbusConnector.get().isConnectionActivated(this.device);
             }
         } catch (DBusException e) {
-            logger.warn("Could not get modem connection status for modem {} with path {} because: ", this.deviceId,
-                    this.device.getObjectPath(), e);
+            logger.warn(
+                    "Could not get modem connection status for modem {} with path {} because: ",
+                    this.deviceId,
+                    this.device.getObjectPath(),
+                    e);
         }
         return isConnected && isActivated;
     }

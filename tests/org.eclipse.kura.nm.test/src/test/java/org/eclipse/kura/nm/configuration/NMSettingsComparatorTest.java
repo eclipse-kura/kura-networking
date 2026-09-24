@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.types.UInt32;
 import org.freedesktop.dbus.types.Variant;
 import org.junit.Test;
@@ -247,6 +246,7 @@ public class NMSettingsComparatorTest {
 
         assertFalse(NMSettingsComparator.areSettingsEqual(newSettings, oldSettings));
     }
+
     @Test
     public void returnsFalseWhenSettingsAreNotEqualAndMapVariant() {
         newSettings.put("connection", new HashMap<>());

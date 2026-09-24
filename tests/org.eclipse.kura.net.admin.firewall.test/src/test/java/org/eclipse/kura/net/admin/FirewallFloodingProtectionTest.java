@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.linux.net.iptables.AbstractLinuxFirewall;
 import org.eclipse.kura.linux.net.iptables.LinuxFirewall;
@@ -36,9 +35,9 @@ import org.osgi.service.component.ComponentContext;
 
 public class FirewallFloodingProtectionTest {
 
-    private final String[] floodingFilterRules = { "first filter rule", "second filter rule" };
-    private final String[] floodingNatRules = { "first nat rule", "second nat rule" };
-    private final String[] floodingMangleRules = { "first mangle rule", "second mangle rule" };
+    private final String[] floodingFilterRules = {"first filter rule", "second filter rule"};
+    private final String[] floodingNatRules = {"first nat rule", "second nat rule"};
+    private final String[] floodingMangleRules = {"first mangle rule", "second mangle rule"};
     private final Set<String> filterRules = new HashSet<>(Arrays.asList(floodingFilterRules));
     private final Set<String> natRules = new HashSet<>(Arrays.asList(floodingNatRules));
     private final Set<String> mangleRules = new HashSet<>(Arrays.asList(floodingMangleRules));
@@ -117,8 +116,7 @@ public class FirewallFloodingProtectionTest {
             }
 
             @Override
-            public synchronized void updated(Map<String, Object> properties) {
-            }
+            public synchronized void updated(Map<String, Object> properties) {}
         };
     }
 
@@ -132,8 +130,7 @@ public class FirewallFloodingProtectionTest {
             }
 
             @Override
-            public synchronized void updated(Map<String, Object> properties) {
-            }
+            public synchronized void updated(Map<String, Object> properties) {}
         };
     }
 
@@ -171,8 +168,8 @@ public class FirewallFloodingProtectionTest {
 
     private void thenSetAdditionalRulesToMangleOnlyIsCalled() {
         try {
-            verify(mockFirewall, times(1)).setAdditionalRules(new HashSet<String>(), new HashSet<String>(),
-                    this.mangleRules);
+            verify(mockFirewall, times(1))
+                    .setAdditionalRules(new HashSet<String>(), new HashSet<String>(), this.mangleRules);
         } catch (KuraException e) {
             assert (false);
         }
@@ -185,5 +182,4 @@ public class FirewallFloodingProtectionTest {
             assert (false);
         }
     }
-
 }

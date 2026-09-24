@@ -22,6 +22,7 @@ public class PropertyConnectionErrorStruct extends Struct {
 
     @Position(0)
     private final String member0;
+
     @Position(1)
     private final String member1;
 
@@ -37,5 +38,4 @@ public class PropertyConnectionErrorStruct extends Struct {
     public String getMember1() {
         return this.member1;
     }
-
 }

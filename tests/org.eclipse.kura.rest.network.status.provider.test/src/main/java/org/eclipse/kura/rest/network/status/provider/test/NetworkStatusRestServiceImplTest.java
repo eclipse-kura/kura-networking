@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import org.eclipse.kura.core.testutil.requesthandler.AbstractRequestHandlerTest;
 import org.eclipse.kura.core.testutil.requesthandler.MqttTransport;
 import org.eclipse.kura.core.testutil.requesthandler.RestTransport;
@@ -106,24 +105,24 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Test
     public void shouldRejectRequestWithNullInterfaceId() {
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"dfoo\",null]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"dfoo\",null]}");
 
         thenResponseCodeIs(400);
     }
 
     @Test
     public void shouldRejectRequestWithEmptyInterfaceId() {
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"dfoo\",\"\"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"dfoo\",\"\"]}");
 
         thenResponseCodeIs(400);
     }
 
     @Test
     public void shouldRejectRequestWithInterfaceIdConteiningOnlySpaces() {
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"dfoo\",\"  \"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"dfoo\",\"  \"]}");
 
         thenResponseCodeIs(400);
     }
@@ -183,8 +182,8 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     public void shouldReportExceptionMessageByInterfaceId() {
         givenExceptionRetrievingInterfaceStatus("foo", new IllegalArgumentException(EXCEPTION_MESSAGE_TEXT));
 
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"foo\"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"foo\"]}");
 
         thenRequestSucceeds();
         thenResponseBodyEqualsJson(
@@ -206,8 +205,8 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     public void shouldReportDefaultExceptionMessageByInterfaceId() {
         givenExceptionRetrievingInterfaceStatus("foo", new IllegalArgumentException());
 
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"foo\"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"foo\"]}");
 
         thenRequestSucceeds();
         thenResponseBodyEqualsJson(
@@ -221,79 +220,82 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\": \"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\": \"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeLoopbackInterfaceStatusWithDefaultsById() {
         givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId("lo0"));
 
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"lo0\"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"lo0\"]}");
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\": \"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\": \"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldNotReturnMissingInterfaces() {
         givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId("lo0"));
 
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"lo0\",\"foo\"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"lo0\",\"foo\"]}");
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\": \"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}],\"failures\":[{" //
-                + "\"interfaceId\":\"foo\"," //
-                + "\"reason\":\"Not found.\""//
-                + "}]}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\": \"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}],\"failures\":[{" //
+                        + "\"interfaceId\":\"foo\"," //
+                        + "\"reason\":\"Not found.\"" //
+                        + "}]}");
     }
 
     @Test
     public void shouldReturnEmptyListIfNoInterfacesMatch() {
         givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId("lo0"));
 
-        whenRequestIsPerformed(new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH,
-                "{\"interfaceIds\":[\"foo\"]}");
+        whenRequestIsPerformed(
+                new MethodSpec("POST"), NETWORK_STATUS_BY_INTERFACE_ID_PATH, "{\"interfaceIds\":[\"foo\"]}");
 
         thenRequestSucceeds();
         thenResponseBodyEqualsJson(
@@ -302,36 +304,38 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Test
     public void shouldEncodeLoopbackInterfaceStatusWithCustomParams() {
-        givenNetworkStatus(LoopbackInterfaceStatus.builder() //
-                .withInterfaceId("lo0") //
-                .withInterfaceName("lo1") //
-                .withHardwareAddress(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, (byte) 0xff }) //
-                .withDriver("fooDriver") //
-                .withDriverVersion("fooDriverVersion") //
-                .withFirmwareVersion("fooFirmwareVersion") //
-                .withVirtual(true) //
-                .withState(NetworkInterfaceState.PREPARE) //
-                .withAutoConnect(false) //
-                .withMtu(1500) //
-        );
+        givenNetworkStatus(
+                LoopbackInterfaceStatus.builder() //
+                        .withInterfaceId("lo0") //
+                        .withInterfaceName("lo1") //
+                        .withHardwareAddress(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05, (byte) 0xff}) //
+                        .withDriver("fooDriver") //
+                        .withDriverVersion("fooDriverVersion") //
+                        .withFirmwareVersion("fooFirmwareVersion") //
+                        .withVirtual(true) //
+                        .withState(NetworkInterfaceState.PREPARE) //
+                        .withAutoConnect(false) //
+                        .withMtu(1500) //
+                );
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"lo1\"," //
-                + "\"hardwareAddress\":\"01:02:03:04:05:FF\"," //
-                + "\"type\":\"LOOPBACK\"," //
-                + "\"driver\":\"fooDriver\"," //
-                + "\"driverVersion\":\"fooDriverVersion\"," //
-                + "\"firmwareVersion\":\"fooFirmwareVersion\"," //
-                + "\"virtual\":true," //
-                + "\"state\":\"PREPARE\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":1500" //
-                + "}]," + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"lo1\"," //
+                        + "\"hardwareAddress\":\"01:02:03:04:05:FF\"," //
+                        + "\"type\":\"LOOPBACK\"," //
+                        + "\"driver\":\"fooDriver\"," //
+                        + "\"driverVersion\":\"fooDriverVersion\"," //
+                        + "\"firmwareVersion\":\"fooFirmwareVersion\"," //
+                        + "\"virtual\":true," //
+                        + "\"state\":\"PREPARE\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":1500" //
+                        + "}]," + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -342,28 +346,28 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"" //
-                + ",\"driver\":\"N/A\"" //
-                + ",\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0," //
-                + "\"interfaceIp4Addresses\":{" //
-                + "\"addresses\":[{" //
-                + "\"address\":\"1.2.3.4\",\"prefix\":16}," //
-                + "{\"address\":\"5.6.7.255\",\"prefix\":32}]" //
-                + ",\"gateway\":\"5.6.7.255\"," //
-                + "\"dnsServerAddresses\":[\"1.2.3.4\",\"5.6.7.255\"" //
-                + "]}}]," //
-                + "\"failures\":[]" //
-                + "}");
-
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"" //
+                        + ",\"driver\":\"N/A\"" //
+                        + ",\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0," //
+                        + "\"interfaceIp4Addresses\":{" //
+                        + "\"addresses\":[{" //
+                        + "\"address\":\"1.2.3.4\",\"prefix\":16}," //
+                        + "{\"address\":\"5.6.7.255\",\"prefix\":32}]" //
+                        + ",\"gateway\":\"5.6.7.255\"," //
+                        + "\"dnsServerAddresses\":[\"1.2.3.4\",\"5.6.7.255\"" //
+                        + "]}}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -374,25 +378,25 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0," //
-                + "\"interfaceIp4Addresses\":{" //
-                + "\"addresses\":[]" //
-                + ",\"dnsServerAddresses\":[]" //
-                + "}}]," //
-                + "\"failures\":[]" //
-                + "}");
-
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0," //
+                        + "\"interfaceIp4Addresses\":{" //
+                        + "\"addresses\":[]" //
+                        + ",\"dnsServerAddresses\":[]" //
+                        + "}}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -403,28 +407,28 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"" //
-                + ",\"driver\":\"N/A\"" //
-                + ",\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0," //
-                + "\"interfaceIp6Addresses\":{" //
-                + "\"addresses\":[" //
-                + "{\"address\":\"102:304:500:0:0:0:0:0\",\"prefix\":16}," //
-                + "{\"address\":\"506:7ff:500:0:0:0:0:0\",\"prefix\":32}]," //
-                + "\"gateway\":\"506:7ff:500:0:0:0:0:0\"," //
-                + "\"dnsServerAddresses\":[\"102:304:500:0:0:0:0:0\",\"506:7ff:500:0:0:0:0:0\"" //
-                + "]}}]," //
-                + "\"failures\":[]" //
-                + "}");
-
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"" //
+                        + ",\"driver\":\"N/A\"" //
+                        + ",\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0," //
+                        + "\"interfaceIp6Addresses\":{" //
+                        + "\"addresses\":[" //
+                        + "{\"address\":\"102:304:500:0:0:0:0:0\",\"prefix\":16}," //
+                        + "{\"address\":\"506:7ff:500:0:0:0:0:0\",\"prefix\":32}]," //
+                        + "\"gateway\":\"506:7ff:500:0:0:0:0:0\"," //
+                        + "\"dnsServerAddresses\":[\"102:304:500:0:0:0:0:0\",\"506:7ff:500:0:0:0:0:0\"" //
+                        + "]}}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -435,25 +439,25 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"id\":\"lo0\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"LOOPBACK\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0," //
-                + "\"interfaceIp6Addresses\":{" //
-                + "\"addresses\":[]" //
-                + ",\"dnsServerAddresses\":[]" //
-                + "}}]," //
-                + "\"failures\":[]" //
-                + "}");
-
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"id\":\"lo0\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"LOOPBACK\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0," //
+                        + "\"interfaceIp6Addresses\":{" //
+                        + "\"addresses\":[]" //
+                        + ",\"dnsServerAddresses\":[]" //
+                        + "}}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -463,22 +467,23 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"linkUp\":false," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"ETHERNET\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"linkUp\":false," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"ETHERNET\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -488,22 +493,23 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"linkUp\":true," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"ETHERNET\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"linkUp\":true," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"ETHERNET\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -513,90 +519,95 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"capabilities\":[\"NONE\"]," //
-                + "\"channels\":[]," //
-                + "\"countryCode\":\"00\"," //
-                + "\"mode\":\"UNKNOWN\"," //
-                + "\"availableWifiAccessPoints\":[]," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"WIFI\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"capabilities\":[\"NONE\"]," //
+                        + "\"channels\":[]," //
+                        + "\"countryCode\":\"00\"," //
+                        + "\"mode\":\"UNKNOWN\"," //
+                        + "\"availableWifiAccessPoints\":[]," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"WIFI\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeWifiInterfaceStatusWithCustomParams() {
         givenNetworkStatus(
-                WifiInterfaceStatus.builder().withCapabilities(EnumSet.of(WifiCapability.ADHOC, WifiCapability.AP)) //
+                WifiInterfaceStatus.builder()
+                        .withCapabilities(EnumSet.of(WifiCapability.ADHOC, WifiCapability.AP)) //
                         .withCountryCode("foo") //
                         .withMode(WifiMode.MASTER) //
-        );
+                );
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"capabilities\":[\"AP\",\"ADHOC\"]," //
-                + "\"channels\":[]," //
-                + "\"countryCode\":\"foo\"," //
-                + "\"mode\":\"MASTER\"," //
-                + "\"availableWifiAccessPoints\":[]," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"WIFI\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"capabilities\":[\"AP\",\"ADHOC\"]," //
+                        + "\"channels\":[]," //
+                        + "\"countryCode\":\"foo\"," //
+                        + "\"mode\":\"MASTER\"," //
+                        + "\"availableWifiAccessPoints\":[]," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"WIFI\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeWifiChannelWithEmptyFields() {
         givenNetworkStatus(WifiInterfaceStatus.builder()
-                .withWifiChannels(Collections.singletonList(WifiChannel.builder(1, 2).build())));
+                .withWifiChannels(
+                        Collections.singletonList(WifiChannel.builder(1, 2).build())));
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"capabilities\":[\"NONE\"]," //
-                + "\"channels\":" //
-                + "[{\"channel\":1,\"frequency\":2}]," //
-                + "\"countryCode\":\"00\"," //
-                + "\"mode\":\"UNKNOWN\"," //
-                + "\"availableWifiAccessPoints\":[]," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"WIFI\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"capabilities\":[\"NONE\"]," //
+                        + "\"channels\":" //
+                        + "[{\"channel\":1,\"frequency\":2}]," //
+                        + "\"countryCode\":\"00\"," //
+                        + "\"mode\":\"UNKNOWN\"," //
+                        + "\"availableWifiAccessPoints\":[]," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"WIFI\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -612,82 +623,86 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"capabilities\":[\"NONE\"]," //
-                + "\"channels\":" //
-                + "[{\"channel\":1," //
-                + "\"frequency\":2," //
-                + "\"disabled\":true," //
-                + "\"attenuation\":12.9," //
-                + "\"noInitiatingRadiation\":true," //
-                + "\"radarDetection\":true}]," //
-                + "\"countryCode\":\"00\"," //
-                + "\"mode\":\"UNKNOWN\"," //
-                + "\"availableWifiAccessPoints\":[]," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"WIFI\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"capabilities\":[\"NONE\"]," //
+                        + "\"channels\":" //
+                        + "[{\"channel\":1," //
+                        + "\"frequency\":2," //
+                        + "\"disabled\":true," //
+                        + "\"attenuation\":12.9," //
+                        + "\"noInitiatingRadiation\":true," //
+                        + "\"radarDetection\":true}]," //
+                        + "\"countryCode\":\"00\"," //
+                        + "\"mode\":\"UNKNOWN\"," //
+                        + "\"availableWifiAccessPoints\":[]," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"WIFI\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeActiveWifiAccessPoint() {
-        givenNetworkStatus(WifiInterfaceStatus.builder().withActiveWifiAccessPoint(Optional.of(WifiAccessPoint.builder() //
-                .withSsid("foo") //
-                .withHardwareAddress(new byte[] { 1, 2, 3, 4, 5, (byte) 0xff }) //
-                .withChannel(WifiChannel.builder(1, 2).build()) //
-                .withMaxBitrate(123) //
-                .withSignalQuality(12) //
-                .withSignalStrength(-94) //
-                .withWpaSecurity(EnumSet.of(WifiSecurity.GROUP_CCMP, WifiSecurity.KEY_MGMT_SAE)) //
-                .withRsnSecurity(EnumSet.of(WifiSecurity.KEY_MGMT_EAP_SUITE_B_192)) //
-                .withFlags(EnumSet.of(WifiFlag.PRIVACY)) //
-                .build())) //
-        );
+        givenNetworkStatus(
+                WifiInterfaceStatus.builder()
+                        .withActiveWifiAccessPoint(Optional.of(WifiAccessPoint.builder() //
+                                .withSsid("foo") //
+                                .withHardwareAddress(new byte[] {1, 2, 3, 4, 5, (byte) 0xff}) //
+                                .withChannel(WifiChannel.builder(1, 2).build()) //
+                                .withMaxBitrate(123) //
+                                .withSignalQuality(12) //
+                                .withSignalStrength(-94) //
+                                .withWpaSecurity(EnumSet.of(WifiSecurity.GROUP_CCMP, WifiSecurity.KEY_MGMT_SAE)) //
+                                .withRsnSecurity(EnumSet.of(WifiSecurity.KEY_MGMT_EAP_SUITE_B_192)) //
+                                .withFlags(EnumSet.of(WifiFlag.PRIVACY)) //
+                                .build())) //
+                );
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"capabilities\":[\"NONE\"]," //
-                + "\"channels\":[]," //
-                + "\"countryCode\":\"00\"," //
-                + "\"mode\":\"UNKNOWN\"," //
-                + "\"activeWifiAccessPoint\":{" //
-                + "\"ssid\":\"foo\"," //
-                + "\"hardwareAddress\":\"01:02:03:04:05:FF\"," //
-                + "\"channel\":{\"channel\":1,\"frequency\":2}," //
-                + "\"maxBitrate\":123," //
-                + "\"signalQuality\":12," //
-                + "\"signalStrength\":-94," //
-                + "\"wpaSecurity\":[\"GROUP_CCMP\",\"KEY_MGMT_SAE\"]," //
-                + "\"rsnSecurity\":[\"KEY_MGMT_EAP_SUITE_B_192\"]," //
-                + "\"flags\":[\"PRIVACY\"]}," //
-                + "\"availableWifiAccessPoints\":[]," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"WIFI\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0}" //
-                + "]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"capabilities\":[\"NONE\"]," //
+                        + "\"channels\":[]," //
+                        + "\"countryCode\":\"00\"," //
+                        + "\"mode\":\"UNKNOWN\"," //
+                        + "\"activeWifiAccessPoint\":{" //
+                        + "\"ssid\":\"foo\"," //
+                        + "\"hardwareAddress\":\"01:02:03:04:05:FF\"," //
+                        + "\"channel\":{\"channel\":1,\"frequency\":2}," //
+                        + "\"maxBitrate\":123," //
+                        + "\"signalQuality\":12," //
+                        + "\"signalStrength\":-94," //
+                        + "\"wpaSecurity\":[\"GROUP_CCMP\",\"KEY_MGMT_SAE\"]," //
+                        + "\"rsnSecurity\":[\"KEY_MGMT_EAP_SUITE_B_192\"]," //
+                        + "\"flags\":[\"PRIVACY\"]}," //
+                        + "\"availableWifiAccessPoints\":[]," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"WIFI\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0}" //
+                        + "]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -695,7 +710,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         givenNetworkStatus(WifiInterfaceStatus.builder() //
                 .withAvailableWifiAccessPoints(Collections.singletonList(WifiAccessPoint.builder() //
                         .withSsid("foo") //
-                        .withHardwareAddress(new byte[] { 1, 2, 3, 4, 5, (byte) 0xff }) //
+                        .withHardwareAddress(new byte[] {1, 2, 3, 4, 5, (byte) 0xff}) //
                         .withChannel(WifiChannel.builder(1, 2).build()) //
                         .withMaxBitrate(123) //
                         .withSignalQuality(12) //
@@ -708,35 +723,36 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"capabilities\":[\"NONE\"]," //
-                + "\"channels\":[]," //
-                + "\"countryCode\":\"00\"," //
-                + "\"mode\":\"UNKNOWN\"," //
-                + "\"availableWifiAccessPoints\":[{" //
-                + "\"ssid\":\"foo\"," //
-                + "\"hardwareAddress\":\"01:02:03:04:05:FF\"," //
-                + "\"channel\":{\"channel\":1,\"frequency\":2}," //
-                + "\"maxBitrate\":123," //
-                + "\"signalQuality\":12," //
-                + "\"signalStrength\":-94," //
-                + "\"wpaSecurity\":[\"GROUP_CCMP\",\"KEY_MGMT_SAE\"]," //
-                + "\"rsnSecurity\":[\"KEY_MGMT_EAP_SUITE_B_192\"]," //
-                + "\"flags\":[\"PRIVACY\",\"WPS\"]}]," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"WIFI\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"capabilities\":[\"NONE\"]," //
+                        + "\"channels\":[]," //
+                        + "\"countryCode\":\"00\"," //
+                        + "\"mode\":\"UNKNOWN\"," //
+                        + "\"availableWifiAccessPoints\":[{" //
+                        + "\"ssid\":\"foo\"," //
+                        + "\"hardwareAddress\":\"01:02:03:04:05:FF\"," //
+                        + "\"channel\":{\"channel\":1,\"frequency\":2}," //
+                        + "\"maxBitrate\":123," //
+                        + "\"signalQuality\":12," //
+                        + "\"signalStrength\":-94," //
+                        + "\"wpaSecurity\":[\"GROUP_CCMP\",\"KEY_MGMT_SAE\"]," //
+                        + "\"rsnSecurity\":[\"KEY_MGMT_EAP_SUITE_B_192\"]," //
+                        + "\"flags\":[\"PRIVACY\",\"WPS\"]}]," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"WIFI\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
@@ -746,273 +762,281 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"model\":\"N/A\"," //
-                + "\"manufacturer\":\"N/A\"," //
-                + "\"serialNumber\":\"N/A\"," //
-                + "\"softwareRevision\":\"N/A\"," //
-                + "\"hardwareRevision\":\"N/A\"," //
-                + "\"primaryPort\":\"N/A\"," //
-                + "\"ports\":{}," //
-                + "\"supportedModemCapabilities\":[]," //
-                + "\"currentModemCapabilities\":[\"NONE\"]," //
-                + "\"powerState\":\"UNKNOWN\"," //
-                + "\"supportedModes\":[]," //
-                + "\"currentModes\":{\"modes\":[],\"preferredMode\":\"NONE\"}," //
-                + "\"supportedBands\":[\"UNKNOWN\"]," //
-                + "\"currentBands\":[\"UNKNOWN\"]," //
-                + "\"gpsSupported\":false," //
-                + "\"availableSims\":[]," //
-                + "\"simLocked\":false," //
-                + "\"bearers\":[]," //
-                + "\"connectionType\":\"DirectIP\"," //
-                + "\"connectionStatus\":\"UNKNOWN\"," //
-                + "\"accessTechnologies\":[\"UNKNOWN\"]," //
-                + "\"signalQuality\":0," //
-                + "\"signalStrength\":-113," //
-                + "\"registrationStatus\":\"UNKNOWN\"," //
-                + "\"operatorName\":\"N/A\"," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"MODEM\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"model\":\"N/A\"," //
+                        + "\"manufacturer\":\"N/A\"," //
+                        + "\"serialNumber\":\"N/A\"," //
+                        + "\"softwareRevision\":\"N/A\"," //
+                        + "\"hardwareRevision\":\"N/A\"," //
+                        + "\"primaryPort\":\"N/A\"," //
+                        + "\"ports\":{}," //
+                        + "\"supportedModemCapabilities\":[]," //
+                        + "\"currentModemCapabilities\":[\"NONE\"]," //
+                        + "\"powerState\":\"UNKNOWN\"," //
+                        + "\"supportedModes\":[]," //
+                        + "\"currentModes\":{\"modes\":[],\"preferredMode\":\"NONE\"}," //
+                        + "\"supportedBands\":[\"UNKNOWN\"]," //
+                        + "\"currentBands\":[\"UNKNOWN\"]," //
+                        + "\"gpsSupported\":false," //
+                        + "\"availableSims\":[]," //
+                        + "\"simLocked\":false," //
+                        + "\"bearers\":[]," //
+                        + "\"connectionType\":\"DirectIP\"," //
+                        + "\"connectionStatus\":\"UNKNOWN\"," //
+                        + "\"accessTechnologies\":[\"UNKNOWN\"]," //
+                        + "\"signalQuality\":0," //
+                        + "\"signalStrength\":-113," //
+                        + "\"registrationStatus\":\"UNKNOWN\"," //
+                        + "\"operatorName\":\"N/A\"," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"MODEM\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeModemInterfaceStatusWithCustomParams() {
-        givenNetworkStatus(ModemInterfaceStatus.builder() //
-                .withModel("foo") //
-                .withManufacturer("bar") //
-                .withSerialNumber("sernum") //
-                .withSoftwareRevision("rev") //
-                .withHardwareRevision("hwrev") //
-                .withPrimaryPort("port") //
-                .withPorts(Collections.singletonMap("foo", ModemPortType.AUDIO)) //
-                .withAllSupportedModemCapabilities(
-                        Arrays.asList(EnumSet.of(ModemCapability.EVDO, ModemCapability.GSM_UMTS)))
-                .withCurrentModemCapabilities(EnumSet.of(ModemCapability.IRIDIUM, ModemCapability.LTE)) //
-                .withPowerState(ModemPowerState.OFF) //
-                .withSupportedModes(Collections.singleton(
-                        new ModemModePair(EnumSet.of(ModemMode.MODE_3G, ModemMode.MODE_4G), ModemMode.MODE_3G))) //
-                .withCurrentModes(new ModemModePair(EnumSet.of(ModemMode.MODE_3G), ModemMode.MODE_3G)) //
-                .withSupportedBands(EnumSet.of(ModemBand.CDMA_BC1)) //
-                .withCurrentBands(EnumSet.of(ModemBand.UTRAN_9, ModemBand.CDMA_BC0)) //
-                .withGpsSupported(true) //
-                .withSimLocked(true) //
-                .withConnectionType(ModemConnectionType.DirectIP) //
-                .withConnectionStatus(ModemConnectionStatus.DISCONNECTING) //
-                .withAccessTechnologies(EnumSet.of(AccessTechnology.EVDO0, AccessTechnology.GPRS)) //
-                .withSignalQuality(12) //
-                .withSignalStrength(-94) //
-                .withRegistrationStatus(RegistrationStatus.ROAMING) //
-                .withOperatorName("oper") //
-        );
+        givenNetworkStatus(
+                ModemInterfaceStatus.builder() //
+                        .withModel("foo") //
+                        .withManufacturer("bar") //
+                        .withSerialNumber("sernum") //
+                        .withSoftwareRevision("rev") //
+                        .withHardwareRevision("hwrev") //
+                        .withPrimaryPort("port") //
+                        .withPorts(Collections.singletonMap("foo", ModemPortType.AUDIO)) //
+                        .withAllSupportedModemCapabilities(
+                                Arrays.asList(EnumSet.of(ModemCapability.EVDO, ModemCapability.GSM_UMTS)))
+                        .withCurrentModemCapabilities(EnumSet.of(ModemCapability.IRIDIUM, ModemCapability.LTE)) //
+                        .withPowerState(ModemPowerState.OFF) //
+                        .withSupportedModes(Collections.singleton(new ModemModePair(
+                                EnumSet.of(ModemMode.MODE_3G, ModemMode.MODE_4G), ModemMode.MODE_3G))) //
+                        .withCurrentModes(new ModemModePair(EnumSet.of(ModemMode.MODE_3G), ModemMode.MODE_3G)) //
+                        .withSupportedBands(EnumSet.of(ModemBand.CDMA_BC1)) //
+                        .withCurrentBands(EnumSet.of(ModemBand.UTRAN_9, ModemBand.CDMA_BC0)) //
+                        .withGpsSupported(true) //
+                        .withSimLocked(true) //
+                        .withConnectionType(ModemConnectionType.DirectIP) //
+                        .withConnectionStatus(ModemConnectionStatus.DISCONNECTING) //
+                        .withAccessTechnologies(EnumSet.of(AccessTechnology.EVDO0, AccessTechnology.GPRS)) //
+                        .withSignalQuality(12) //
+                        .withSignalStrength(-94) //
+                        .withRegistrationStatus(RegistrationStatus.ROAMING) //
+                        .withOperatorName("oper") //
+                );
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"model\":\"foo\"," //
-                + "\"manufacturer\":\"bar\"," //
-                + "\"serialNumber\":\"sernum\"," //
-                + "\"softwareRevision\":\"rev\"," //
-                + "\"hardwareRevision\":\"hwrev\"," //
-                + "\"primaryPort\":\"port\"," //
-                + "\"ports\":{\"foo\":\"AUDIO\"}," //
-                + "\"supportedModemCapabilities\":[\"EVDO\",\"GSM_UMTS\"]," //
-                + "\"currentModemCapabilities\":[\"LTE\",\"IRIDIUM\"]," //
-                + "\"powerState\":\"OFF\"," //
-                + "\"supportedModes\":[" //
-                + "{\"modes\":[\"MODE_3G\",\"MODE_4G\"]," //
-                + "\"preferredMode\":\"MODE_3G\"}]," //
-                + "\"currentModes\":{\"modes\":[\"MODE_3G\"],\"preferredMode\":\"MODE_3G\"}," //
-                + "\"supportedBands\":[\"CDMA_BC1\"]," //
-                + "\"currentBands\":[\"UTRAN_9\",\"CDMA_BC0\"]," //
-                + "\"gpsSupported\":true,\"availableSims\":[]," //
-                + "\"simLocked\":true," //
-                + "\"bearers\":[]," //
-                + "\"connectionType\":\"DirectIP\"," //
-                + "\"connectionStatus\":\"DISCONNECTING\"," //
-                + "\"accessTechnologies\":[\"GPRS\",\"EVDO0\"]," //
-                + "\"signalQuality\":12," //
-                + "\"signalStrength\":-94," //
-                + "\"registrationStatus\":\"ROAMING\"," //
-                + "\"operatorName\":\"oper\"," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"MODEM\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"model\":\"foo\"," //
+                        + "\"manufacturer\":\"bar\"," //
+                        + "\"serialNumber\":\"sernum\"," //
+                        + "\"softwareRevision\":\"rev\"," //
+                        + "\"hardwareRevision\":\"hwrev\"," //
+                        + "\"primaryPort\":\"port\"," //
+                        + "\"ports\":{\"foo\":\"AUDIO\"}," //
+                        + "\"supportedModemCapabilities\":[\"EVDO\",\"GSM_UMTS\"]," //
+                        + "\"currentModemCapabilities\":[\"LTE\",\"IRIDIUM\"]," //
+                        + "\"powerState\":\"OFF\"," //
+                        + "\"supportedModes\":[" //
+                        + "{\"modes\":[\"MODE_3G\",\"MODE_4G\"]," //
+                        + "\"preferredMode\":\"MODE_3G\"}]," //
+                        + "\"currentModes\":{\"modes\":[\"MODE_3G\"],\"preferredMode\":\"MODE_3G\"}," //
+                        + "\"supportedBands\":[\"CDMA_BC1\"]," //
+                        + "\"currentBands\":[\"UTRAN_9\",\"CDMA_BC0\"]," //
+                        + "\"gpsSupported\":true,\"availableSims\":[]," //
+                        + "\"simLocked\":true," //
+                        + "\"bearers\":[]," //
+                        + "\"connectionType\":\"DirectIP\"," //
+                        + "\"connectionStatus\":\"DISCONNECTING\"," //
+                        + "\"accessTechnologies\":[\"GPRS\",\"EVDO0\"]," //
+                        + "\"signalQuality\":12," //
+                        + "\"signalStrength\":-94," //
+                        + "\"registrationStatus\":\"ROAMING\"," //
+                        + "\"operatorName\":\"oper\"," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"MODEM\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeBearer() {
         givenNetworkStatus(ModemInterfaceStatus.builder()
-                .withBearers(Arrays.asList(new Bearer("foo", true, "bar", Collections.emptySet(), 1000, 1000),
+                .withBearers(Arrays.asList(
+                        new Bearer("foo", true, "bar", Collections.emptySet(), 1000, 1000),
                         new Bearer("bar", true, "baz", EnumSet.of(BearerIpType.ANY, BearerIpType.IPV4V6), 100, 1010))));
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"model\":\"N/A\"," //
-                + "\"manufacturer\":\"N/A\"," //
-                + "\"serialNumber\":\"N/A\"," //
-                + "\"softwareRevision\":\"N/A\"," //
-                + "\"hardwareRevision\":\"N/A\"," //
-                + "\"primaryPort\":\"N/A\"," //
-                + "\"ports\":{}," //
-                + "\"supportedModemCapabilities\":[]," //
-                + "\"currentModemCapabilities\":[\"NONE\"]," //
-                + "\"powerState\":\"UNKNOWN\"," //
-                + "\"supportedModes\":[]," //
-                + "\"currentModes\":{\"modes\":[],\"preferredMode\":\"NONE\"}," //
-                + "\"supportedBands\":[\"UNKNOWN\"]," //
-                + "\"currentBands\":[\"UNKNOWN\"]," //
-                + "\"gpsSupported\":false," //
-                + "\"availableSims\":[]," //
-                + "\"simLocked\":false," //
-                + "\"bearers\":[{" //
-                + "\"name\":\"foo\"," //
-                + "\"connected\":true," //
-                + "\"apn\":\"bar\"," //
-                + "\"ipTypes\":[]," //
-                + "\"bytesTransmitted\":1000," //
-                + "\"bytesReceived\":1000},{" //
-                + "\"name\":\"bar\"," //
-                + "\"connected\":true," //
-                + "\"apn\":\"baz\"," //
-                + "\"ipTypes\":[\"IPV4V6\",\"ANY\"]," //
-                + "\"bytesTransmitted\":100," //
-                + "\"bytesReceived\":1010}]," //
-                + "\"connectionType\":\"DirectIP\"," //
-                + "\"connectionStatus\":\"UNKNOWN\"," //
-                + "\"accessTechnologies\":[\"UNKNOWN\"]," //
-                + "\"signalQuality\":0," //
-                + "\"signalStrength\":-113," //
-                + "\"registrationStatus\":\"UNKNOWN\"," //
-                + "\"operatorName\":\"N/A\"," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"MODEM\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"model\":\"N/A\"," //
+                        + "\"manufacturer\":\"N/A\"," //
+                        + "\"serialNumber\":\"N/A\"," //
+                        + "\"softwareRevision\":\"N/A\"," //
+                        + "\"hardwareRevision\":\"N/A\"," //
+                        + "\"primaryPort\":\"N/A\"," //
+                        + "\"ports\":{}," //
+                        + "\"supportedModemCapabilities\":[]," //
+                        + "\"currentModemCapabilities\":[\"NONE\"]," //
+                        + "\"powerState\":\"UNKNOWN\"," //
+                        + "\"supportedModes\":[]," //
+                        + "\"currentModes\":{\"modes\":[],\"preferredMode\":\"NONE\"}," //
+                        + "\"supportedBands\":[\"UNKNOWN\"]," //
+                        + "\"currentBands\":[\"UNKNOWN\"]," //
+                        + "\"gpsSupported\":false," //
+                        + "\"availableSims\":[]," //
+                        + "\"simLocked\":false," //
+                        + "\"bearers\":[{" //
+                        + "\"name\":\"foo\"," //
+                        + "\"connected\":true," //
+                        + "\"apn\":\"bar\"," //
+                        + "\"ipTypes\":[]," //
+                        + "\"bytesTransmitted\":1000," //
+                        + "\"bytesReceived\":1000},{" //
+                        + "\"name\":\"bar\"," //
+                        + "\"connected\":true," //
+                        + "\"apn\":\"baz\"," //
+                        + "\"ipTypes\":[\"IPV4V6\",\"ANY\"]," //
+                        + "\"bytesTransmitted\":100," //
+                        + "\"bytesReceived\":1010}]," //
+                        + "\"connectionType\":\"DirectIP\"," //
+                        + "\"connectionStatus\":\"UNKNOWN\"," //
+                        + "\"accessTechnologies\":[\"UNKNOWN\"]," //
+                        + "\"signalQuality\":0," //
+                        + "\"signalStrength\":-113," //
+                        + "\"registrationStatus\":\"UNKNOWN\"," //
+                        + "\"operatorName\":\"N/A\"," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"MODEM\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     @Test
     public void shouldEncodeSim() {
-        givenNetworkStatus(ModemInterfaceStatus.builder().withAvailableSims(Arrays.asList( //
-                Sim.builder() //
-                        .withActive(true) //
-                        .withPrimary(true) //
-                        .withIccid("abc") //
-                        .withImsi("imsi") //
-                        .withEid("sed") //
-                        .withOperatorName("op") //
-                        .withOperatorIdentifier("id") //
-                        .withSimType(SimType.PHYSICAL) //
-                        .withESimStatus(ESimStatus.UNKNOWN).build(), //
-                Sim.builder() //
-                        .withActive(false) //
-                        .withPrimary(false) //
-                        .withIccid("ac") //
-                        .withImsi("isi") //
-                        .withEid("se") //
-                        .withOperatorName("opp") //
-                        .withOperatorIdentifier("idd") //
-                        .withSimType(SimType.ESIM) //
-                        .withESimStatus(ESimStatus.WITH_PROFILES) //
-                        .build())));
+        givenNetworkStatus(ModemInterfaceStatus.builder()
+                .withAvailableSims(Arrays.asList( //
+                        Sim.builder() //
+                                .withActive(true) //
+                                .withPrimary(true) //
+                                .withIccid("abc") //
+                                .withImsi("imsi") //
+                                .withEid("sed") //
+                                .withOperatorName("op") //
+                                .withOperatorIdentifier("id") //
+                                .withSimType(SimType.PHYSICAL) //
+                                .withESimStatus(ESimStatus.UNKNOWN)
+                                .build(), //
+                        Sim.builder() //
+                                .withActive(false) //
+                                .withPrimary(false) //
+                                .withIccid("ac") //
+                                .withImsi("isi") //
+                                .withEid("se") //
+                                .withOperatorName("opp") //
+                                .withOperatorIdentifier("idd") //
+                                .withSimType(SimType.ESIM) //
+                                .withESimStatus(ESimStatus.WITH_PROFILES) //
+                                .build())));
 
         whenRequestIsPerformed(new MethodSpec("GET"), NETWORK_STATUS_PATH);
 
         thenRequestSucceeds();
-        thenResponseBodyEqualsJson("{\"interfaces\":[{" //
-                + "\"model\":\"N/A\"," //
-                + "\"manufacturer\":\"N/A\"," //
-                + "\"serialNumber\":\"N/A\"," //
-                + "\"softwareRevision\":\"N/A\"," //
-                + "\"hardwareRevision\":\"N/A\"," //
-                + "\"primaryPort\":\"N/A\"," //
-                + "\"ports\":{}," //
-                + "\"supportedModemCapabilities\":[]," //
-                + "\"currentModemCapabilities\":[\"NONE\"]," //
-                + "\"powerState\":\"UNKNOWN\"," //
-                + "\"supportedModes\":[]," //
-                + "\"currentModes\":{\"modes\":[],\"preferredMode\":\"NONE\"}," //
-                + "\"supportedBands\":[\"UNKNOWN\"]," //
-                + "\"currentBands\":[\"UNKNOWN\"]," //
-                + "\"gpsSupported\":false," //
-                + "\"availableSims\":[{" //
-                + "\"active\":true," //
-                + "\"primary\":true," //
-                + "\"iccid\":\"abc\"," //
-                + "\"imsi\":\"imsi\"," //
-                + "\"eid\":\"sed\"," //
-                + "\"operatorName\":\"op\"," //
-                + "\"operatorIdentifier\":\"id\"," //
-                + "\"simType\":\"PHYSICAL\"," //
-                + "\"eSimStatus\":\"UNKNOWN\"}," //
-                + "{\"active\":false," //
-                + "\"primary\":false," //
-                + "\"iccid\":\"ac\"," //
-                + "\"imsi\":\"isi\"," //
-                + "\"eid\":\"se\"," //
-                + "\"operatorName\":\"opp\"," //
-                + "\"operatorIdentifier\":\"idd\"," //
-                + "\"simType\":\"ESIM\"," //
-                + "\"eSimStatus\":\"WITH_PROFILES\"}]," //
-                + "\"simLocked\":false," //
-                + "\"bearers\":[]," //
-                + "\"connectionType\":\"DirectIP\"," //
-                + "\"connectionStatus\":\"UNKNOWN\"," //
-                + "\"accessTechnologies\":[\"UNKNOWN\"]," //
-                + "\"signalQuality\":0," //
-                + "\"signalStrength\":-113," //
-                + "\"registrationStatus\":\"UNKNOWN\"," //
-                + "\"operatorName\":\"N/A\"," //
-                + "\"id\":\"N/A\"," //
-                + "\"interfaceName\":\"N/A\"," //
-                + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
-                + "\"type\":\"MODEM\"," //
-                + "\"driver\":\"N/A\"," //
-                + "\"driverVersion\":\"N/A\"," //
-                + "\"firmwareVersion\":\"N/A\"," //
-                + "\"virtual\":false," //
-                + "\"state\":\"UNKNOWN\"," //
-                + "\"autoConnect\":false," //
-                + "\"mtu\":0" //
-                + "}]," //
-                + "\"failures\":[]" //
-                + "}");
+        thenResponseBodyEqualsJson(
+                "{\"interfaces\":[{" //
+                        + "\"model\":\"N/A\"," //
+                        + "\"manufacturer\":\"N/A\"," //
+                        + "\"serialNumber\":\"N/A\"," //
+                        + "\"softwareRevision\":\"N/A\"," //
+                        + "\"hardwareRevision\":\"N/A\"," //
+                        + "\"primaryPort\":\"N/A\"," //
+                        + "\"ports\":{}," //
+                        + "\"supportedModemCapabilities\":[]," //
+                        + "\"currentModemCapabilities\":[\"NONE\"]," //
+                        + "\"powerState\":\"UNKNOWN\"," //
+                        + "\"supportedModes\":[]," //
+                        + "\"currentModes\":{\"modes\":[],\"preferredMode\":\"NONE\"}," //
+                        + "\"supportedBands\":[\"UNKNOWN\"]," //
+                        + "\"currentBands\":[\"UNKNOWN\"]," //
+                        + "\"gpsSupported\":false," //
+                        + "\"availableSims\":[{" //
+                        + "\"active\":true," //
+                        + "\"primary\":true," //
+                        + "\"iccid\":\"abc\"," //
+                        + "\"imsi\":\"imsi\"," //
+                        + "\"eid\":\"sed\"," //
+                        + "\"operatorName\":\"op\"," //
+                        + "\"operatorIdentifier\":\"id\"," //
+                        + "\"simType\":\"PHYSICAL\"," //
+                        + "\"eSimStatus\":\"UNKNOWN\"}," //
+                        + "{\"active\":false," //
+                        + "\"primary\":false," //
+                        + "\"iccid\":\"ac\"," //
+                        + "\"imsi\":\"isi\"," //
+                        + "\"eid\":\"se\"," //
+                        + "\"operatorName\":\"opp\"," //
+                        + "\"operatorIdentifier\":\"idd\"," //
+                        + "\"simType\":\"ESIM\"," //
+                        + "\"eSimStatus\":\"WITH_PROFILES\"}]," //
+                        + "\"simLocked\":false," //
+                        + "\"bearers\":[]," //
+                        + "\"connectionType\":\"DirectIP\"," //
+                        + "\"connectionStatus\":\"UNKNOWN\"," //
+                        + "\"accessTechnologies\":[\"UNKNOWN\"]," //
+                        + "\"signalQuality\":0," //
+                        + "\"signalStrength\":-113," //
+                        + "\"registrationStatus\":\"UNKNOWN\"," //
+                        + "\"operatorName\":\"N/A\"," //
+                        + "\"id\":\"N/A\"," //
+                        + "\"interfaceName\":\"N/A\"," //
+                        + "\"hardwareAddress\":\"00:00:00:00:00:00\"," //
+                        + "\"type\":\"MODEM\"," //
+                        + "\"driver\":\"N/A\"," //
+                        + "\"driverVersion\":\"N/A\"," //
+                        + "\"firmwareVersion\":\"N/A\"," //
+                        + "\"virtual\":false," //
+                        + "\"state\":\"UNKNOWN\"," //
+                        + "\"autoConnect\":false," //
+                        + "\"mtu\":0" //
+                        + "}]," //
+                        + "\"failures\":[]" //
+                        + "}");
     }
 
     private static final String INTERFACE_IDS_PATH = "/interfaceIds";
@@ -1029,22 +1053,23 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         super(transport);
 
         try {
-            Mockito.when(networkStatusService.getNetworkStatus(ArgumentMatchers.anyString())).thenAnswer(i -> {
-                if (this.generalFailure.isPresent()) {
-                    throw this.generalFailure.get();
-                }
+            Mockito.when(networkStatusService.getNetworkStatus(ArgumentMatchers.anyString()))
+                    .thenAnswer(i -> {
+                        if (this.generalFailure.isPresent()) {
+                            throw this.generalFailure.get();
+                        }
 
-                final String id = i.getArgument(0);
-                final Result result = this.currentStatus.get(id);
+                        final String id = i.getArgument(0);
+                        final Result result = this.currentStatus.get(id);
 
-                if (result instanceof Success success) {
-                    return Optional.of((success.status));
-                } else if (result instanceof Failure failure) {
-                    throw failure.exception;
-                }
+                        if (result instanceof Success success) {
+                            return Optional.of((success.status));
+                        } else if (result instanceof Failure failure) {
+                            throw failure.exception;
+                        }
 
-                return Optional.empty();
-            });
+                        return Optional.empty();
+                    });
 
             Mockito.when(networkStatusService.getInterfaceIds()).thenAnswer(i -> {
                 if (this.generalFailure.isPresent()) {
@@ -1061,11 +1086,14 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     @BeforeClass
     public static void registerNetworkStatusService()
             throws InterruptedException, ExecutionException, TimeoutException {
-        reg = FrameworkUtil.getBundle(NetworkStatusRestServiceImplTest.class).getBundleContext()
+        reg = FrameworkUtil.getBundle(NetworkStatusRestServiceImplTest.class)
+                .getBundleContext()
                 .registerService(NetworkStatusService.class, networkStatusService, new Hashtable<>());
 
-        ServiceUtil.trackService("org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl",
-                Optional.empty()).get(30, TimeUnit.SECONDS);
+        ServiceUtil.trackService(
+                        "org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl",
+                        Optional.empty())
+                .get(30, TimeUnit.SECONDS);
     }
 
     @AfterClass
@@ -1103,19 +1131,20 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     }
 
     private void givenLoopbackInterfaceWithFilledIP4Address(final String id) throws UnknownHostException {
-        givenNetworkStatus(
-                LoopbackInterfaceStatus.builder().withInterfaceId(id)
-                        .withInterfaceIp4Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP4Address>builder()
-                                .withAddresses(Arrays.asList(
-                                        new NetworkInterfaceIpAddress<>(ipV4Address(1, 2, 3, 4), (short) 16),
-                                        new NetworkInterfaceIpAddress<>(ipV4Address(5, 6, 7, 0xff), (short) 32)))
-                                .withGateway(Optional.of(ipV4Address(5, 6, 7, 0xff))).withDnsServerAddresses(
-                                        Arrays.asList(ipV4Address(1, 2, 3, 4), ipV4Address(5, 6, 7, 0xff)))
-                                .build())));
+        givenNetworkStatus(LoopbackInterfaceStatus.builder()
+                .withInterfaceId(id)
+                .withInterfaceIp4Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP4Address>builder()
+                        .withAddresses(Arrays.asList(
+                                new NetworkInterfaceIpAddress<>(ipV4Address(1, 2, 3, 4), (short) 16),
+                                new NetworkInterfaceIpAddress<>(ipV4Address(5, 6, 7, 0xff), (short) 32)))
+                        .withGateway(Optional.of(ipV4Address(5, 6, 7, 0xff)))
+                        .withDnsServerAddresses(Arrays.asList(ipV4Address(1, 2, 3, 4), ipV4Address(5, 6, 7, 0xff)))
+                        .build())));
     }
 
     private void givenLoopbackInterfaceWithFilledIP6Address(final String id) throws UnknownHostException {
-        givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId(id)
+        givenNetworkStatus(LoopbackInterfaceStatus.builder()
+                .withInterfaceId(id)
                 .withInterfaceIp6Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP6Address>builder()
                         .withAddresses(Arrays.asList(
                                 new NetworkInterfaceIpAddress<>(ipV6Address(1, 2, 3, 4, 5, 0), (short) 16),
@@ -1127,13 +1156,17 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     }
 
     private void givenLoopbackInterfaceWithUnFilledIP4Address(final String id) {
-        givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId(id)
-                .withInterfaceIp4Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP4Address>builder().build())));
+        givenNetworkStatus(LoopbackInterfaceStatus.builder()
+                .withInterfaceId(id)
+                .withInterfaceIp4Addresses(Optional.of(
+                        NetworkInterfaceIpAddressStatus.<IP4Address>builder().build())));
     }
 
     private void givenLoopbackInterfaceWithUnFilledIP6Address(final String id) {
-        givenNetworkStatus(LoopbackInterfaceStatus.builder().withInterfaceId(id)
-                .withInterfaceIp6Addresses(Optional.of(NetworkInterfaceIpAddressStatus.<IP6Address>builder().build())));
+        givenNetworkStatus(LoopbackInterfaceStatus.builder()
+                .withInterfaceId(id)
+                .withInterfaceIp6Addresses(Optional.of(
+                        NetworkInterfaceIpAddressStatus.<IP6Address>builder().build())));
     }
 
     private void givenExceptionThrownByNetworkStatusServiceMethods(final Exception exception) {
@@ -1141,7 +1174,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
     }
 
     private IP4Address ipV4Address(final int a, final int b, final int c, final int d) throws UnknownHostException {
-        return (IP4Address) IPAddress.getByAddress(new byte[] { (byte) a, (byte) b, (byte) c, (byte) d });
+        return (IP4Address) IPAddress.getByAddress(new byte[] {(byte) a, (byte) b, (byte) c, (byte) d});
     }
 
     private IP6Address ipV6Address(final int... bytes) throws UnknownHostException {
@@ -1154,8 +1187,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
         return (IP6Address) IPAddress.getByAddress(address);
     }
 
-    private interface Result {
-    }
+    private interface Result {}
 
     private static class Success implements Result {
 
@@ -1174,5 +1206,4 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
             this.exception = exception;
         }
     }
-
 }

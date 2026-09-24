@@ -24,6 +24,7 @@ public class PropertyValidityStruct extends Struct {
 
     @Position(0)
     private final UInt32 member0;
+
     @Position(1)
     private final Variant<?> member1;
 
@@ -39,5 +40,4 @@ public class PropertyValidityStruct extends Struct {
     public Variant<?> getMember1() {
         return this.member1;
     }
-
 }
