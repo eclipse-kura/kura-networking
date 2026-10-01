@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm;
 
 public enum KuraWifiSecurityType {
-
     SECURITY_NONE,
     SECURITY_WEP,
     SECURITY_WPA,

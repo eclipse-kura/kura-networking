@@ -12,16 +12,14 @@
  *******************************************************************************/
 package org.eclipse.kura.nm.signal.handlers;
 
+import fi.w1.wpa_supplicant1.Interface;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import fi.w1.wpa_supplicant1.Interface;
 
 public class WPAScanLock {
 
@@ -54,5 +52,4 @@ public class WPAScanLock {
             this.dbusConnection.removeSigHandler(Interface.ScanDone.class, this.scanHandler);
         }
     }
-
 }

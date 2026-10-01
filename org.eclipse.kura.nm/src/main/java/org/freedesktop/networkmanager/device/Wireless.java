@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.device;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -46,9 +45,7 @@ public interface Wireless extends DBusInterface {
 
     public void RequestScan(Map<String, Variant<?>> options);
 
-    public static interface PropertyAccessPointsType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyAccessPointsType extends TypeRef<List<DBusPath>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -62,7 +59,6 @@ public interface Wireless extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class AccessPointAdded extends DBusSignal {
@@ -77,7 +73,6 @@ public interface Wireless extends DBusInterface {
         public DBusPath getAccessPoint() {
             return this.accessPoint;
         }
-
     }
 
     public static class AccessPointRemoved extends DBusSignal {
@@ -92,6 +87,5 @@ public interface Wireless extends DBusInterface {
         public DBusPath getAccessPoint() {
             return this.accessPoint;
         }
-
     }
 }

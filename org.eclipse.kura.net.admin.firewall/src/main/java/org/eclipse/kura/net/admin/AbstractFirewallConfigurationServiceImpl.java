@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.configuration.metatype.Tocd;
@@ -48,7 +47,10 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddress, T extends FirewallOpenPortConfigIPBuilder<U, T>, Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
+public abstract class AbstractFirewallConfigurationServiceImpl<
+        U extends IPAddress,
+        T extends FirewallOpenPortConfigIPBuilder<U, T>,
+        Z extends FirewallPortForwardConfigIPBuilder<U, Z>> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractFirewallConfigurationServiceImpl.class);
 
@@ -93,8 +95,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
         FirewallConfiguration firewallConfiguration = buildFirewallConfigurationFromProperties(properties);
         List<LocalRule> localRules = buildLocalRuleList(firewallConfiguration.getOpenPortConfigs());
-        List<PortForwardRule> portForwardRules = buildPortForwardRuleList(
-                firewallConfiguration.getPortForwardConfigs());
+        List<PortForwardRule> portForwardRules =
+                buildPortForwardRuleList(firewallConfiguration.getPortForwardConfigs());
         List<NATRule> natRules = buildNATRuleList(firewallConfiguration.getNatConfigs());
 
         try {
@@ -145,7 +147,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
                     firewallConfiguration.addConfig(builder.build());
                 } else {
                     logger.debug("getFirewallConfiguration() :: Adding local rule for {}", localRule.getPort());
-                    builder.withPort(localRule.getPort()).withProtocol(NetProtocol.valueOf(localRule.getProtocol()))
+                    builder.withPort(localRule.getPort())
+                            .withProtocol(NetProtocol.valueOf(localRule.getProtocol()))
                             .withPermittedNetwork(convertNetworkPair(localRule.getPermittedNetworkString()))
                             .withPermittedInterfaceName(localRule.getPermittedInterfaceName())
                             .withUnpermittedInterfaceName(localRule.getUnpermittedInterfaceName())
@@ -162,14 +165,16 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         while (portForwardRules.hasNext()) {
             PortForwardRule portForwardRule = portForwardRules.next();
             try {
-                logger.debug("getFirewallConfiguration() :: Adding port forwarding - inbound iface is {}",
+                logger.debug(
+                        "getFirewallConfiguration() :: Adding port forwarding - inbound iface is {}",
                         portForwardRule.getInboundIface());
                 FirewallPortForwardConfigIPBuilder<U, Z> builder = getPortForwardConfigIPBuilder();
                 builder.withInboundIface(portForwardRule.getInboundIface())
                         .withOutboundIface(portForwardRule.getOutboundIface())
                         .withAddress(getIPAddress(portForwardRule.getAddress()))
                         .withProtocol(NetProtocol.valueOf(portForwardRule.getProtocol()))
-                        .withInPort(portForwardRule.getInPort()).withOutPort(portForwardRule.getOutPort())
+                        .withInPort(portForwardRule.getInPort())
+                        .withOutPort(portForwardRule.getOutPort())
                         .withMasquerade(portForwardRule.isMasquerade())
                         .withPermittedNetwork(convertNetworkPair(portForwardRule.getPermittedNetwork() + "/"
                                 + portForwardRule.getPermittedNetworkMask()))
@@ -184,17 +189,24 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         while (autoNatRules.hasNext()) {
             NATRule autoNatRule = autoNatRules.next();
             logger.debug("getFirewallConfiguration() :: Adding auto NAT rules {}", autoNatRule.getSourceInterface());
-            firewallConfiguration.addConfig(new FirewallAutoNatConfig(autoNatRule.getSourceInterface(),
-                    autoNatRule.getDestinationInterface(), autoNatRule.isMasquerade()));
+            firewallConfiguration.addConfig(new FirewallAutoNatConfig(
+                    autoNatRule.getSourceInterface(),
+                    autoNatRule.getDestinationInterface(),
+                    autoNatRule.isMasquerade()));
         }
 
         Iterator<NATRule> natRules = getNatRules().iterator();
         while (natRules.hasNext()) {
             NATRule natRule = natRules.next();
             logger.debug("getFirewallConfiguration() :: Adding NAT rules {}", natRule.getSourceInterface());
-            firewallConfiguration.addConfig(new FirewallNatConfig(natRule.getSourceInterface(),
-                    natRule.getDestinationInterface(), natRule.getProtocol(), natRule.getSource(),
-                    natRule.getDestination(), natRule.isMasquerade(), natRule.getRuleType()));
+            firewallConfiguration.addConfig(new FirewallNatConfig(
+                    natRule.getSourceInterface(),
+                    natRule.getDestinationInterface(),
+                    natRule.getProtocol(),
+                    natRule.getSource(),
+                    natRule.getDestination(),
+                    natRule.isMasquerade(),
+                    natRule.getRuleType()));
         }
 
         return firewallConfiguration;
@@ -211,14 +223,16 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
 
     public void setFirewallOpenPortConfiguration(
             List<FirewallOpenPortConfigIP<? extends IPAddress>> firewallConfiguration) throws KuraException {
-        this.firewall.replace(buildLocalRuleList(firewallConfiguration),
+        this.firewall.replace(
+                buildLocalRuleList(firewallConfiguration),
                 new ArrayList<>(this.firewall.getPortForwardRules()),
                 new ArrayList<>(this.firewall.getNatRules()));
     }
 
     public void setFirewallPortForwardingConfiguration(
             List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration) throws KuraException {
-        this.firewall.replace(new ArrayList<>(this.firewall.getLocalRules()),
+        this.firewall.replace(
+                new ArrayList<>(this.firewall.getLocalRules()),
                 buildPortForwardRuleList(firewallConfiguration),
                 new ArrayList<>(this.firewall.getNatRules()));
     }
@@ -226,15 +240,22 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
     private String convertNetworkPairToString(NetworkPair<? extends IPAddress> permittedNetwork)
             throws UnknownHostException {
         if (permittedNetwork == null || permittedNetwork.getIpAddress() == null) {
-            return new NetworkPair<>(getDefaultAddress(), (short) 0).getIpAddress().getHostAddress();
+            return new NetworkPair<>(getDefaultAddress(), (short) 0)
+                    .getIpAddress()
+                    .getHostAddress();
         } else {
-            return new NetworkPair<>(IPAddress.parseHostAddress(permittedNetwork.getIpAddress().getHostAddress()),
-                    permittedNetwork.getPrefix()).getIpAddress().getHostAddress();
+            return new NetworkPair<>(
+                            IPAddress.parseHostAddress(
+                                    permittedNetwork.getIpAddress().getHostAddress()),
+                            permittedNetwork.getPrefix())
+                    .getIpAddress()
+                    .getHostAddress();
         }
     }
 
     public void setFirewallNatConfiguration(List<FirewallNatConfig> natConfigs) throws KuraException {
-        this.firewall.replace(new ArrayList<>(this.firewall.getLocalRules()),
+        this.firewall.replace(
+                new ArrayList<>(this.firewall.getLocalRules()),
                 new ArrayList<>(this.firewall.getPortForwardRules()),
                 buildNATRuleList(natConfigs));
     }
@@ -246,24 +267,35 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
             try {
                 LocalRule localRule;
                 if (openPortEntry.getPortRange() != null) {
-                    logger.debug("setFirewallOpenPortConfiguration() :: Adding local rule for: {}",
+                    logger.debug(
+                            "setFirewallOpenPortConfiguration() :: Adding local rule for: {}",
                             openPortEntry.getPortRange());
-                    localRule = new LocalRule(openPortEntry.getPortRange(), openPortEntry.getProtocol().name(),
+                    localRule = new LocalRule(
+                            openPortEntry.getPortRange(),
+                            openPortEntry.getProtocol().name(),
                             convertNetworkPair(openPortEntry.getPermittedNetworkString()),
-                            openPortEntry.getPermittedInterfaceName(), openPortEntry.getUnpermittedInterfaceName(),
-                            openPortEntry.getPermittedMac(), openPortEntry.getSourcePortRange());
+                            openPortEntry.getPermittedInterfaceName(),
+                            openPortEntry.getUnpermittedInterfaceName(),
+                            openPortEntry.getPermittedMac(),
+                            openPortEntry.getSourcePortRange());
                 } else {
-                    logger.debug("setFirewallOpenPortConfiguration() :: Adding local rule for: {}",
-                            openPortEntry.getPort());
-                    localRule = new LocalRule(openPortEntry.getPort(), openPortEntry.getProtocol().name(),
+                    logger.debug(
+                            "setFirewallOpenPortConfiguration() :: Adding local rule for: {}", openPortEntry.getPort());
+                    localRule = new LocalRule(
+                            openPortEntry.getPort(),
+                            openPortEntry.getProtocol().name(),
                             convertNetworkPair(openPortEntry.getPermittedNetworkString()),
-                            openPortEntry.getPermittedInterfaceName(), openPortEntry.getUnpermittedInterfaceName(),
-                            openPortEntry.getPermittedMac(), openPortEntry.getSourcePortRange());
+                            openPortEntry.getPermittedInterfaceName(),
+                            openPortEntry.getUnpermittedInterfaceName(),
+                            openPortEntry.getPermittedMac(),
+                            openPortEntry.getSourcePortRange());
                 }
                 localRules.add(localRule);
             } catch (Exception e) {
-                logger.error("setFirewallOpenPortConfiguration() :: Failed to add local rule for: {}",
-                        openPortEntry.getPort(), e);
+                logger.error(
+                        "setFirewallOpenPortConfiguration() :: Failed to add local rule for: {}",
+                        openPortEntry.getPort(),
+                        e);
             }
         }
         return localRules;
@@ -273,7 +305,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
             List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration) {
         ArrayList<PortForwardRule> portForwardRules = new ArrayList<>();
         for (FirewallPortForwardConfigIP<? extends IPAddress> portForwardEntry : firewallConfiguration) {
-            logger.debug("setFirewallPortForwardingConfiguration() :: Adding port forward rule for: {}",
+            logger.debug(
+                    "setFirewallPortForwardingConfiguration() :: Adding port forward rule for: {}",
                     portForwardEntry.getInPort());
 
             try {
@@ -282,16 +315,21 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
                         .outboundIface(portForwardEntry.getOutboundInterface())
                         .address(portForwardEntry.getIPAddress().getHostAddress())
                         .addressMask(portForwardEntry.getIPAddressNetmask())
-                        .protocol(portForwardEntry.getProtocol().name()).inPort(portForwardEntry.getInPort())
-                        .outPort(portForwardEntry.getOutPort()).masquerade(portForwardEntry.isMasquerade())
+                        .protocol(portForwardEntry.getProtocol().name())
+                        .inPort(portForwardEntry.getInPort())
+                        .outPort(portForwardEntry.getOutPort())
+                        .masquerade(portForwardEntry.isMasquerade())
                         .permittedNetwork(convertNetworkPairToString(portForwardEntry.getPermittedNetwork()))
-                        .permittedNetworkMask(portForwardEntry.getPermittedNetwork().getPrefix())
+                        .permittedNetworkMask(
+                                portForwardEntry.getPermittedNetwork().getPrefix())
                         .permittedMAC(portForwardEntry.getPermittedMac())
                         .sourcePortRange(portForwardEntry.getSourcePortRange());
                 portForwardRules.add(portForwardRule);
             } catch (Exception e) {
-                logger.error("setFirewallPortForwardingConfiguration() :: Failed to add port forward rule for: {}",
-                        portForwardEntry.getInPort(), e);
+                logger.error(
+                        "setFirewallPortForwardingConfiguration() :: Failed to add port forward rule for: {}",
+                        portForwardEntry.getInPort(),
+                        e);
             }
         }
         return portForwardRules;
@@ -300,9 +338,14 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
     private List<NATRule> buildNATRuleList(List<FirewallNatConfig> natConfigs) {
         ArrayList<NATRule> natRules = new ArrayList<>();
         for (FirewallNatConfig natConfig : natConfigs) {
-            NATRule natRule = new NATRule(natConfig.getSourceInterface(), natConfig.getDestinationInterface(),
-                    natConfig.getProtocol(), natConfig.getSource(), natConfig.getDestination(),
-                    natConfig.isMasquerade(), natConfig.getRuleType());
+            NATRule natRule = new NATRule(
+                    natConfig.getSourceInterface(),
+                    natConfig.getDestinationInterface(),
+                    natConfig.getProtocol(),
+                    natConfig.getSource(),
+                    natConfig.getDestination(),
+                    natConfig.isMasquerade(),
+                    natConfig.getRuleType());
             natRules.add(natRule);
         }
         return natRules;
@@ -369,8 +412,8 @@ public abstract class AbstractFirewallConfigurationServiceImpl<U extends IPAddre
         addFloodingProtectionRules(new LinkedHashSet<>(), new LinkedHashSet<>(), floodingRules);
     }
 
-    public void addFloodingProtectionRules(Set<String> filterFloodingRules, Set<String> natFloodingRules,
-            Set<String> mangleFloodingRules) {
+    public void addFloodingProtectionRules(
+            Set<String> filterFloodingRules, Set<String> natFloodingRules, Set<String> mangleFloodingRules) {
         try {
             this.firewall.setAdditionalRules(filterFloodingRules, natFloodingRules, mangleFloodingRules);
         } catch (KuraException e) {

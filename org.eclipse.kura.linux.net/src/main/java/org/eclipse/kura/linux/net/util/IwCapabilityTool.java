@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.Command;
@@ -46,14 +45,12 @@ public class IwCapabilityTool {
     private static final Pattern CHIPHER_CAPABILITY_PATTERN = Pattern.compile("^\\s+\\* ([\\w-\\d]+).+$");
     private static final Pattern RSN_CAPABILITY_PATTERN = Pattern.compile("^\\s*Device supports RSN.*$");
     private static final Pattern COUNTRY_PATTERN = Pattern.compile("country (..): .*");
-    private static final Pattern FREQUENCY_CHANNEL_PATTERN = Pattern
-            .compile("^\\* ([0-9]+) MHz \\[([0-9]+)\\](?: \\((\\d{0,3}\\.\\d{0,2}) dBm\\)){0,1}[\\(\\w\\\\\\s,)]*$");
+    private static final Pattern FREQUENCY_CHANNEL_PATTERN = Pattern.compile(
+            "^\\* ([0-9]+) MHz \\[([0-9]+)\\](?: \\((\\d{0,3}\\.\\d{0,2}) dBm\\)){0,1}[\\(\\w\\\\\\s,)]*$");
     private static final Pattern VHT_PATTERN = Pattern.compile("^\\s*VHT Capabilities.*$");
     private static final Pattern DFS_PATTERN = Pattern.compile("^.+DFS_OFFLOAD.+$");
 
-    protected IwCapabilityTool() {
-
-    }
+    protected IwCapabilityTool() {}
 
     private static Optional<Matcher> skipTo(final BufferedReader reader, final Pattern pattern) throws IOException {
         String line;
@@ -64,7 +61,6 @@ public class IwCapabilityTool {
             if (matcher.matches()) {
                 return Optional.of(matcher);
             }
-
         }
 
         return Optional.empty();
@@ -121,9 +117,7 @@ public class IwCapabilityTool {
                 if (RSN_CAPABILITY_PATTERN.matcher(line).matches()) {
                     capabilities.add(Capability.RSN);
                 }
-
             }
-
         }
 
         // best effort guess
@@ -146,17 +140,16 @@ public class IwCapabilityTool {
         }
 
         return new ByteArrayInputStream(((ByteArrayOutputStream) status.getOutputStream()).toByteArray());
-
     }
 
     public static Set<Capability> probeCapabilities(final String interfaceName, CommandExecutorService executorService)
             throws KuraException {
         try {
 
-            final int phy = parseWiphyIndex(exec(new String[] { "iw", interfaceName, "info" }, executorService))
-                    .orElseThrow(() -> new KuraException(KuraErrorCode.PROCESS_EXECUTION_ERROR,
-                            "failed to get phy index for " + interfaceName));
-            return parseCapabilities(exec(new String[] { "iw", "phy" + phy, "info" }, executorService));
+            final int phy = parseWiphyIndex(exec(new String[] {"iw", interfaceName, "info"}, executorService))
+                    .orElseThrow(() -> new KuraException(
+                            KuraErrorCode.PROCESS_EXECUTION_ERROR, "failed to get phy index for " + interfaceName));
+            return parseCapabilities(exec(new String[] {"iw", "phy" + phy, "info"}, executorService));
 
         } catch (final KuraException e) {
             throw e;
@@ -167,7 +160,7 @@ public class IwCapabilityTool {
 
     /**
      * Get the list of Wifi channels and frequencies
-     * 
+     *
      * @since 2.2
      **/
     public static List<WifiChannel> probeChannels(String ifaceName, CommandExecutorService executorService)
@@ -180,10 +173,10 @@ public class IwCapabilityTool {
                 return channels;
             }
 
-            final int phy = parseWiphyIndex(exec(new String[] { "iw", ifaceName, "info" }, executorService))
-                    .orElseThrow(() -> new KuraException(KuraErrorCode.PROCESS_EXECUTION_ERROR,
-                            "failed to get phy index for " + ifaceName));
-            parseWifiChannelFrequency(exec(new String[] { "iw", "phy" + phy, "info" }, executorService), channels);
+            final int phy = parseWiphyIndex(exec(new String[] {"iw", ifaceName, "info"}, executorService))
+                    .orElseThrow(() -> new KuraException(
+                            KuraErrorCode.PROCESS_EXECUTION_ERROR, "failed to get phy index for " + ifaceName));
+            parseWifiChannelFrequency(exec(new String[] {"iw", "phy" + phy, "info"}, executorService), channels);
             return channels;
         } catch (final KuraException e) {
             throw e;
@@ -221,11 +214,11 @@ public class IwCapabilityTool {
 
     /**
      * Get the Wifi Country Code
-     * 
+     *
      * @since 2.2
      */
     public static String getWifiCountryCode(CommandExecutorService executorService) throws KuraException {
-        String[] cmd = { "iw", "reg", "get" };
+        String[] cmd = {"iw", "reg", "get"};
         Command command = new Command(cmd);
         command.setTimeout(60);
         command.setOutputStream(new ByteArrayOutputStream());
@@ -246,5 +239,4 @@ public class IwCapabilityTool {
         }
         return "Unknown";
     }
-
 }

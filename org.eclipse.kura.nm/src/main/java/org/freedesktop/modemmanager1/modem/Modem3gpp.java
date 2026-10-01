@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -37,9 +36,15 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "EpsUeModeOperation", type = UInt32.class, access = Access.READ)
 @DBusProperty(name = "Pco", type = Modem3gpp.PropertyPcoType.class, access = Access.READ)
 @DBusProperty(name = "InitialEpsBearer", type = DBusPath.class, access = Access.READ)
-@DBusProperty(name = "InitialEpsBearerSettings", type = Modem3gpp.PropertyInitialEpsBearerSettingsType.class, access = Access.READ)
+@DBusProperty(
+        name = "InitialEpsBearerSettings",
+        type = Modem3gpp.PropertyInitialEpsBearerSettingsType.class,
+        access = Access.READ)
 @DBusProperty(name = "PacketServiceState", type = UInt32.class, access = Access.READ)
-@DBusProperty(name = "Nr5gRegistrationSettings", type = Modem3gpp.PropertyNr5gRegistrationSettingsType.class, access = Access.READ)
+@DBusProperty(
+        name = "Nr5gRegistrationSettings",
+        type = Modem3gpp.PropertyNr5gRegistrationSettingsType.class,
+        access = Access.READ)
 public interface Modem3gpp extends DBusInterface {
 
     public void Register(String operatorId);
@@ -56,15 +61,9 @@ public interface Modem3gpp extends DBusInterface {
 
     public void SetPacketServiceState(UInt32 state);
 
-    public static interface PropertyPcoType extends TypeRef<List<PropertyPcoStruct>> {
+    public static interface PropertyPcoType extends TypeRef<List<PropertyPcoStruct>> {}
 
-    }
+    public static interface PropertyInitialEpsBearerSettingsType extends TypeRef<Map<String, Variant>> {}
 
-    public static interface PropertyInitialEpsBearerSettingsType extends TypeRef<Map<String, Variant>> {
-
-    }
-
-    public static interface PropertyNr5gRegistrationSettingsType extends TypeRef<Map<String, Variant>> {
-
-    }
+    public static interface PropertyNr5gRegistrationSettingsType extends TypeRef<Map<String, Variant>> {}
 }

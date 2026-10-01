@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.signal.handlers;
 
 import java.util.concurrent.CountDownLatch;
-
 import org.eclipse.kura.nm.enums.NMDeviceState;
 import org.freedesktop.dbus.interfaces.DBusSigHandler;
 import org.freedesktop.networkmanager.Device;

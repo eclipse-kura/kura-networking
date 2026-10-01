@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
@@ -68,13 +67,20 @@ public abstract class AbstractLinuxFirewall {
 
     /**
      * Add a Local rule to the firewall.
-     * 
+     *
      * @deprecated since 1.2. Use {@link addLocalRules(List<LocalRule>
      *             newLocalRules)}
      */
     @Deprecated
-    public void addLocalRule(int port, String protocol, String permittedNetwork, String permittedNetworkPrefix,
-            String permittedInterfaceName, String unpermittedInterfaceName, String permittedMAC, String sourcePortRange)
+    public void addLocalRule(
+            int port,
+            String protocol,
+            String permittedNetwork,
+            String permittedNetworkPrefix,
+            String permittedInterfaceName,
+            String unpermittedInterfaceName,
+            String permittedMAC,
+            String sourcePortRange)
             throws KuraException {
         try {
             LocalRule newLocalRule;
@@ -82,13 +88,24 @@ public abstract class AbstractLinuxFirewall {
                 logger.debug("permittedNetwork: {}", permittedNetwork);
                 logger.debug("permittedNetworkPrefix: {}", permittedNetworkPrefix);
 
-                newLocalRule = new LocalRule(port, protocol,
-                        new NetworkPair<>(IPAddress.parseHostAddress(permittedNetwork),
-                                Short.parseShort(permittedNetworkPrefix)),
-                        permittedInterfaceName, unpermittedInterfaceName, permittedMAC, sourcePortRange);
+                newLocalRule = new LocalRule(
+                        port,
+                        protocol,
+                        new NetworkPair<>(
+                                IPAddress.parseHostAddress(permittedNetwork), Short.parseShort(permittedNetworkPrefix)),
+                        permittedInterfaceName,
+                        unpermittedInterfaceName,
+                        permittedMAC,
+                        sourcePortRange);
             } else {
-                newLocalRule = new LocalRule(port, protocol, new NetworkPair<>(getDefaultAddress(), (short) 0),
-                        permittedInterfaceName, unpermittedInterfaceName, permittedMAC, sourcePortRange);
+                newLocalRule = new LocalRule(
+                        port,
+                        protocol,
+                        new NetworkPair<>(getDefaultAddress(), (short) 0),
+                        permittedInterfaceName,
+                        unpermittedInterfaceName,
+                        permittedMAC,
+                        sourcePortRange);
             }
 
             ArrayList<LocalRule> locRules = new ArrayList<>();
@@ -116,20 +133,38 @@ public abstract class AbstractLinuxFirewall {
 
     /**
      * Add a Port Forward rule to the firewall.
-     * 
+     *
      * @deprecated since 1.2. Use {@link addPortForwardRules(List<PortForwardRule>
      *             newPortForwardRules)}
      */
     @Deprecated
-    public void addPortForwardRule(String inboundIface, String outboundIface, String address, String protocol,
-            int inPort, int outPort, boolean masquerade, String permittedNetwork, String permittedNetworkPrefix,
-            String permittedMAC, String sourcePortRange) throws KuraException {
+    public void addPortForwardRule(
+            String inboundIface,
+            String outboundIface,
+            String address,
+            String protocol,
+            int inPort,
+            int outPort,
+            boolean masquerade,
+            String permittedNetwork,
+            String permittedNetworkPrefix,
+            String permittedMAC,
+            String sourcePortRange)
+            throws KuraException {
 
         short mask = permittedNetworkPrefix == null ? (short) -1 : Short.parseShort(permittedNetworkPrefix);
-        PortForwardRule newPortForwardRule = new PortForwardRule().inboundIface(inboundIface)
-                .outboundIface(outboundIface).address(address).protocol(protocol).inPort(inPort).outPort(outPort)
-                .masquerade(masquerade).permittedNetwork(permittedNetwork).permittedNetworkMask(mask)
-                .permittedMAC(permittedMAC).sourcePortRange(sourcePortRange);
+        PortForwardRule newPortForwardRule = new PortForwardRule()
+                .inboundIface(inboundIface)
+                .outboundIface(outboundIface)
+                .address(address)
+                .protocol(protocol)
+                .inPort(inPort)
+                .outPort(outPort)
+                .masquerade(masquerade)
+                .permittedNetwork(permittedNetwork)
+                .permittedNetworkMask(mask)
+                .permittedMAC(permittedMAC)
+                .sourcePortRange(sourcePortRange);
 
         ArrayList<PortForwardRule> portFwdRules = new ArrayList<>();
         portFwdRules.add(newPortForwardRule);
@@ -153,7 +188,7 @@ public abstract class AbstractLinuxFirewall {
 
     /**
      * Add a Nat rule to the firewall.
-     * 
+     *
      * @deprecated since 1.2. Use {@link addNatRules(List<NATRule> newNatRules))}
      */
     @Deprecated
@@ -175,12 +210,19 @@ public abstract class AbstractLinuxFirewall {
 
     /**
      * Add a Nat Forward rule to the firewall.
-     * 
+     *
      * @deprecated since 1.2. Use {@link addNatRules(List<NATRule> newNatRules)}
      */
     @Deprecated
-    public void addNatRule(String sourceInterface, String destinationInterface, String protocol, String source,
-            String destination, boolean masquerade, RuleType type) throws KuraException {
+    public void addNatRule(
+            String sourceInterface,
+            String destinationInterface,
+            String protocol,
+            String source,
+            String destination,
+            boolean masquerade,
+            RuleType type)
+            throws KuraException {
 
         if (sourceInterface == null || sourceInterface.isEmpty()) {
             logger.warn("Can't add NAT rule - source interface not specified");
@@ -190,8 +232,8 @@ public abstract class AbstractLinuxFirewall {
             return;
         }
 
-        NATRule newNatRule = new NATRule(sourceInterface, destinationInterface, protocol, source, destination,
-                masquerade, type);
+        NATRule newNatRule =
+                new NATRule(sourceInterface, destinationInterface, protocol, source, destination, masquerade, type);
 
         ArrayList<NATRule> natRuleList = new ArrayList<>();
         natRuleList.add(newNatRule);
@@ -224,7 +266,7 @@ public abstract class AbstractLinuxFirewall {
     /**
      * Replace the current firewall local, port forwarding and NAT rules
      * with the given ones.
-     * 
+     *
      * @since 3.0
      */
     public void replace(List<LocalRule> localRules, List<PortForwardRule> portForwardRules, List<NATRule> natRules)
@@ -397,8 +439,11 @@ public abstract class AbstractLinuxFirewall {
         }
         for (String rule : rules) {
             // Check for both icmp (IPv4) and ipv6-icmp (IPv6) rules
-            if (rule.contains("-p icmp") || rule.contains("-p ipv6-icmp") || rule.contains("-p icmpv6")
-                    || rule.contains("--protocol icmp") || rule.contains("--protocol ipv6-icmp")
+            if (rule.contains("-p icmp")
+                    || rule.contains("-p ipv6-icmp")
+                    || rule.contains("-p icmpv6")
+                    || rule.contains("--protocol icmp")
+                    || rule.contains("--protocol ipv6-icmp")
                     || rule.contains("--protocol icmpv6")) {
                 return true;
             }

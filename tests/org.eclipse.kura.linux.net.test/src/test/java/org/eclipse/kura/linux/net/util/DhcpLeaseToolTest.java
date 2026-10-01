@@ -23,7 +23,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Optional;
-
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandStatus;
@@ -40,8 +39,8 @@ public class DhcpLeaseToolTest {
 
     private static final String INTERFACE_NAME = "eth0";
     private static final String DNSMASQ_FILENAME = "/tmp/dnsmasq.leases";
-    protected static final CommandStatus successStatus = new CommandStatus(new Command(new String[] {}),
-            new LinuxExitStatus(0));
+    protected static final CommandStatus successStatus =
+            new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(0));
 
     private String dhcpLeaseInfo;
     private List<DhcpLease> leases;
@@ -87,16 +86,21 @@ public class DhcpLeaseToolTest {
 
     private void givenDnsmasqLeaseFile() throws IOException {
         Path dnsmasqFilePath = Paths.get(DNSMASQ_FILENAME);
-        Files.write(dnsmasqFilePath, this.dhcpLeaseInfo.getBytes(), StandardOpenOption.CREATE,
+        Files.write(
+                dnsmasqFilePath,
+                this.dhcpLeaseInfo.getBytes(),
+                StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     private void whenDhcpLeaseIsParsed(DhcpServerTool tool) {
         try (MockedStatic<DhcpServerManager> dhcpManagerMock = Mockito.mockStatic(DhcpServerManager.class)) {
             if (tool == DhcpServerTool.DNSMASQ) {
-                dhcpManagerMock.when(DhcpServerManager::getLeaseReader)
+                dhcpManagerMock
+                        .when(DhcpServerManager::getLeaseReader)
                         .thenReturn(Optional.of(new DnsmasqLeaseReader()));
-                dhcpManagerMock.when(() -> DhcpServerManager.getLeasesFilename(INTERFACE_NAME))
+                dhcpManagerMock
+                        .when(() -> DhcpServerManager.getLeasesFilename(INTERFACE_NAME))
                         .thenReturn(DNSMASQ_FILENAME);
             } else {
                 dhcpManagerMock.when(DhcpServerManager::getLeaseReader).thenReturn(Optional.empty());

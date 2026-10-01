@@ -13,13 +13,13 @@
 package org.eclipse.kura.nm.configuration.event;
 
 import java.util.Map;
-
 import org.osgi.service.event.Event;
 
 public class NetworkConfigurationChangeEvent extends Event {
 
     /** Topic of the NetworkConfigurationChangeEvent */
-    public static final String NETWORK_EVENT_CONFIG_CHANGE_TOPIC = "org/eclipse/kura/net/admin/event/NETWORK_EVENT_CONFIG_CHANGE_TOPIC";
+    public static final String NETWORK_EVENT_CONFIG_CHANGE_TOPIC =
+            "org/eclipse/kura/net/admin/event/NETWORK_EVENT_CONFIG_CHANGE_TOPIC";
 
     public NetworkConfigurationChangeEvent(Map<String, ?> properties) {
         super(NETWORK_EVENT_CONFIG_CHANGE_TOPIC, properties);

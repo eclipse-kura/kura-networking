@@ -32,5 +32,4 @@ public interface Ussd extends DBusInterface {
     public String Respond(String response);
 
     public void Cancel();
-
 }

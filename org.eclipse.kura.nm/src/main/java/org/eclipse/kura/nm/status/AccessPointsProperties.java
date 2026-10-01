@@ -14,7 +14,6 @@ package org.eclipse.kura.nm.status;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.freedesktop.dbus.interfaces.Properties;
 
 public class AccessPointsProperties {
@@ -34,5 +33,4 @@ public class AccessPointsProperties {
     public List<Properties> getAvailableAccessPoints() {
         return this.availableAccessPoints;
     }
-
 }

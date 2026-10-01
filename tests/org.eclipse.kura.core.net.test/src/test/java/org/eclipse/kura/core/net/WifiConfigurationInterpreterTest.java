@@ -19,14 +19,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.Password;
-import org.eclipse.kura.core.testutil.TestUtil;
 import org.eclipse.kura.net.NetConfig;
-import org.eclipse.kura.net.NetConfigIP4;
-import org.eclipse.kura.net.NetConfigIP6;
-import org.eclipse.kura.net.NetInterfaceStatus;
 import org.eclipse.kura.net.wifi.WifiBgscan;
 import org.eclipse.kura.net.wifi.WifiBgscanModule;
 import org.eclipse.kura.net.wifi.WifiCiphers;
@@ -36,9 +31,7 @@ import org.eclipse.kura.net.wifi.WifiInterfaceAddressConfig;
 import org.eclipse.kura.net.wifi.WifiMode;
 import org.eclipse.kura.net.wifi.WifiRadioMode;
 import org.eclipse.kura.net.wifi.WifiSecurity;
-import org.junit.Ignore;
 import org.junit.Test;
-
 
 public class WifiConfigurationInterpreterTest {
 
@@ -58,7 +51,7 @@ public class WifiConfigurationInterpreterTest {
         expected.setPasskey("password");
         expected.setHardwareMode("");
         expected.setIgnoreSSID(false);
-        
+
         List<NetConfig> netConfigs = WifiConfigurationInterpreter.populateConfiguration(properties, "wlan");
 
         assertNotNull(netConfigs);
@@ -127,7 +120,7 @@ public class WifiConfigurationInterpreterTest {
 
         WifiConfig expected = new WifiConfig();
         expected.setMode(WifiMode.INFRA);
-        expected.setChannels(new int[] { 1, 0, 3 });
+        expected.setChannels(new int[] {1, 0, 3});
         expected.setSSID("ssid");
         expected.setDriver("driver");
         expected.setSecurity(WifiSecurity.GROUP_CCMP);
@@ -147,7 +140,7 @@ public class WifiConfigurationInterpreterTest {
         assertEquals(2, netConfigs.size());
 
         WifiConfig wifiConfig = (WifiConfig) netConfigs.get(1);
-        
+
         assertEquals(expected, wifiConfig);
     }
 
@@ -180,7 +173,7 @@ public class WifiConfigurationInterpreterTest {
 
         WifiConfig expected = new WifiConfig();
         expected.setMode(WifiMode.INFRA);
-        expected.setChannels(new int[] { 1, 2, 3 });
+        expected.setChannels(new int[] {1, 2, 3});
         expected.setSSID("ssid");
         expected.setDriver("driver");
         expected.setSecurity(WifiSecurity.GROUP_CCMP);
@@ -200,7 +193,7 @@ public class WifiConfigurationInterpreterTest {
         assertEquals(2, netConfigs.size());
 
         WifiConfig wifiConfig = (WifiConfig) netConfigs.get(1);
-        
+
         assertEquals(expected, wifiConfig);
     }
 
@@ -221,7 +214,7 @@ public class WifiConfigurationInterpreterTest {
 
         WifiConfig expected = new WifiConfig();
         expected.setMode(WifiMode.MASTER);
-        expected.setChannels(new int[] { 1, 2, 3 });
+        expected.setChannels(new int[] {1, 2, 3});
         expected.setSSID("ssid");
         expected.setDriver("driver");
         expected.setSecurity(WifiSecurity.GROUP_CCMP);
@@ -238,10 +231,10 @@ public class WifiConfigurationInterpreterTest {
         assertEquals(2, netConfigs.size());
 
         WifiConfig wifiConfig = (WifiConfig) netConfigs.get(0);
-        
+
         assertEquals(expected, wifiConfig);
     }
-    
+
     @Test
     public void testPopulateNetInterfaceConfigurationWifi() throws Throwable {
         WifiInterfaceConfigImpl netInterfaceConfig = new WifiInterfaceConfigImpl("if1");
@@ -263,7 +256,7 @@ public class WifiConfigurationInterpreterTest {
         expected.setCapabilities(EnumSet.of(Capability.CIPHER_CCMP, Capability.CIPHER_TKIP));
 
         List<NetConfig> expectedNetConfigs = new ArrayList<>();
-        
+
         WifiConfig netConfig1 = new WifiConfig();
         netConfig1.setMode(WifiMode.MASTER);
         netConfig1.setSSID("");
@@ -280,7 +273,7 @@ public class WifiConfigurationInterpreterTest {
         netConfig2.setPasskey("password");
         netConfig2.setBgscan(new WifiBgscan(""));
         expectedNetConfigs.add(netConfig2);
-        
+
         List<NetConfig> netConfigs = WifiConfigurationInterpreter.populateConfiguration(properties, "if1");
 
         assertEquals(expectedNetConfigs, netConfigs);

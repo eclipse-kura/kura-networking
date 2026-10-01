@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
@@ -39,7 +38,6 @@ public class ExtractWiFiCapabilitiesTest {
         whenPhyIndexIs(0);
 
         thenCapabilitiesAreDetected(Capability.DFS, Capability.VHT);
-
     }
 
     @Test
@@ -52,7 +50,6 @@ public class ExtractWiFiCapabilitiesTest {
         whenPhyIndexIs(0);
 
         thenCapabilitiesAreDetected(Capability.CIPHER_CCMP, Capability.CIPHER_WEP104, Capability.CIPHER_WEP104);
-
     }
 
     private void givenIwInfoOutput(String iwInfoOutput) {
@@ -72,11 +69,10 @@ public class ExtractWiFiCapabilitiesTest {
     }
 
     private void thenCapabilitiesAreDetected(Capability... capabilities) throws KuraException, IOException {
-        Set<Capability> foundCapabilities = IwCapabilityTool.probeCapabilities(this.interfaceName,
-                commandExecutorMock());
+        Set<Capability> foundCapabilities =
+                IwCapabilityTool.probeCapabilities(this.interfaceName, commandExecutorMock());
 
         foundCapabilities.forEach(c -> assertTrue(foundCapabilities.contains(c)));
-
     }
 
     private CommandExecutorService commandExecutorMock() throws IOException {
@@ -88,9 +84,9 @@ public class ExtractWiFiCapabilitiesTest {
 
         CommandExecutorService commandExecutorService = mock(CommandExecutorService.class);
 
-        when(commandExecutorService.execute(new Command(new String[] { "iw", this.interfaceName, "info" })))
+        when(commandExecutorService.execute(new Command(new String[] {"iw", this.interfaceName, "info"})))
                 .thenReturn(interfaceInfoStatus);
-        when(commandExecutorService.execute(new Command(new String[] { "iw", "phy" + this.phyIndex, "info" })))
+        when(commandExecutorService.execute(new Command(new String[] {"iw", "phy" + this.phyIndex, "info"})))
                 .thenReturn(phyInfoStatus);
 
         return commandExecutorService;
@@ -106,5 +102,4 @@ public class ExtractWiFiCapabilitiesTest {
 
         return os;
     }
-
 }

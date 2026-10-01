@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm;
 
 public enum Kura8021xEAP {
-
     KURA_8021X_EAP_TLS("Kura8021xEapTls"),
     KURA_8021X_EAP_PEAP("Kura8021xEapPeap"),
     KURA_8021X_EAP_TTLS("Kura8021xEapTtls");

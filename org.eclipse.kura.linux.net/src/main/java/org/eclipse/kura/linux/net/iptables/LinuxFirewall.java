@@ -14,7 +14,6 @@ package org.eclipse.kura.linux.net.iptables;
 
 import java.io.File;
 import java.net.UnknownHostException;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.net.IP4Address;

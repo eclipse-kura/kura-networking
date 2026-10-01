@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.enums;
 
 public enum NM8021xPhase2Auth {
-
     EAP("eap"),
     MSCHAPV2("mschapv2"),
     GTC("gtc"),

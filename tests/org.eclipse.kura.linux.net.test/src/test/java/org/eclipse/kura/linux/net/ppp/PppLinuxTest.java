@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2021, 2022 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.linux.executor.LinuxSignal;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -59,13 +58,14 @@ public class PppLinuxTest {
 
     public PppLinuxTest() {
         Mockito.when(commandExecutorService.getPids(Mockito.any())).thenAnswer(i -> {
-
             final String[] requestedCommand = i.getArgument(0, String[].class);
 
             final String requestedCommandConcat = concat(requestedCommand, " ");
 
-            return process.map(Collections::singletonList)
-                    .orElseThrow(() -> new IllegalStateException("process not configured")).stream()
+            return process
+                    .map(Collections::singletonList)
+                    .orElseThrow(() -> new IllegalStateException("process not configured"))
+                    .stream()
                     .filter(p -> p.commandLine.contains(requestedCommandConcat) && p.stopped == false)
                     .collect(Collectors.toMap(p -> p.commandLine, p -> p.pid));
         });
@@ -87,7 +87,8 @@ public class PppLinuxTest {
         Mockito.when(commandExecutorService.isRunning(Mockito.any(Pid.class))).thenAnswer(i -> {
             final Pid pid = i.getArgument(0, Pid.class);
 
-            return process.filter(p -> p.pid.getPid() == pid.getPid() && !p.stopped).isPresent();
+            return process.filter(p -> p.pid.getPid() == pid.getPid() && !p.stopped)
+                    .isPresent();
         });
     }
 
@@ -139,6 +140,5 @@ public class PppLinuxTest {
                 stopped = true;
             }
         }
-
     }
 }

@@ -291,5 +291,4 @@ public class NMDeviceStateTest {
     public void thenIsConnectShouldReturn(Boolean bool) {
         assertEquals(NMDeviceState.isConnected(this.state), bool);
     }
-
 }

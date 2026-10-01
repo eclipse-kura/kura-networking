@@ -23,6 +23,7 @@ public class PropertyPortsStruct extends Struct {
 
     @Position(0)
     private final String member0;
+
     @Position(1)
     private final UInt32 member1;
 
@@ -38,5 +39,4 @@ public class PropertyPortsStruct extends Struct {
     public UInt32 getMember1() {
         return this.member1;
     }
-
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2017, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -19,12 +19,10 @@ import static org.junit.Assert.fail;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.IP4Address;
 import org.junit.Test;
-
 
 public class DhcpServerConfigIP4Test {
 
@@ -35,8 +33,8 @@ public class DhcpServerConfigIP4Test {
         int defaultLeaseTime = 1200;
         int maximumLeaseTime = 1200;
         boolean passDns = true;
-        DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime,
-                passDns);
+        DhcpServerCfg dhcpServerCfg =
+                new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime, passDns);
 
         IP4Address subnet = (IP4Address) IP4Address.parseHostAddress("172.16.4.0");
         IP4Address subnetMask = (IP4Address) IP4Address.parseHostAddress("255.255.255.0");
@@ -45,8 +43,8 @@ public class DhcpServerConfigIP4Test {
         IP4Address rangeStart = (IP4Address) IP4Address.parseHostAddress("172.16.4.100");
         IP4Address rangeEnd = (IP4Address) IP4Address.parseHostAddress("172.16.4.110");
         List<IP4Address> dnsServers = new ArrayList<>();
-        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart,
-                rangeEnd, dnsServers);
+        DhcpServerCfgIP4 dhcpServerCfgIP4 =
+                new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart, rangeEnd, dnsServers);
 
         DhcpServerConfigIP4 configIP4 = new DhcpServerConfigIP4(dhcpServerCfg, dhcpServerCfgIP4);
 
@@ -60,8 +58,8 @@ public class DhcpServerConfigIP4Test {
         int defaultLeaseTime = 0; // error
         int maximumLeaseTime = 1200;
         boolean passDns = true;
-        DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime,
-                passDns);
+        DhcpServerCfg dhcpServerCfg =
+                new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime, passDns);
 
         IP4Address subnet = (IP4Address) IP4Address.parseHostAddress("172.16.4.0");
         IP4Address subnetMask = (IP4Address) IP4Address.parseHostAddress("255.255.255.0");
@@ -70,8 +68,8 @@ public class DhcpServerConfigIP4Test {
         IP4Address rangeStart = (IP4Address) IP4Address.parseHostAddress("172.16.4.100");
         IP4Address rangeEnd = (IP4Address) IP4Address.parseHostAddress("172.16.4.110");
         List<IP4Address> dnsServers = new ArrayList<>();
-        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart,
-                rangeEnd, dnsServers);
+        DhcpServerCfgIP4 dhcpServerCfgIP4 =
+                new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart, rangeEnd, dnsServers);
 
         DhcpServerConfigIP4 configIP4;
         try {
@@ -80,7 +78,6 @@ public class DhcpServerConfigIP4Test {
         } catch (KuraException e) {
             assertEquals(KuraErrorCode.CONFIGURATION_ERROR, e.getCode());
         }
-
     }
 
     @Test
@@ -90,8 +87,8 @@ public class DhcpServerConfigIP4Test {
         int defaultLeaseTime = 1200;
         int maximumLeaseTime = 1200;
         boolean passDns = true;
-        DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime,
-                passDns);
+        DhcpServerCfg dhcpServerCfg =
+                new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime, passDns);
 
         IP4Address subnet = (IP4Address) IP4Address.parseHostAddress("172.16.4.0");
         IP4Address subnetMask = (IP4Address) IP4Address.parseHostAddress("255.255.255.0");
@@ -100,8 +97,8 @@ public class DhcpServerConfigIP4Test {
         IP4Address rangeStart = (IP4Address) IP4Address.parseHostAddress("172.16.4.100");
         IP4Address rangeEnd = null; // error
         List<IP4Address> dnsServers = new ArrayList<>();
-        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart,
-                rangeEnd, dnsServers);
+        DhcpServerCfgIP4 dhcpServerCfgIP4 =
+                new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart, rangeEnd, dnsServers);
 
         DhcpServerConfigIP4 configIP4;
         try {
@@ -110,7 +107,6 @@ public class DhcpServerConfigIP4Test {
         } catch (KuraException e) {
             assertEquals(KuraErrorCode.CONFIGURATION_ERROR, e.getCode());
         }
-
     }
 
     @Test
@@ -120,8 +116,8 @@ public class DhcpServerConfigIP4Test {
         int defaultLeaseTime = 1200;
         int maximumLeaseTime = 1200;
         boolean passDns = true;
-        DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime,
-                passDns);
+        DhcpServerCfg dhcpServerCfg =
+                new DhcpServerCfg(interfaceName, enabled, defaultLeaseTime, maximumLeaseTime, passDns);
 
         IP4Address subnet = (IP4Address) IP4Address.parseHostAddress("172.16.4.0");
         IP4Address subnetMask = (IP4Address) IP4Address.parseHostAddress("255.255.255.0");
@@ -130,8 +126,8 @@ public class DhcpServerConfigIP4Test {
         IP4Address rangeStart = (IP4Address) IP4Address.parseHostAddress("172.16.4.100");
         IP4Address rangeEnd = (IP4Address) IP4Address.parseHostAddress("172.16.5.110"); // error
         List<IP4Address> dnsServers = new ArrayList<>();
-        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart,
-                rangeEnd, dnsServers);
+        DhcpServerCfgIP4 dhcpServerCfgIP4 =
+                new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress, rangeStart, rangeEnd, dnsServers);
 
         DhcpServerConfigIP4 configIP4;
         try {
@@ -140,7 +136,5 @@ public class DhcpServerConfigIP4Test {
         } catch (KuraException e) {
             assertEquals(KuraErrorCode.CONFIGURATION_ERROR, e.getCode());
         }
-
     }
-
 }

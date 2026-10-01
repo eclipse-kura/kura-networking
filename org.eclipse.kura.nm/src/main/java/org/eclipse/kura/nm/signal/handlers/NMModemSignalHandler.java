@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.signal.handlers;
 
 import java.util.Objects;
-
 import org.eclipse.kura.nm.ModemTaskScheduler;
 import org.eclipse.kura.nm.enums.NMDeviceState;
 import org.freedesktop.dbus.interfaces.DBusSigHandler;
@@ -56,5 +55,4 @@ public class NMModemSignalHandler implements DBusSigHandler<Device.StateChanged>
     public ModemTaskScheduler getModemConnectionScheduler() {
         return this.modemTaskScheduler;
     }
-
 }

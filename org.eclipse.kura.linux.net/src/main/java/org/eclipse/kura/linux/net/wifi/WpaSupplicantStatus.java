@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.Command;
@@ -52,7 +51,9 @@ public class WpaSupplicantStatus {
         CommandStatus status = executorService.execute(command);
         if (!status.getExitStatus().isSuccessful()) {
             if (logger.isErrorEnabled()) {
-                logger.error("error executing command --- {} --- exit value = {}", String.join(" ", cmd),
+                logger.error(
+                        "error executing command --- {} --- exit value = {}",
+                        String.join(" ", cmd),
                         status.getExitStatus().getExitCode());
             }
             throw new KuraException(KuraErrorCode.PROCESS_EXECUTION_ERROR, "Failed to get wpa supplicant status");
@@ -108,6 +109,6 @@ public class WpaSupplicantStatus {
     }
 
     private static String[] formSupplicantStatusCommand(String iface) {
-        return new String[] { "wpa_cli", "-i", iface, "status" };
+        return new String[] {"wpa_cli", "-i", iface, "status"};
     }
 }

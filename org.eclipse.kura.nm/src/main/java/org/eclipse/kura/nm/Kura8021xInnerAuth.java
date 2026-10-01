@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm;
 
 public enum Kura8021xInnerAuth {
-
     KURA_8021X_INNER_AUTH_NONE("Kura8021xInnerAuthNone"),
     KURA_8021X_INNER_AUTH_MSCHAPV2("Kura8021xInnerAuthMschapv2");
 

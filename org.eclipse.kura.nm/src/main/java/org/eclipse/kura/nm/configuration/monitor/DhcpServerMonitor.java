@@ -18,7 +18,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.eclipse.kura.linux.net.dhcp.DhcpServerManager;
@@ -110,5 +109,4 @@ public class DhcpServerMonitor {
         }
         logger.debug("Stopping DHCP server for {}. Done.", interfaceName);
     }
-
 }

@@ -23,6 +23,7 @@ public class AddAndActivateConnectionTuple extends Tuple {
 
     @Position(0)
     private DBusPath path;
+
     @Position(1)
     private DBusPath activeConnection;
 
@@ -46,5 +47,4 @@ public class AddAndActivateConnectionTuple extends Tuple {
     public DBusPath getActiveConnection() {
         return this.activeConnection;
     }
-
 }

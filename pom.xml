@@ -13,46 +13,34 @@
      Eurotech
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-    child.project.url.inherit.append.path="false">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" child.project.url.inherit.append.path="false" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.eclipse.kura</groupId>
     <artifactId>kura-networking</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <url>https://eclipse-kura.github.io/kura</url>
 
     <organization>
         <name>Eclipse Kura</name>
         <url>https://eclipse.dev/kura/</url>
     </organization>
-    <developers>
-        <developer>
-            <id>kura-dev</id>
-            <name>Eclipse Kura Developers</name>
-            <email>kura-dev@eclipse.org</email>
-            <organization>Eclipse Foundation</organization>
-            <url>https://www.eclipse.org/</url>
-        </developer>
-    </developers>
     <licenses>
         <license>
             <name>Eclipse Public License - v 2.0</name>
             <url>https://www.eclipse.org/legal/epl-2.0/</url>
         </license>
     </licenses>
-    <url>https://eclipse-kura.github.io/kura</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
-        <bnd.version>7.2.2</bnd.version>
-        <jffi.version>1.3.9</jffi.version>
-        <spotless-maven-plugin.version>3.10.2</spotless-maven-plugin.version>
-        <palantir-java-format.version>2.98.0</palantir-java-format.version>
-    </properties>
+    <developers>
+        <developer>
+            <id>kura-dev</id>
+            <name>Eclipse Kura Developers</name>
+            <email>kura-dev@eclipse.org</email>
+            <url>https://www.eclipse.org/</url>
+            <organization>Eclipse Foundation</organization>
+        </developer>
+    </developers>
 
     <modules>
         <module>bom</module>
@@ -68,6 +56,28 @@
         <module>distrib</module>
         <module>tests</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>repo.eclipse.org</id>
+            <name>Eclipse Kura Repository - Releases</name>
+            <url>https://repo.eclipse.org/content/repositories/kura-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>repo.eclipse.org</id>
+            <name>Eclipse Kura Repository - Snapshots</name>
+            <url>https://repo.eclipse.org/content/repositories/kura-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+        <bnd.version>7.2.2</bnd.version>
+        <jffi.version>1.3.9</jffi.version>
+        <spotless-maven-plugin.version>3.10.2</spotless-maven-plugin.version>
+        <palantir-java-format.version>2.98.0</palantir-java-format.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -145,8 +155,8 @@
             <dependency>
                 <groupId>com.github.jnr</groupId>
                 <artifactId>jffi</artifactId>
-                <classifier>native</classifier>
                 <version>${jffi.version}</version>
+                <classifier>native</classifier>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -186,19 +196,6 @@
             <url>https://repo.eclipse.org/content/repositories/kura-snapshots/</url>
         </pluginRepository>
     </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>repo.eclipse.org</id>
-            <name>Eclipse Kura Repository - Releases</name>
-            <url>https://repo.eclipse.org/content/repositories/kura-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.eclipse.org</id>
-            <name>Eclipse Kura Repository - Snapshots</name>
-            <url>https://repo.eclipse.org/content/repositories/kura-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <pluginManagement>
@@ -273,8 +270,7 @@
                     <version>${bnd.version}</version>
                     <configuration>
                         <failOnChanges>false</failOnChanges>
-                        <bndruns>
-                        </bndruns>
+                        <bndruns />
                     </configuration>
                     <executions>
                         <execution>
@@ -350,17 +346,17 @@
                     <executions>
                         <execution>
                             <id>flatten</id>
-                            <phase>process-resources</phase>
                             <goals>
                                 <goal>flatten</goal>
                             </goals>
+                            <phase>process-resources</phase>
                         </execution>
                         <execution>
                             <id>flatten.clean</id>
-                            <phase>clean</phase>
                             <goals>
                                 <goal>clean</goal>
                             </goals>
+                            <phase>clean</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -379,6 +375,9 @@
                     <executions>
                         <execution>
                             <id>enforce</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
                             <configuration>
                                 <rules>
                                     <bannedPluginsAdvanced>
@@ -393,9 +392,6 @@
                                     </bannedPluginsAdvanced>
                                 </rules>
                             </configuration>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
                         </execution>
                     </executions>
                 </plugin>

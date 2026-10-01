@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.status;
 
 import java.util.List;
-
 import org.eclipse.kura.net.wifi.WifiChannel;
 
 public class SupportedChannelsProperties {

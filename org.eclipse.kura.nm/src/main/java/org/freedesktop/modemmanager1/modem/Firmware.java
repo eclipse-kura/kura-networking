@@ -27,5 +27,4 @@ public interface Firmware extends DBusInterface {
     public ListTuple List();
 
     public void Select(String uniqueid);
-
 }

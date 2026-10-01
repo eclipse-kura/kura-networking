@@ -22,6 +22,7 @@ public class GetLoggingTuple extends Tuple {
 
     @Position(0)
     private String level;
+
     @Position(1)
     private String domains;
 
@@ -45,5 +46,4 @@ public class GetLoggingTuple extends Tuple {
     public String getDomains() {
         return this.domains;
     }
-
 }

@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager;
 
 import java.util.List;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -37,7 +36,5 @@ import org.freedesktop.dbus.types.UInt32;
 @DBusProperty(name = "LastSeen", type = Integer.class, access = Access.READ)
 public interface WifiP2PPeer extends DBusInterface {
 
-    public static interface PropertyWfdIEsType extends TypeRef<List<Byte>> {
-
-    }
+    public static interface PropertyWfdIEsType extends TypeRef<List<Byte>> {}
 }

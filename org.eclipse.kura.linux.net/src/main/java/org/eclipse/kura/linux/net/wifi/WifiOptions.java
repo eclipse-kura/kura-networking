@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -103,10 +102,10 @@ public class WifiOptions {
     }
 
     private static String[] formIwDevInfoCommand(String ifaceName) {
-        return new String[] { "iw", "dev", ifaceName, "info" };
+        return new String[] {"iw", "dev", ifaceName, "info"};
     }
 
     private static String[] formIwconfigCommand(String ifaceName) {
-        return new String[] { "iwconfig", ifaceName };
+        return new String[] {"iwconfig", ifaceName};
     }
 }

@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.nm.status;
 
 import org.freedesktop.dbus.interfaces.Properties;
@@ -38,5 +37,4 @@ public class SimProperties {
     public boolean isPrimary() {
         return this.isPrimary;
     }
-
 }

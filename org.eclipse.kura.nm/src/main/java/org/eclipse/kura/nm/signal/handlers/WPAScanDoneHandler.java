@@ -12,13 +12,11 @@
  *******************************************************************************/
 package org.eclipse.kura.nm.signal.handlers;
 
+import fi.w1.wpa_supplicant1.Interface;
 import java.util.concurrent.CountDownLatch;
-
 import org.freedesktop.dbus.interfaces.DBusSigHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import fi.w1.wpa_supplicant1.Interface;
 
 public class WPAScanDoneHandler implements DBusSigHandler<Interface.ScanDone> {
 

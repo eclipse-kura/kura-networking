@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager;
 
 import java.util.List;
-
 import org.freedesktop.dbus.Tuple;
 import org.freedesktop.dbus.annotations.Position;
 
@@ -24,6 +23,7 @@ public class LoadConnectionsTuple extends Tuple {
 
     @Position(0)
     private boolean status;
+
     @Position(1)
     private List<String> failures;
 
@@ -47,5 +47,4 @@ public class LoadConnectionsTuple extends Tuple {
     public List<String> getFailures() {
         return this.failures;
     }
-
 }

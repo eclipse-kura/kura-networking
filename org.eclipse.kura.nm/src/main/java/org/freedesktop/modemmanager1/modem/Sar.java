@@ -29,5 +29,4 @@ public interface Sar extends DBusInterface {
     public void Enable(boolean enable);
 
     public void SetPowerLevel(UInt32 level);
-
 }

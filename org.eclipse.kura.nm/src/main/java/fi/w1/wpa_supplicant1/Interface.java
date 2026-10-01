@@ -14,7 +14,6 @@ package fi.w1.wpa_supplicant1;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -255,7 +254,6 @@ public interface Interface extends DBusInterface {
         public boolean getSuccess() {
             return this.success;
         }
-
     }
 
     public static class BSSAdded extends DBusSignal {
@@ -277,7 +275,6 @@ public interface Interface extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class BSSRemoved extends DBusSignal {
@@ -292,7 +289,6 @@ public interface Interface extends DBusInterface {
         public DBusPath getRemovedBSSPath() {
             return this.removedBSSPath;
         }
-
     }
 
     public static class BlobAdded extends DBusSignal {
@@ -307,7 +303,6 @@ public interface Interface extends DBusInterface {
         public String getBlobName() {
             return this.blobName;
         }
-
     }
 
     public static class BlobRemoved extends DBusSignal {
@@ -322,7 +317,6 @@ public interface Interface extends DBusInterface {
         public String getBlobName() {
             return this.blobName;
         }
-
     }
 
     public static class NetworkAdded extends DBusSignal {
@@ -344,7 +338,6 @@ public interface Interface extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class NetworkRemoved extends DBusSignal {
@@ -359,7 +352,6 @@ public interface Interface extends DBusInterface {
         public DBusPath getRemovedNetworkPath() {
             return this.removedNetworkPath;
         }
-
     }
 
     public static class NetworkSelected extends DBusSignal {
@@ -374,7 +366,6 @@ public interface Interface extends DBusInterface {
         public DBusPath getSelectedNetworkPath() {
             return this.selectedNetworkPath;
         }
-
     }
 
     public static class PropertiesChanged extends DBusSignal {
@@ -389,7 +380,6 @@ public interface Interface extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class ProbeRequest extends DBusSignal {
@@ -404,7 +394,6 @@ public interface Interface extends DBusInterface {
         public Map<String, Variant<?>> getArgs() {
             return this.args;
         }
-
     }
 
     public static class Certification extends DBusSignal {
@@ -419,7 +408,6 @@ public interface Interface extends DBusInterface {
         public Map<String, Variant<?>> getCertification() {
             return this.certification;
         }
-
     }
 
     public static class EAP extends DBusSignal {
@@ -440,7 +428,6 @@ public interface Interface extends DBusInterface {
         public String getParameter() {
             return this.parameter;
         }
-
     }
 
     public static class StaAuthorized extends DBusSignal {
@@ -455,7 +442,6 @@ public interface Interface extends DBusInterface {
         public String getMac() {
             return this.mac;
         }
-
     }
 
     public static class StaDeauthorized extends DBusSignal {
@@ -470,7 +456,6 @@ public interface Interface extends DBusInterface {
         public String getMac() {
             return this.mac;
         }
-
     }
 
     public static class StationAdded extends DBusSignal {
@@ -492,7 +477,6 @@ public interface Interface extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class StationRemoved extends DBusSignal {
@@ -507,7 +491,6 @@ public interface Interface extends DBusInterface {
         public DBusPath getRemovedStationPath() {
             return this.removedStationPath;
         }
-
     }
 
     public static class NetworkRequest extends DBusSignal {
@@ -534,26 +517,15 @@ public interface Interface extends DBusInterface {
         public String getText() {
             return this.text;
         }
-
     }
 
-    public static interface PropertyCapabilitiesType extends TypeRef<Map<String, Variant>> {
+    public static interface PropertyCapabilitiesType extends TypeRef<Map<String, Variant>> {}
 
-    }
+    public static interface PropertyBlobsType extends TypeRef<Map<String, List<Byte>>> {}
 
-    public static interface PropertyBlobsType extends TypeRef<Map<String, List<Byte>>> {
+    public static interface PropertyBSSsType extends TypeRef<List<DBusPath>> {}
 
-    }
+    public static interface PropertyNetworksType extends TypeRef<List<DBusPath>> {}
 
-    public static interface PropertyBSSsType extends TypeRef<List<DBusPath>> {
-
-    }
-
-    public static interface PropertyNetworksType extends TypeRef<List<DBusPath>> {
-
-    }
-
-    public static interface PropertyStationsType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyStationsType extends TypeRef<List<DBusPath>> {}
 }

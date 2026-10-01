@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.nm.position;
 
 import java.time.LocalDate;
@@ -25,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.position.GNSSType;
 import org.eclipse.kura.position.NmeaPosition;
 import org.freedesktop.dbus.types.Variant;
@@ -79,9 +77,11 @@ public class MMLocationParser {
      * and track.
      */
     public Position getPosition() {
-        return Objects.requireNonNull(new Position(new Measurement(Math.toRadians(this.latitudeDegrees), Unit.rad),
+        return Objects.requireNonNull(new Position(
+                new Measurement(Math.toRadians(this.latitudeDegrees), Unit.rad),
                 new Measurement(Math.toRadians(this.longitudeDegrees), Unit.rad),
-                new Measurement(this.altitudeMeters, Unit.m), new Measurement(this.speedMetersPerSecond, Unit.m_s),
+                new Measurement(this.altitudeMeters, Unit.m),
+                new Measurement(this.speedMetersPerSecond, Unit.m_s),
                 new Measurement(Math.toRadians(this.trackDegrees), Unit.rad)));
     }
 
@@ -94,9 +94,22 @@ public class MMLocationParser {
     }
 
     public NmeaPosition getNmeaPosition() {
-        return new NmeaPosition(this.latitudeDegrees, this.longitudeDegrees, this.altitudeMeters,
-                this.speedMetersPerSecond, this.trackDegrees, this.fixQuality, this.nrSatellites, this.mDOP, this.mPDOP,
-                this.mHDOP, this.mVDOP, this.m3Dfix, this.validFix, this.latitudeHemisphere, this.longitudeHemisphere);
+        return new NmeaPosition(
+                this.latitudeDegrees,
+                this.longitudeDegrees,
+                this.altitudeMeters,
+                this.speedMetersPerSecond,
+                this.trackDegrees,
+                this.fixQuality,
+                this.nrSatellites,
+                this.mDOP,
+                this.mPDOP,
+                this.mHDOP,
+                this.mVDOP,
+                this.m3Dfix,
+                this.validFix,
+                this.latitudeHemisphere,
+                this.longitudeHemisphere);
     }
 
     public String getNmeaTime() {
@@ -131,25 +144,26 @@ public class MMLocationParser {
         for (Map.Entry<String, Variant<?>> rawEntry : locationData.entrySet()) {
 
             switch (rawEntry.getKey()) {
-            case "latitude":
-                this.latitudeDegrees = (Double) rawEntry.getValue().getValue();
-                break;
+                case "latitude":
+                    this.latitudeDegrees = (Double) rawEntry.getValue().getValue();
+                    break;
 
-            case "longitude":
-                this.longitudeDegrees = (Double) rawEntry.getValue().getValue();
-                break;
+                case "longitude":
+                    this.longitudeDegrees = (Double) rawEntry.getValue().getValue();
+                    break;
 
-            case "altitude":
-                this.altitudeMeters = (Double) rawEntry.getValue().getValue();
-                break;
+                case "altitude":
+                    this.altitudeMeters = (Double) rawEntry.getValue().getValue();
+                    break;
 
-            // time comes in format HHmmss.SS, so we cut the string after the dot to extract only the util information
-            case "utc-time":
-                String utcTime = ((String) rawEntry.getValue().getValue());
-                this.time = LocalTime.parse(utcTime.split("\\.")[0], DateTimeFormatter.ofPattern("HHmmss"));
-                break;
+                // time comes in format HHmmss.SS, so we cut the string after the dot to extract only the util
+                // information
+                case "utc-time":
+                    String utcTime = ((String) rawEntry.getValue().getValue());
+                    this.time = LocalTime.parse(utcTime.split("\\.")[0], DateTimeFormatter.ofPattern("HHmmss"));
+                    break;
 
-            default:
+                default:
                 // DO NOTHING
             }
         }
@@ -160,12 +174,14 @@ public class MMLocationParser {
             String locationString = ((CharSequence) nmeaLocationVariant.getValue()).toString();
 
             List<String> nmeaSentences = Arrays.asList(locationString.split("\\r?\\n|\\r")).stream()
-                    .filter(sentence -> !sentence.isEmpty()).collect(Collectors.toList());
+                    .filter(sentence -> !sentence.isEmpty())
+                    .collect(Collectors.toList());
 
             for (String sentence : nmeaSentences) {
 
                 int starpos = sentence.indexOf('*');
-                final List<String> tokens = Arrays.asList(sentence.substring(0, starpos).split(","));
+                final List<String> tokens =
+                        Arrays.asList(sentence.substring(0, starpos).split(","));
 
                 String sentenceGnss = sentence.substring(1, 3);
 
@@ -174,20 +190,19 @@ public class MMLocationParser {
                 String sentenceType = sentence.substring(3, 6);
 
                 switch (sentenceType) {
+                    case "GSA":
+                        parseGsaSentence(tokens);
+                        break;
 
-                case "GSA":
-                    parseGsaSentence(tokens);
-                    break;
+                    case "RMC":
+                        parseRmcSentence(tokens);
+                        break;
 
-                case "RMC":
-                    parseRmcSentence(tokens);
-                    break;
+                    case "GGA":
+                        parseGgaSentence(tokens);
+                        break;
 
-                case "GGA":
-                    parseGgaSentence(tokens);
-                    break;
-
-                default:
+                    default:
                     // Do Nothing
 
                 }
@@ -292,42 +307,41 @@ public class MMLocationParser {
 
     /*
      * Also 'GN' is a possible GNSSType, representing the Mixed GNSS System (GPS+GALILEO or GPS+GLONASS for example).
-     * 
+     *
      * But, if the device is capable to emit GN sentences, it must emit also the single-id ones. So we are still able to
      * extract the specific GNSS System. See {@link
      * https://receiverhelp.trimble.com/alloy-gnss/en-us/NMEA-0183messages_GNS.html}
-     * 
+     *
      * As example, if the device emits GN messages due to a GP/GA combination, it will emit three sentences: GN, GP, GA.
-     * 
+     *
      * Info about the correlation GNSS System / NMEA Sentence at
      * {@link https://en.wikipedia.org/wiki/NMEA_0183#NMEA_sentence_format}
-     * 
+     *
      */
     private GNSSType sentenceIdToGnssType(String type) {
 
         switch (type) {
+            case "GP":
+                return GNSSType.GPS;
 
-        case "GP":
-            return GNSSType.GPS;
+            case "BD":
+            case "GB":
+                return GNSSType.BEIDOU;
 
-        case "BD":
-        case "GB":
-            return GNSSType.BEIDOU;
+            case "GA":
+                return GNSSType.GALILEO;
 
-        case "GA":
-            return GNSSType.GALILEO;
+            case "GL":
+                return GNSSType.GLONASS;
 
-        case "GL":
-            return GNSSType.GLONASS;
+            case "GI":
+                return GNSSType.IRNSS;
 
-        case "GI":
-            return GNSSType.IRNSS;
+            case "GQ":
+                return GNSSType.QZSS;
 
-        case "GQ":
-            return GNSSType.QZSS;
-
-        default:
-            return GNSSType.UNKNOWN;
+            default:
+                return GNSSType.UNKNOWN;
         }
     }
 

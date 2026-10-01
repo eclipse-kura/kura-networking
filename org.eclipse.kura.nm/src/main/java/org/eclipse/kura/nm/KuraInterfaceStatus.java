@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm;
 
 public enum KuraInterfaceStatus {
-
     DISABLED,
     UNMANAGED,
     ENABLED;
@@ -48,5 +47,4 @@ public enum KuraInterfaceStatus {
 
         return DISABLED;
     }
-
 }

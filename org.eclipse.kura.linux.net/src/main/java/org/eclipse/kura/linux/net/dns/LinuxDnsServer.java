@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2019, 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *  3 Port d.o.o.
@@ -25,7 +25,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.apache.commons.net.util.SubnetUtils;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -92,7 +91,8 @@ public abstract class LinuxDnsServer {
         Set<IP4Address> forwarders = new HashSet<>();
         Set<NetworkPair<IP4Address>> allowedNetworks = new HashSet<>();
 
-        try (FileReader fr = new FileReader(configFile); BufferedReader br = new BufferedReader(fr)) {
+        try (FileReader fr = new FileReader(configFile);
+                BufferedReader br = new BufferedReader(fr)) {
             String line;
             while ((line = br.readLine()) != null) {
                 parseDnsConfigFile(forwarders, allowedNetworks, line);
@@ -105,8 +105,9 @@ public abstract class LinuxDnsServer {
         }
     }
 
-    private void parseDnsConfigFile(Set<IP4Address> forwarders, Set<NetworkPair<IP4Address>> allowedNetworks,
-            String line) throws UnknownHostException {
+    private void parseDnsConfigFile(
+            Set<IP4Address> forwarders, Set<NetworkPair<IP4Address>> allowedNetworks, String line)
+            throws UnknownHostException {
         StringTokenizer st = new StringTokenizer(line);
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -126,8 +127,8 @@ public abstract class LinuxDnsServer {
             String allowedNetwork = st2.nextToken();
             if (allowedNetwork != null && !"".equals(allowedNetwork.trim())) {
                 String[] splitNetwork = allowedNetwork.split("/");
-                allowedNetworks.add(new NetworkPair<>((IP4Address) IPAddress.parseHostAddress(splitNetwork[0]),
-                        Short.parseShort(splitNetwork[1])));
+                allowedNetworks.add(new NetworkPair<>(
+                        (IP4Address) IPAddress.parseHostAddress(splitNetwork[0]), Short.parseShort(splitNetwork[1])));
             }
         }
     }
@@ -146,7 +147,8 @@ public abstract class LinuxDnsServer {
 
     private boolean isForwardOnlyConfiguration(File configFile) throws KuraException {
         boolean forwardingConfig = false;
-        try (FileReader fr = new FileReader(configFile); BufferedReader br = new BufferedReader(fr)) {
+        try (FileReader fr = new FileReader(configFile);
+                BufferedReader br = new BufferedReader(fr)) {
             String line;
             while ((line = br.readLine()) != null) {
                 if ("forward only;".equals(line.trim())) {
@@ -162,7 +164,7 @@ public abstract class LinuxDnsServer {
 
     public boolean isRunning() {
         // Check if named is running
-        return this.executorService.isRunning(new String[] { getDnsServiceName() });
+        return this.executorService.isRunning(new String[] {getDnsServiceName()});
     }
 
     public void start() throws KuraException {
@@ -206,7 +208,8 @@ public abstract class LinuxDnsServer {
     }
 
     public boolean isConfigured() {
-        if (this.dnsServerConfigIP4 == null || this.dnsServerConfigIP4.getForwarders() == null
+        if (this.dnsServerConfigIP4 == null
+                || this.dnsServerConfigIP4.getForwarders() == null
                 || this.dnsServerConfigIP4.getAllowedNetworks() == null) {
             return false;
         }
@@ -237,14 +240,19 @@ public abstract class LinuxDnsServer {
         final File tempFile = new File(getDnsConfigFileName() + ".tmp");
         final File persistentConfigFile = new File(getDnsConfigFileName());
 
-        try (FileOutputStream fos = new FileOutputStream(tempFile); PrintWriter pw = new PrintWriter(fos);) {
+        try (FileOutputStream fos = new FileOutputStream(tempFile);
+                PrintWriter pw = new PrintWriter(fos); ) {
             // build up the file
             if (isConfigured()) {
-                logger.debug("writing custom named.conf to {} with: {}", persistentConfigFile.getAbsolutePath(),
+                logger.debug(
+                        "writing custom named.conf to {} with: {}",
+                        persistentConfigFile.getAbsolutePath(),
                         this.dnsServerConfigIP4);
                 pw.print(getForwardingNamedFile());
             } else {
-                logger.debug("writing default named.conf to {} with: {}", persistentConfigFile.getAbsolutePath(),
+                logger.debug(
+                        "writing default named.conf to {} with: {}",
+                        persistentConfigFile.getAbsolutePath(),
                         this.dnsServerConfigIP4);
                 pw.print(getDefaultNamedFile());
             }
@@ -260,7 +268,8 @@ public abstract class LinuxDnsServer {
     }
 
     private String getForwardingNamedFile() {
-        StringBuilder sb = new StringBuilder().append("// Forwarding and Caching Name Server Configuration\n")
+        StringBuilder sb = new StringBuilder()
+                .append("// Forwarding and Caching Name Server Configuration\n")
                 .append("options {\n") //
                 .append("\tdirectory \"/var/named\";\n") //
                 .append("\tversion \"not currently available\";\n") //
@@ -301,7 +310,8 @@ public abstract class LinuxDnsServer {
     }
 
     private String getDefaultNamedFile() {
-        StringBuilder sb = new StringBuilder().append("//\n") //
+        StringBuilder sb = new StringBuilder()
+                .append("//\n") //
                 .append("// named.conf\n") //
                 .append("//\n") //
                 .append("// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS\n") //
@@ -352,14 +362,14 @@ public abstract class LinuxDnsServer {
     }
 
     public String[] getDnsStartCommand() {
-        return new String[] { SYSTEMCTL_COMMAND, "start", NAMED };
+        return new String[] {SYSTEMCTL_COMMAND, "start", NAMED};
     }
 
     public String[] getDnsRestartCommand() {
-        return new String[] { SYSTEMCTL_COMMAND, "restart", NAMED };
+        return new String[] {SYSTEMCTL_COMMAND, "restart", NAMED};
     }
 
     public String[] getDnsStopCommand() {
-        return new String[] { SYSTEMCTL_COMMAND, "stop", NAMED };
+        return new String[] {SYSTEMCTL_COMMAND, "stop", NAMED};
     }
 }

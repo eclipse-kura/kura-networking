@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2017, 2026 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -33,7 +33,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
@@ -110,12 +109,24 @@ public class FirewallConfigurationServiceImplTest {
         properties.put("firewall.nat", "eth0,eth1,tcp,0.0.0.0/0,0.0.0.0/0,true,#");
         properties.put("firewall.port.forwarding", "eth0,eth1,1.2.3.4,tcp,4050,3040,true,0.0.0.0/0,,,#");
         List<LocalRule> localRules = new ArrayList<>();
-        localRules.add(new LocalRule(22, "tcp",
-                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("1.2.3.4"), Short.parseShort("32")), "eth1",
-                null, null, null));
+        localRules.add(new LocalRule(
+                22,
+                "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("1.2.3.4"), Short.parseShort("32")),
+                "eth1",
+                null,
+                null,
+                null));
         List<PortForwardRule> portForwardRules = new ArrayList<>();
-        portForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1").address("1.2.3.4")
-                .protocol("tcp").inPort(4050).outPort(3040).masquerade(true).permittedNetwork("0.0.0.0")
+        portForwardRules.add(new PortForwardRule()
+                .inboundIface("eth0")
+                .outboundIface("eth1")
+                .address("1.2.3.4")
+                .protocol("tcp")
+                .inPort(4050)
+                .outPort(3040)
+                .masquerade(true)
+                .permittedNetwork("0.0.0.0")
                 .permittedNetworkMask(0));
         List<NATRule> natRules = new ArrayList<>();
         natRules.add(new NATRule("eth0", "eth1", "tcp", "0.0.0.0/0", "0.0.0.0/0", true, RuleType.IP_FORWARDING));
@@ -146,11 +157,11 @@ public class FirewallConfigurationServiceImplTest {
                 String unpermittedIface = "wlan0";
                 String permittedMac = null;
                 String srcPorts = null;
-                LocalRule rule = new LocalRule("1100:1200", "tcp", permittedNetwork, permittedIface, unpermittedIface,
-                        permittedMac, srcPorts);
+                LocalRule rule = new LocalRule(
+                        "1100:1200", "tcp", permittedNetwork, permittedIface, unpermittedIface, permittedMac, srcPorts);
                 result.add(rule);
-                rule = new LocalRule(1300, "tcp", permittedNetwork, permittedIface, unpermittedIface, permittedMac,
-                        srcPorts);
+                rule = new LocalRule(
+                        1300, "tcp", permittedNetwork, permittedIface, unpermittedIface, permittedMac, srcPorts);
                 result.add(rule);
 
                 return result;
@@ -160,9 +171,16 @@ public class FirewallConfigurationServiceImplTest {
             protected Set<PortForwardRule> getPortForwardRules() throws KuraException {
                 Set<PortForwardRule> result = new HashSet<>();
 
-                PortForwardRule rule = new PortForwardRule().inboundIface("wlan0").outboundIface("eth0")
-                        .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
-                        .permittedNetwork("10.10.1.0").permittedNetworkMask(24);
+                PortForwardRule rule = new PortForwardRule()
+                        .inboundIface("wlan0")
+                        .outboundIface("eth0")
+                        .address("10.10.1.15")
+                        .protocol("tcp")
+                        .inPort(1234)
+                        .outPort(2345)
+                        .masquerade(true)
+                        .permittedNetwork("10.10.1.0")
+                        .permittedNetworkMask(24);
                 result.add(rule);
 
                 return result;
@@ -235,11 +253,11 @@ public class FirewallConfigurationServiceImplTest {
                 String unpermittedIface = "wlan0";
                 String permittedMac = null;
                 String srcPorts = null;
-                LocalRule rule = new LocalRule("1100:1200", "tcp", permittedNetwork, permittedIface, unpermittedIface,
-                        permittedMac, srcPorts);
+                LocalRule rule = new LocalRule(
+                        "1100:1200", "tcp", permittedNetwork, permittedIface, unpermittedIface, permittedMac, srcPorts);
                 result.add(rule);
-                rule = new LocalRule(1300, "tcp", permittedNetwork, permittedIface, unpermittedIface, permittedMac,
-                        srcPorts);
+                rule = new LocalRule(
+                        1300, "tcp", permittedNetwork, permittedIface, unpermittedIface, permittedMac, srcPorts);
                 result.add(rule);
 
                 return result;
@@ -249,9 +267,16 @@ public class FirewallConfigurationServiceImplTest {
             protected Set<PortForwardRule> getPortForwardRules() throws KuraException {
                 Set<PortForwardRule> result = new HashSet<>();
 
-                PortForwardRule rule = new PortForwardRule().inboundIface("wlan0").outboundIface("eth0")
-                        .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
-                        .permittedNetwork("10.10.1.0").permittedNetworkMask(24);
+                PortForwardRule rule = new PortForwardRule()
+                        .inboundIface("wlan0")
+                        .outboundIface("eth0")
+                        .address("10.10.1.15")
+                        .protocol("tcp")
+                        .inPort(1234)
+                        .outPort(2345)
+                        .masquerade(true)
+                        .permittedNetwork("10.10.1.0")
+                        .permittedNetworkMask(24);
                 result.add(rule);
 
                 return result;
@@ -348,7 +373,8 @@ public class FirewallConfigurationServiceImplTest {
 
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("firewall.open.ports",
+        properties.put(
+                "firewall.open.ports",
                 "1300,tcp,10.10.1.0/24,eth0,wlan0,,,#" + ";1100:1200,tcp,10.10.1.0/24,eth0,wlan0,,,#");
 
         properties.put("firewall.nat", "wlan0,eth0,tcp,,10.10.1.0/24,true,#");
@@ -356,8 +382,9 @@ public class FirewallConfigurationServiceImplTest {
         properties.put("firewall.port.forwarding", "wlan0,eth0,10.10.1.15,tcp,1234,2345,true,10.10.1.0/24,,,#");
 
         LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
-        doThrow(new KuraException(KuraErrorCode.CONFIGURATION_ERROR)).when(linuxFirewall).replace(anyList(),
-                anyList(), anyList());
+        doThrow(new KuraException(KuraErrorCode.CONFIGURATION_ERROR))
+                .when(linuxFirewall)
+                .replace(anyList(), anyList(), anyList());
         FirewallConfigurationServiceImpl svc = new FirewallConfigurationServiceImpl() {
 
             @Override
@@ -390,7 +417,8 @@ public class FirewallConfigurationServiceImplTest {
 
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("firewall.open.ports",
+        properties.put(
+                "firewall.open.ports",
                 "1300,tcp,10.10.1.0/24,eth0,wlan0,,,#" + ";1100:1200,tcp,10.10.1.0/24,eth0,wlan0,,,#");
 
         properties.put("firewall.nat", "wlan0,eth0,tcp,,10.10.1.0/24,true,#");
@@ -416,17 +444,24 @@ public class FirewallConfigurationServiceImplTest {
         svc.activate(componentContext, properties);
         svc.updated(properties);
 
-        NetworkPair<IP4Address> permittedNetwork = new NetworkPair<>(
-                (IP4Address) IPAddress.parseHostAddress("10.10.1.0"), (short) 24);
+        NetworkPair<IP4Address> permittedNetwork =
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("10.10.1.0"), (short) 24);
 
         List<LocalRule> localRules = new ArrayList<>();
         localRules.add(new LocalRule(1300, "tcp", permittedNetwork, "eth0", "wlan0", null, null));
         localRules.add(new LocalRule("1100:1200", "tcp", permittedNetwork, "eth0", "wlan0", null, null));
 
         List<PortForwardRule> portForwardRules = new ArrayList<>();
-        portForwardRules.add(new PortForwardRule().inboundIface("wlan0").outboundIface("eth0")
-                .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
-                .permittedNetwork("10.10.1.0").permittedNetworkMask(24));
+        portForwardRules.add(new PortForwardRule()
+                .inboundIface("wlan0")
+                .outboundIface("eth0")
+                .address("10.10.1.15")
+                .protocol("tcp")
+                .inPort(1234)
+                .outPort(2345)
+                .masquerade(true)
+                .permittedNetwork("10.10.1.0")
+                .permittedNetworkMask(24));
 
         List<NATRule> natRules = new ArrayList<>();
         natRules.add(new NATRule("wlan0", "eth0", "tcp", null, "10.10.1.0/24", true, RuleType.IP_FORWARDING));
@@ -440,9 +475,16 @@ public class FirewallConfigurationServiceImplTest {
         LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
 
         List<PortForwardRule> existingPortForwardRules = new ArrayList<>();
-        existingPortForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
-                .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
-                .permittedNetwork("10.10.1.0").permittedNetworkMask(24));
+        existingPortForwardRules.add(new PortForwardRule()
+                .inboundIface("eth0")
+                .outboundIface("eth1")
+                .address("10.10.1.15")
+                .protocol("tcp")
+                .inPort(1234)
+                .outPort(2345)
+                .masquerade(true)
+                .permittedNetwork("10.10.1.0")
+                .permittedNetworkMask(24));
         List<NATRule> existingNatRules = new ArrayList<>();
         existingNatRules.add(new NATRule("eth0", "eth1", "tcp", null, "10.10.1.0/24", true, RuleType.IP_FORWARDING));
 
@@ -473,8 +515,13 @@ public class FirewallConfigurationServiceImplTest {
         svc.setFirewallOpenPortConfiguration(firewallConfiguration);
 
         List<LocalRule> expectedLocalRules = new ArrayList<>();
-        expectedLocalRules.add(new LocalRule(1234, "tcp",
-                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), null, null, null,
+        expectedLocalRules.add(new LocalRule(
+                1234,
+                "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0),
+                null,
+                null,
+                null,
                 null));
 
         verify(linuxFirewall).replace(expectedLocalRules, existingPortForwardRules, existingNatRules);
@@ -485,8 +532,13 @@ public class FirewallConfigurationServiceImplTest {
         LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
 
         List<LocalRule> existingLocalRules = new ArrayList<>();
-        existingLocalRules.add(new LocalRule(22, "tcp",
-                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), "eth0", null, null,
+        existingLocalRules.add(new LocalRule(
+                22,
+                "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0),
+                "eth0",
+                null,
+                null,
                 null));
         List<NATRule> existingNatRules = new ArrayList<>();
         existingNatRules.add(new NATRule("eth0", "eth1", "tcp", null, "10.10.1.0/24", true, RuleType.IP_FORWARDING));
@@ -503,9 +555,15 @@ public class FirewallConfigurationServiceImplTest {
         };
 
         FirewallPortForwardConfigIP4Builder pfBuilder = FirewallPortForwardConfigIP4.builder();
-        pfBuilder.withInboundIface("eth0").withOutboundIface("eth1")
-                .withAddress((IP4Address) IPAddress.parseHostAddress("172.16.0.1")).withProtocol(NetProtocol.tcp)
-                .withInPort(3040).withOutPort(4050).withMasquerade(true).withPermittedNetwork(
+        pfBuilder
+                .withInboundIface("eth0")
+                .withOutboundIface("eth1")
+                .withAddress((IP4Address) IPAddress.parseHostAddress("172.16.0.1"))
+                .withProtocol(NetProtocol.tcp)
+                .withInPort(3040)
+                .withOutPort(4050)
+                .withMasquerade(true)
+                .withPermittedNetwork(
                         new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("172.16.0.100"), (short) 32));
         List<FirewallPortForwardConfigIP<? extends IPAddress>> firewallConfiguration = new ArrayList<>();
         firewallConfiguration.add(pfBuilder.build());
@@ -521,9 +579,16 @@ public class FirewallConfigurationServiceImplTest {
         svc.setFirewallPortForwardingConfiguration(firewallConfiguration);
 
         List<PortForwardRule> expectedPortForwardRules = new ArrayList<>();
-        expectedPortForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
-                .address("172.16.0.1").protocol("tcp").inPort(3040).outPort(4050).masquerade(true)
-                .permittedNetwork("172.16.0.100").permittedNetworkMask(32));
+        expectedPortForwardRules.add(new PortForwardRule()
+                .inboundIface("eth0")
+                .outboundIface("eth1")
+                .address("172.16.0.1")
+                .protocol("tcp")
+                .inPort(3040)
+                .outPort(4050)
+                .masquerade(true)
+                .permittedNetwork("172.16.0.100")
+                .permittedNetworkMask(32));
 
         verify(linuxFirewall).replace(existingLocalRules, expectedPortForwardRules, existingNatRules);
     }
@@ -533,13 +598,25 @@ public class FirewallConfigurationServiceImplTest {
         LinuxFirewall linuxFirewall = mock(LinuxFirewall.class);
 
         List<LocalRule> existingLocalRules = new ArrayList<>();
-        existingLocalRules.add(new LocalRule(22, "tcp",
-                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), "eth0", null, null,
+        existingLocalRules.add(new LocalRule(
+                22,
+                "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0),
+                "eth0",
+                null,
+                null,
                 null));
         List<PortForwardRule> existingPortForwardRules = new ArrayList<>();
-        existingPortForwardRules.add(new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
-                .address("10.10.1.15").protocol("tcp").inPort(1234).outPort(2345).masquerade(true)
-                .permittedNetwork("10.10.1.0").permittedNetworkMask(24));
+        existingPortForwardRules.add(new PortForwardRule()
+                .inboundIface("eth0")
+                .outboundIface("eth1")
+                .address("10.10.1.15")
+                .protocol("tcp")
+                .inPort(1234)
+                .outPort(2345)
+                .masquerade(true)
+                .permittedNetwork("10.10.1.0")
+                .permittedNetworkMask(24));
 
         when(linuxFirewall.getLocalRules()).thenReturn(new HashSet<>(existingLocalRules));
         when(linuxFirewall.getPortForwardRules()).thenReturn(new HashSet<>(existingPortForwardRules));
@@ -553,9 +630,8 @@ public class FirewallConfigurationServiceImplTest {
         };
 
         List<FirewallNatConfig> natConfigs = new ArrayList<>();
-        natConfigs.add(
-                new FirewallNatConfig("eth0", "eth1", "tcp", "172.16.0.1/32", "172.16.0.2/32", true,
-                        RuleType.IP_FORWARDING));
+        natConfigs.add(new FirewallNatConfig(
+                "eth0", "eth1", "tcp", "172.16.0.1/32", "172.16.0.2/32", true, RuleType.IP_FORWARDING));
 
         EventAdmin eventAdminMock = mock(EventAdmin.class);
         svc.setEventAdmin(eventAdminMock);
@@ -568,11 +644,9 @@ public class FirewallConfigurationServiceImplTest {
         svc.setFirewallNatConfiguration(natConfigs);
 
         List<NATRule> expectedNatRules = new ArrayList<>();
-        expectedNatRules
-                .add(new NATRule("eth0", "eth1", "tcp", "172.16.0.1/32", "172.16.0.2/32", true,
-                        RuleType.IP_FORWARDING));
+        expectedNatRules.add(
+                new NATRule("eth0", "eth1", "tcp", "172.16.0.1/32", "172.16.0.2/32", true, RuleType.IP_FORWARDING));
 
         verify(linuxFirewall).replace(existingLocalRules, existingPortForwardRules, expectedNatRules);
     }
-
 }

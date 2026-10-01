@@ -1,23 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.iptables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.firewall.RuleType;
@@ -105,7 +103,7 @@ public class FilterForwardChainRule {
     public FilterForwardChainRule(String rule) throws KuraException {
         this.type = RuleType.GENERIC;
         try {
-            for (Iterator<String> ruleIterator = Arrays.asList(rule.split(" ")).iterator(); ruleIterator.hasNext();) {
+            for (Iterator<String> ruleIterator = Arrays.asList(rule.split(" ")).iterator(); ruleIterator.hasNext(); ) {
                 String aRuleToken = ruleIterator.next();
                 if ("-i".equals(aRuleToken)) {
                     this.inputInterface = ruleIterator.next();
@@ -216,11 +214,15 @@ public class FilterForwardChainRule {
             return false;
         }
 
-        return compareObjects(this.rule, other.rule) && compareObjects(this.inputInterface, other.inputInterface)
+        return compareObjects(this.rule, other.rule)
+                && compareObjects(this.inputInterface, other.inputInterface)
                 && compareObjects(this.outputInterface, other.outputInterface)
-                && compareObjects(this.state, other.state) && compareObjects(this.srcNetwork, other.srcNetwork)
-                && this.srcMask == other.srcMask && compareObjects(this.dstNetwork, other.dstNetwork)
-                && this.dstMask == other.dstMask && compareObjects(this.protocol, other.protocol)
+                && compareObjects(this.state, other.state)
+                && compareObjects(this.srcNetwork, other.srcNetwork)
+                && this.srcMask == other.srcMask
+                && compareObjects(this.dstNetwork, other.dstNetwork)
+                && this.dstMask == other.dstMask
+                && compareObjects(this.protocol, other.protocol)
                 && compareObjects(this.type, other.type);
     }
 

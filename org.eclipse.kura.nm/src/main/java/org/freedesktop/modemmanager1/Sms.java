@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1;
 
 import java.util.List;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -47,7 +46,5 @@ public interface Sms extends DBusInterface {
 
     public void Store(UInt32 storage);
 
-    public static interface PropertyDataType extends TypeRef<List<Byte>> {
-
-    }
+    public static interface PropertyDataType extends TypeRef<List<Byte>> {}
 }

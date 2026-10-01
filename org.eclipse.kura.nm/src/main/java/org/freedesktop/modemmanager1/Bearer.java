@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -45,19 +44,11 @@ public interface Bearer extends DBusInterface {
 
     public void Disconnect();
 
-    public static interface PropertyIp4ConfigType extends TypeRef<Map<String, Variant>> {
+    public static interface PropertyIp4ConfigType extends TypeRef<Map<String, Variant>> {}
 
-    }
+    public static interface PropertyIp6ConfigType extends TypeRef<Map<String, Variant>> {}
 
-    public static interface PropertyIp6ConfigType extends TypeRef<Map<String, Variant>> {
+    public static interface PropertyStatsType extends TypeRef<Map<String, Variant>> {}
 
-    }
-
-    public static interface PropertyStatsType extends TypeRef<Map<String, Variant>> {
-
-    }
-
-    public static interface PropertyPropertiesType extends TypeRef<Map<String, Variant>> {
-
-    }
+    public static interface PropertyPropertiesType extends TypeRef<Map<String, Variant>> {}
 }

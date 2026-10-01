@@ -1,19 +1,18 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
 package org.eclipse.kura.linux.net.util;
 
 import java.io.ByteArrayOutputStream;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.Command;
@@ -49,7 +48,9 @@ public class IwLinkTool extends LinkToolImpl implements LinkTool {
         command.setOutputStream(new ByteArrayOutputStream());
         CommandStatus status = this.executorService.execute(command);
         if (!status.getExitStatus().isSuccessful()) {
-            logger.warn("The iwconfig returned with exit value {}", status.getExitStatus().getExitCode());
+            logger.warn(
+                    "The iwconfig returned with exit value {}",
+                    status.getExitStatus().getExitCode());
             return false;
         }
         parse(new String(((ByteArrayOutputStream) status.getOutputStream()).toByteArray(), Charsets.UTF_8));
@@ -107,7 +108,6 @@ public class IwLinkTool extends LinkToolImpl implements LinkTool {
     }
 
     private String[] formIwLinkCommand(String ifaceName) {
-        return new String[] { "iw", ifaceName, "link" };
+        return new String[] {"iw", ifaceName, "link"};
     }
-
 }

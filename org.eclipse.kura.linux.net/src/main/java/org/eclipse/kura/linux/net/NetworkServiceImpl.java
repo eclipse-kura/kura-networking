@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
 import org.eclipse.kura.core.net.EthernetInterfaceImpl;
@@ -83,22 +82,22 @@ import org.eclipse.kura.usb.UsbNetDevice;
 import org.eclipse.kura.usb.UsbService;
 import org.eclipse.kura.usb.UsbTtyDevice;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
 
 @Component(
-    name = "org.eclipse.kura.net.NetworkService", //
-    immediate = true, //
-    property = { "service.pid=org.eclipse.kura.net.NetworkService" } //
-)
+        name = "org.eclipse.kura.net.NetworkService", //
+        immediate = true, //
+        property = {"service.pid=org.eclipse.kura.net.NetworkService"} //
+        )
 public class NetworkServiceImpl implements NetworkService, EventHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(NetworkServiceImpl.class);
@@ -111,8 +110,9 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     private static final String PPP = "ppp";
     private static final Integer MAX_PPP_NUMBER = 100;
 
-    private static final String[] EVENT_TOPICS = new String[] { UsbDeviceAddedEvent.USB_EVENT_DEVICE_ADDED_TOPIC,
-            UsbDeviceRemovedEvent.USB_EVENT_DEVICE_REMOVED_TOPIC };
+    private static final String[] EVENT_TOPICS = new String[] {
+        UsbDeviceAddedEvent.USB_EVENT_DEVICE_ADDED_TOPIC, UsbDeviceRemovedEvent.USB_EVENT_DEVICE_REMOVED_TOPIC
+    };
 
     private static final String TOGGLE_MODEM_TASK_NAME = "ToggleModem";
     private static final long TOGGLE_MODEM_TASK_INTERVAL = 40; // in sec
@@ -128,8 +128,10 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
 
     @Reference
     private EventAdmin eventAdmin;
+
     @Reference
     private UsbService usbService;
+
     @Reference
     private PrivilegedExecutorService executorService;
 
@@ -205,7 +207,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
                 }
 
                 // At this point, we should have some modems - display them
-                Iterator<Entry<String, UsbModemDevice>> it = this.detectedUsbModems.entrySet().iterator();
+                Iterator<Entry<String, UsbModemDevice>> it =
+                        this.detectedUsbModems.entrySet().iterator();
                 while (it.hasNext()) {
                     final Entry<String, UsbModemDevice> e = it.next();
 
@@ -222,10 +225,14 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
 
                     // Check for correct number of resources
 
-                    logger.debug("activate() :: usbModem.getTtyDevs().size()={}, modemInfo.getNumTtyDevs()={}",
-                            usbModem.getTtyDevs().size(), modemInfo.getNumTtyDevs());
-                    logger.debug("activate() :: usbModem.getBlockDevs().size()={}, modemInfo.getNumBlockDevs()={}",
-                            usbModem.getBlockDevs().size(), modemInfo.getNumBlockDevs());
+                    logger.debug(
+                            "activate() :: usbModem.getTtyDevs().size()={}, modemInfo.getNumTtyDevs()={}",
+                            usbModem.getTtyDevs().size(),
+                            modemInfo.getNumTtyDevs());
+                    logger.debug(
+                            "activate() :: usbModem.getBlockDevs().size()={}, modemInfo.getNumBlockDevs()={}",
+                            usbModem.getBlockDevs().size(),
+                            modemInfo.getNumBlockDevs());
 
                     if (hasCorrectNumberOfResources(modemInfo, usbModem)) {
                         logger.info("activate () :: posting ModemAddedEvent ... {}", usbModem);
@@ -234,10 +241,14 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
                     } else {
                         logger.warn(
                                 "activate() :: modem doesn't have correct number of resources, will try to toggle it ...");
-                        logger.info("activate() :: scheduling {} thread in {} minutes ..", TOGGLE_MODEM_TASK_NAME,
+                        logger.info(
+                                "activate() :: scheduling {} thread in {} minutes ..",
+                                TOGGLE_MODEM_TASK_NAME,
                                 TOGGLE_MODEM_TASK_EXECUTION_DELAY);
-                        this.executor.schedule(new ToggleModemTask(modemInfo, usbPort),
-                                TOGGLE_MODEM_TASK_EXECUTION_DELAY, TimeUnit.MINUTES);
+                        this.executor.schedule(
+                                new ToggleModemTask(modemInfo, usbPort),
+                                TOGGLE_MODEM_TASK_EXECUTION_DELAY,
+                                TimeUnit.MINUTES);
                     }
                 }
             } finally {
@@ -253,7 +264,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     private int generatePppNumber() {
         synchronized (this.assignedPppNumbers) {
             OptionalInt pppNumber = IntStream.range(0, MAX_PPP_NUMBER)
-                    .filter(i -> !this.assignedPppNumbers.containsValue(i)).findFirst();
+                    .filter(i -> !this.assignedPppNumbers.containsValue(i))
+                    .findFirst();
             if (pppNumber.isPresent()) {
                 return pppNumber.getAsInt();
             } else {
@@ -304,8 +316,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
                 Thread.currentThread().interrupt();
                 logger.warn("Interrupted", e);
             }
-            logger.info("deactivate() :: {} Thread terminated? - {}", TOGGLE_MODEM_TASK_NAME,
-                    this.executor.isTerminated());
+            logger.info(
+                    "deactivate() :: {} Thread terminated? - {}", TOGGLE_MODEM_TASK_NAME, this.executor.isTerminated());
         }
         this.ctx = null;
     }
@@ -463,15 +475,17 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
             } else if (interfaceName.startsWith("ppp")) {
                 logger.debug("Ignoring unconfigured ppp interface: {}", interfaceName);
             } else {
-                logger.debug("Unsupported network type - not adding to network devices: {} of type: {}", interfaceName,
+                logger.debug(
+                        "Unsupported network type - not adding to network devices: {} of type: {}",
+                        interfaceName,
                         type);
             }
             return null;
         }
     }
 
-    protected NetInterface<? extends NetInterfaceAddress> getModemInterface(String interfaceName,
-            LinuxIfconfig ifconfig) throws KuraException {
+    protected NetInterface<? extends NetInterfaceAddress> getModemInterface(
+            String interfaceName, LinuxIfconfig ifconfig) throws KuraException {
         if (interfaceName.startsWith("ppp")) {
             String modemUsbPort = getModemUsbPort(interfaceName);
             if (modemUsbPort == null || modemUsbPort.isEmpty()) {
@@ -480,7 +494,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
             }
 
             ModemDevice modemDevice = this.detectedUsbModems.get(modemUsbPort);
-            return modemDevice != null ? getModemNetInterfaceByPppName(interfaceName, ifconfig.isUp(), modemDevice)
+            return modemDevice != null
+                    ? getModemNetInterfaceByPppName(interfaceName, ifconfig.isUp(), modemDevice)
                     : null;
         } else {
             return null;
@@ -521,8 +536,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         return wifiInterface;
     }
 
-    protected NetInterface<? extends NetInterfaceAddress> getLoopbackInterface(String interfaceName,
-            LinuxIfconfig ifconfig) throws KuraException {
+    protected NetInterface<? extends NetInterfaceAddress> getLoopbackInterface(
+            String interfaceName, LinuxIfconfig ifconfig) throws KuraException {
         LoopbackInterfaceImpl<NetInterfaceAddress> netInterface = new LoopbackInterfaceImpl<>(interfaceName);
         boolean isUp = ifconfig.isUp();
 
@@ -530,7 +545,7 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         netInterface.setDriverVersion(NA);
         netInterface.setFirmwareVersion(NA);
         netInterface.setAutoConnect(LinuxNetworkUtil.isAutoConnect(interfaceName));
-        netInterface.setHardwareAddress(new byte[] { 0, 0, 0, 0, 0, 0 });
+        netInterface.setHardwareAddress(new byte[] {0, 0, 0, 0, 0, 0});
         netInterface.setLoopback(true);
         netInterface.setMTU(ifconfig.getMtu());
         netInterface.setSupportsMulticast(ifconfig.isMulticast());
@@ -544,8 +559,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         return netInterface;
     }
 
-    protected NetInterface<? extends NetInterfaceAddress> getEthernetInterface(String interfaceName,
-            LinuxIfconfig ifconfig) throws KuraException {
+    protected NetInterface<? extends NetInterfaceAddress> getEthernetInterface(
+            String interfaceName, LinuxIfconfig ifconfig) throws KuraException {
         EthernetInterfaceImpl<NetInterfaceAddress> netInterface = new EthernetInterfaceImpl<>(interfaceName);
         NetInterfaceType type = ifconfig.getType();
         boolean isUp = ifconfig.isUp();
@@ -612,8 +627,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     }
 
     private void manageDeviceRemovedEvent(Event event) {
-        UsbModemDevice usbModem = this.detectedUsbModems
-                .remove(event.getProperty(UsbDeviceEvent.USB_EVENT_USB_PORT_PROPERTY));
+        UsbModemDevice usbModem =
+                this.detectedUsbModems.remove(event.getProperty(UsbDeviceEvent.USB_EVENT_USB_PORT_PROPERTY));
         if (usbModem != null) {
             logger.info("handleEvent() :: Removing modem: {}", usbModem);
 
@@ -632,8 +647,11 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     private void manageDeviceAddedEvent(Event event) {
         UsbModemDevice temporaryUsbModem = new UsbModemDevice(
                 (String) event.getProperty(UsbDeviceEvent.USB_EVENT_VENDOR_ID_PROPERTY),
-                (String) event.getProperty(UsbDeviceEvent.USB_EVENT_PRODUCT_ID_PROPERTY), null,
-                (String) event.getProperty(UsbDeviceEvent.USB_EVENT_PRODUCT_NAME_PROPERTY), null, null);
+                (String) event.getProperty(UsbDeviceEvent.USB_EVENT_PRODUCT_ID_PROPERTY),
+                null,
+                (String) event.getProperty(UsbDeviceEvent.USB_EVENT_PRODUCT_NAME_PROPERTY),
+                null,
+                null);
         final SupportedUsbModemInfo modemInfo = SupportedUsbModemsInfo.getModem(temporaryUsbModem);
 
         if (modemInfo != null) {
@@ -653,10 +671,14 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
             // At this point, we should have some modems - display them
             logger.info("handleEvent() :: Modified modem (Added resource): {}", usbModem);
 
-            logger.debug("handleEvent() :: usbModem.getTtyDevs().size()={}, modemInfo.getNumTtyDevs()={}",
-                    usbModem.getTtyDevs().size(), modemInfo.getNumTtyDevs());
-            logger.debug("handleEvent() :: usbModem.getBlockDevs().size()={}, modemInfo.getNumBlockDevs()={}",
-                    usbModem.getBlockDevs().size(), modemInfo.getNumBlockDevs());
+            logger.debug(
+                    "handleEvent() :: usbModem.getTtyDevs().size()={}, modemInfo.getNumTtyDevs()={}",
+                    usbModem.getTtyDevs().size(),
+                    modemInfo.getNumTtyDevs());
+            logger.debug(
+                    "handleEvent() :: usbModem.getBlockDevs().size()={}, modemInfo.getNumBlockDevs()={}",
+                    usbModem.getBlockDevs().size(),
+                    modemInfo.getNumBlockDevs());
 
             // Check for correct number of resources
             if (usbModem.getTtyDevs().size() == modemInfo.getNumTtyDevs()
@@ -671,7 +693,10 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         String resource = (String) event.getProperty(UsbDeviceEvent.USB_EVENT_RESOURCE_PROPERTY);
         Integer interfaceNumber = (Integer) event.getProperty(UsbDeviceEvent.USB_EVENT_USB_INTERFACE_NUMBER);
         UsbDeviceType usbDeviceType = (UsbDeviceType) event.getProperty(UsbDeviceEvent.USB_EVENT_DEVICE_TYPE_PROPERTY);
-        logger.debug("handleEvent() :: Found resource: {} of type {} for: {}", resource, usbDeviceType,
+        logger.debug(
+                "handleEvent() :: Found resource: {} of type {} for: {}",
+                resource,
+                usbDeviceType,
                 usbModem.getUsbPort());
         if (usbDeviceType.equals(UsbDeviceType.USB_TTY_DEVICE)) {
             usbModem.addTtyDev(resource, interfaceNumber);
@@ -681,8 +706,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     }
 
     private UsbModemDevice getUsbModemDevice(Event event, final SupportedUsbModemInfo modemInfo) {
-        UsbModemDevice usbModem = this.detectedUsbModems
-                .get(event.getProperty(UsbDeviceEvent.USB_EVENT_USB_PORT_PROPERTY));
+        UsbModemDevice usbModem =
+                this.detectedUsbModems.get(event.getProperty(UsbDeviceEvent.USB_EVENT_USB_PORT_PROPERTY));
 
         if (usbModem == null) {
             logger.debug("handleEvent() :: Modem not found. Create one");
@@ -703,7 +728,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
 
     private UsbModemDevice createNewUsbModemDevice(Event event) {
         UsbModemDevice usbModem;
-        usbModem = new UsbModemDevice((String) event.getProperty(UsbDeviceEvent.USB_EVENT_VENDOR_ID_PROPERTY),
+        usbModem = new UsbModemDevice(
+                (String) event.getProperty(UsbDeviceEvent.USB_EVENT_VENDOR_ID_PROPERTY),
                 (String) event.getProperty(UsbDeviceEvent.USB_EVENT_PRODUCT_ID_PROPERTY),
                 (String) event.getProperty(UsbDeviceEvent.USB_EVENT_MANUFACTURER_NAME_PROPERTY),
                 (String) event.getProperty(UsbDeviceEvent.USB_EVENT_PRODUCT_NAME_PROPERTY),
@@ -723,8 +749,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         }
     }
 
-    private ModemInterface<ModemInterfaceAddress> getModemNetInterfaceByPppName(String pppInterfaceName, boolean isUp,
-            ModemDevice modemDevice) throws KuraException {
+    private ModemInterface<ModemInterfaceAddress> getModemNetInterfaceByPppName(
+            String pppInterfaceName, boolean isUp, ModemDevice modemDevice) throws KuraException {
 
         ModemInterfaceImpl<ModemInterfaceAddress> modemInterface = new ModemInterfaceImpl<>(pppInterfaceName);
 
@@ -751,7 +777,7 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         modemInterface.setLoopback(false);
         modemInterface.setPointToPoint(true);
         modemInterface.setState(getState(pppInterfaceName, isUp));
-        modemInterface.setHardwareAddress(new byte[] { 0, 0, 0, 0, 0, 0 });
+        modemInterface.setHardwareAddress(new byte[] {0, 0, 0, 0, 0, 0});
         LinuxIfconfig ifconfig = this.linuxNetworkUtil.getInterfaceConfiguration(pppInterfaceName);
         if (ifconfig != null) {
             modemInterface.setMTU(ifconfig.getMtu());
@@ -763,7 +789,6 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         modemInterface.setNetInterfaceAddresses(getModemInterfaceAddresses(pppInterfaceName, isUp));
 
         return modemInterface;
-
     }
 
     private List<NetInterfaceAddress> getEthernetOrLoopbackNetInterfaceAddresses(String interfaceName, boolean isUp)
@@ -785,7 +810,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
                         if (gatewayAddress.isPresent()) {
                             netInterfaceAddress.setGateway(gatewayAddress.get());
                         }
-                        netInterfaceAddress.setDnsServers(new ArrayList<>(LinuxDns.getInstance().getDnServers()));
+                        netInterfaceAddress.setDnsServers(
+                                new ArrayList<>(LinuxDns.getInstance().getDnServers()));
                         netInterfaceAddresses.add(netInterfaceAddress);
                     }
                 }
@@ -814,7 +840,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
                     if (gatewayAddress.isPresent()) {
                         wifiInterfaceAddress.setGateway(gatewayAddress.get());
                     }
-                    wifiInterfaceAddress.setDnsServers(new ArrayList<>(LinuxDns.getInstance().getDnServers()));
+                    wifiInterfaceAddress.setDnsServers(
+                            new ArrayList<>(LinuxDns.getInstance().getDnServers()));
 
                     WifiMode wifiMode = this.linuxNetworkUtil.getWifiMode(interfaceName);
                     wifiInterfaceAddress.setBitrate(this.linuxNetworkUtil.getWifiBitrate(interfaceName));
@@ -861,7 +888,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
                         modemInterfaceAddress.setBroadcast(IPAddress.parseHostAddress(ifconfig.getInetBcast()));
                         modemInterfaceAddress.setNetmask(IPAddress.parseHostAddress(currentNetmask));
                         modemInterfaceAddress.setNetworkPrefixLength(NetworkUtil.getNetmaskShortForm(currentNetmask));
-                        modemInterfaceAddress.setDnsServers(LinuxDns.getInstance().getPppDnServers());
+                        modemInterfaceAddress.setDnsServers(
+                                LinuxDns.getInstance().getPppDnServers());
                         ModemConnectionStatus connectionStatus = ModemConnectionStatus.CONNECTED;
                         modemInterfaceAddress.setConnectionStatus(connectionStatus);
                     }
@@ -912,7 +940,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     @Override
     public Optional<UsbNetDevice> getUsbNetDevice(String interfaceName) {
         List<UsbNetDevice> usbNetDevices = this.usbService.getUsbNetDevices();
-        return usbNetDevices.stream().filter(usbDevice -> usbDevice.getInterfaceName().equals(interfaceName))
+        return usbNetDevices.stream()
+                .filter(usbDevice -> usbDevice.getInterfaceName().equals(interfaceName))
                 .findFirst();
     }
 
@@ -951,8 +980,8 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
         return this.linuxNetworkUtil.isVirtual(interfaceName);
     }
 
-    private boolean hasCorrectNumberOfResources(final SupportedUsbModemInfo modemInfo,
-            final UsbModemDevice modemDevice) {
+    private boolean hasCorrectNumberOfResources(
+            final SupportedUsbModemInfo modemInfo, final UsbModemDevice modemDevice) {
         return modemDevice.getTtyDevs().size() == modemInfo.getNumTtyDevs()
                 && modemDevice.getBlockDevs().size() == modemInfo.getNumBlockDevs();
     }
@@ -960,8 +989,7 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
     private void waitActivated() {
         if (!this.activated.get()) {
             try {
-                this.executor.submit(() -> {
-                }).get();
+                this.executor.submit(() -> {}).get();
             } catch (ExecutionException e) {
                 logger.warn("Exception while waiting for activation", e);
             } catch (InterruptedException e) {
@@ -1039,5 +1067,4 @@ public class NetworkServiceImpl implements NetworkService, EventHandler {
             }
         }
     }
-
 }

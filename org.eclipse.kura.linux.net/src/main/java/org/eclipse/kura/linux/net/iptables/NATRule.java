@@ -1,19 +1,18 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2021 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
 package org.eclipse.kura.linux.net.iptables;
 
 import java.util.List;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.firewall.RuleType;
 import org.slf4j.Logger;
@@ -52,8 +51,14 @@ public class NATRule {
         this.type = type;
     }
 
-    public NATRule(String sourceInterface, String destinationInterface, String protocol, String source,
-            String destination, boolean masquerade, RuleType type) {
+    public NATRule(
+            String sourceInterface,
+            String destinationInterface,
+            String protocol,
+            String source,
+            String destination,
+            boolean masquerade,
+            RuleType type) {
         this(sourceInterface, destinationInterface, masquerade, type);
         this.source = source;
         this.destination = destination;
@@ -184,8 +189,13 @@ public class NATRule {
             ret = new NatPostroutingChainRule(this.destinationInterface, this.masquerade, this.type);
         } else {
             try {
-                ret = new NatPostroutingChainRule(this.destinationInterface, this.protocol, this.destination,
-                        this.source, this.masquerade, this.type);
+                ret = new NatPostroutingChainRule(
+                        this.destinationInterface,
+                        this.protocol,
+                        this.destination,
+                        this.source,
+                        this.masquerade,
+                        this.type);
             } catch (KuraException e) {
                 ret = null;
                 logger.error("failed to obtain NatPostroutingChainRule", e);
@@ -207,9 +217,16 @@ public class NATRule {
             dstNetwork = this.destination.split("/")[0];
             dstMask = Short.parseShort(this.destination.split("/")[1]);
         }
-        return new FilterForwardChainRule().inputInterface(this.sourceInterface)
-                .outputInterface(this.destinationInterface).srcNetwork(srcNetwork).srcMask(srcMask)
-                .dstNetwork(dstNetwork).dstMask(dstMask).protocol(this.protocol).srcPortFirst(0).srcPortLast(0)
+        return new FilterForwardChainRule()
+                .inputInterface(this.sourceInterface)
+                .outputInterface(this.destinationInterface)
+                .srcNetwork(srcNetwork)
+                .srcMask(srcMask)
+                .dstNetwork(dstNetwork)
+                .dstMask(dstMask)
+                .protocol(this.protocol)
+                .srcPortFirst(0)
+                .srcPortLast(0)
                 .type(this.type);
     }
 
@@ -236,8 +253,10 @@ public class NATRule {
 
         return compareObjects(this.sourceInterface, other.sourceInterface)
                 && compareObjects(this.destinationInterface, other.destinationInterface)
-                && this.masquerade == other.masquerade && compareObjects(this.protocol, other.protocol)
-                && compareObjects(this.source, other.source) && compareObjects(this.destination, other.destination);
+                && this.masquerade == other.masquerade
+                && compareObjects(this.protocol, other.protocol)
+                && compareObjects(this.source, other.source)
+                && compareObjects(this.destination, other.destination);
     }
 
     private boolean compareObjects(Object obj1, Object obj2) {

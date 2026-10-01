@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.kura.net.status.modem.ESimStatus;
 import org.freedesktop.dbus.types.UInt32;
 import org.junit.Test;
@@ -35,10 +34,10 @@ public class MMSimESimStatusTest {
         @Parameters
         public static Collection<Object[]> SimEsimStatusParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00), MMSimEsimStatus.MM_SIM_ESIM_STATUS_UNKNOWN });
-            params.add(new Object[] { new UInt32(0x01), MMSimEsimStatus.MM_SIM_ESIM_STATUS_NO_PROFILES });
-            params.add(new Object[] { new UInt32(0x02), MMSimEsimStatus.MM_SIM_ESIM_STATUS_WITH_PROFILES });
-            params.add(new Object[] { new UInt32(0x13), MMSimEsimStatus.MM_SIM_ESIM_STATUS_UNKNOWN });
+            params.add(new Object[] {new UInt32(0x00), MMSimEsimStatus.MM_SIM_ESIM_STATUS_UNKNOWN});
+            params.add(new Object[] {new UInt32(0x01), MMSimEsimStatus.MM_SIM_ESIM_STATUS_NO_PROFILES});
+            params.add(new Object[] {new UInt32(0x02), MMSimEsimStatus.MM_SIM_ESIM_STATUS_WITH_PROFILES});
+            params.add(new Object[] {new UInt32(0x13), MMSimEsimStatus.MM_SIM_ESIM_STATUS_UNKNOWN});
             return params;
         }
 
@@ -72,10 +71,10 @@ public class MMSimESimStatusTest {
         @Parameters
         public static Collection<Object[]> SimEsimStatusParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00), ESimStatus.UNKNOWN });
-            params.add(new Object[] { new UInt32(0x01), ESimStatus.NO_PROFILES });
-            params.add(new Object[] { new UInt32(0x02), ESimStatus.WITH_PROFILES });
-            params.add(new Object[] { new UInt32(0x13), ESimStatus.UNKNOWN });
+            params.add(new Object[] {new UInt32(0x00), ESimStatus.UNKNOWN});
+            params.add(new Object[] {new UInt32(0x01), ESimStatus.NO_PROFILES});
+            params.add(new Object[] {new UInt32(0x02), ESimStatus.WITH_PROFILES});
+            params.add(new Object[] {new UInt32(0x13), ESimStatus.UNKNOWN});
             return params;
         }
 
@@ -109,9 +108,9 @@ public class MMSimESimStatusTest {
         @Parameters
         public static Collection<Object[]> SimEsimStatusParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { MMSimEsimStatus.MM_SIM_ESIM_STATUS_UNKNOWN, new UInt32(0x00) });
-            params.add(new Object[] { MMSimEsimStatus.MM_SIM_ESIM_STATUS_NO_PROFILES, new UInt32(0x01) });
-            params.add(new Object[] { MMSimEsimStatus.MM_SIM_ESIM_STATUS_WITH_PROFILES, new UInt32(0x02) });
+            params.add(new Object[] {MMSimEsimStatus.MM_SIM_ESIM_STATUS_UNKNOWN, new UInt32(0x00)});
+            params.add(new Object[] {MMSimEsimStatus.MM_SIM_ESIM_STATUS_NO_PROFILES, new UInt32(0x01)});
+            params.add(new Object[] {MMSimEsimStatus.MM_SIM_ESIM_STATUS_WITH_PROFILES, new UInt32(0x02)});
             return params;
         }
 

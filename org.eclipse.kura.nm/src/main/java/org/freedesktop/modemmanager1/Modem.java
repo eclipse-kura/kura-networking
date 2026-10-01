@@ -14,7 +14,6 @@ package org.freedesktop.modemmanager1;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -34,7 +33,10 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "SimSlots", type = Modem.PropertySimSlotsType.class, access = Access.READ)
 @DBusProperty(name = "PrimarySimSlot", type = UInt32.class, access = Access.READ)
 @DBusProperty(name = "Bearers", type = Modem.PropertyBearersType.class, access = Access.READ)
-@DBusProperty(name = "SupportedCapabilities", type = Modem.PropertySupportedCapabilitiesType.class, access = Access.READ)
+@DBusProperty(
+        name = "SupportedCapabilities",
+        type = Modem.PropertySupportedCapabilitiesType.class,
+        access = Access.READ)
 @DBusProperty(name = "CurrentCapabilities", type = UInt32.class, access = Access.READ)
 @DBusProperty(name = "MaxBearers", type = UInt32.class, access = Access.READ)
 @DBusProperty(name = "MaxActiveBearers", type = UInt32.class, access = Access.READ)
@@ -117,46 +119,25 @@ public interface Modem extends DBusInterface {
         public UInt32 getReason() {
             return this.reason;
         }
-
     }
 
-    public static interface PropertySimSlotsType extends TypeRef<List<DBusPath>> {
+    public static interface PropertySimSlotsType extends TypeRef<List<DBusPath>> {}
 
-    }
+    public static interface PropertyBearersType extends TypeRef<List<DBusPath>> {}
 
-    public static interface PropertyBearersType extends TypeRef<List<DBusPath>> {
+    public static interface PropertySupportedCapabilitiesType extends TypeRef<List<UInt32>> {}
 
-    }
+    public static interface PropertyDriversType extends TypeRef<List<String>> {}
 
-    public static interface PropertySupportedCapabilitiesType extends TypeRef<List<UInt32>> {
+    public static interface PropertyPortsType extends TypeRef<List<PropertyPortsStruct>> {}
 
-    }
+    public static interface PropertyUnlockRetriesType extends TypeRef<Map<UInt32, UInt32>> {}
 
-    public static interface PropertyDriversType extends TypeRef<List<String>> {
+    public static interface PropertyOwnNumbersType extends TypeRef<List<String>> {}
 
-    }
+    public static interface PropertySupportedModesType extends TypeRef<List<PropertySupportedModesStruct>> {}
 
-    public static interface PropertyPortsType extends TypeRef<List<PropertyPortsStruct>> {
+    public static interface PropertySupportedBandsType extends TypeRef<List<UInt32>> {}
 
-    }
-
-    public static interface PropertyUnlockRetriesType extends TypeRef<Map<UInt32, UInt32>> {
-
-    }
-
-    public static interface PropertyOwnNumbersType extends TypeRef<List<String>> {
-
-    }
-
-    public static interface PropertySupportedModesType extends TypeRef<List<PropertySupportedModesStruct>> {
-
-    }
-
-    public static interface PropertySupportedBandsType extends TypeRef<List<UInt32>> {
-
-    }
-
-    public static interface PropertyCurrentBandsType extends TypeRef<List<UInt32>> {
-
-    }
+    public static interface PropertyCurrentBandsType extends TypeRef<List<UInt32>> {}
 }

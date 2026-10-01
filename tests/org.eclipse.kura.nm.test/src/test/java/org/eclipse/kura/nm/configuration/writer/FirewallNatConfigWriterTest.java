@@ -21,7 +21,6 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -161,7 +160,7 @@ public class FirewallNatConfigWriterTest {
     @SuppressWarnings("unchecked")
     private void thenNATRuleApplied(String expectedSource, String expectedDestination) throws KuraException {
         Mockito.verify(this.mockLinuxFirewall).replaceAllNatRules((Set<NATRule>) this.appliedRuleCaptor.capture());
-        
+
         assertTrue(
                 natRuleExists((Set<NATRule>) this.appliedRuleCaptor.getValue(), expectedSource, expectedDestination));
     }
@@ -196,12 +195,12 @@ public class FirewallNatConfigWriterTest {
 
     private boolean sourceAndDestinationMatch(NATRule rule, String source, String destination) {
         if (rule.getSourceInterface() != null && rule.getDestinationInterface() != null) {
-            if (rule.getSourceInterface().equals(source) && rule.getDestinationInterface().equals(destination)) {
+            if (rule.getSourceInterface().equals(source)
+                    && rule.getDestinationInterface().equals(destination)) {
                 return true;
             }
         }
 
         return false;
     }
-
 }

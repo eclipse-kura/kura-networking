@@ -15,7 +15,6 @@ package org.eclipse.kura.network.status.provider.api;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.net.status.wifi.WifiCapability;
 import org.eclipse.kura.net.status.wifi.WifiInterfaceStatus;
 import org.eclipse.kura.net.status.wifi.WifiMode;
@@ -37,9 +36,10 @@ public class WifiInterfaceStatusDTO extends NetworkInterfaceStatusDTO {
         this.channels = status.getChannels().stream().map(WifiChannelDTO::new).collect(Collectors.toList());
         this.countryCode = status.getCountryCode();
         this.mode = status.getMode();
-        this.activeWifiAccessPoint = status.getActiveWifiAccessPoint().map(WifiAccessPointDTO::new).orElse(null);
-        this.availableWifiAccessPoints = status.getAvailableWifiAccessPoints().stream().map(WifiAccessPointDTO::new)
+        this.activeWifiAccessPoint =
+                status.getActiveWifiAccessPoint().map(WifiAccessPointDTO::new).orElse(null);
+        this.availableWifiAccessPoints = status.getAvailableWifiAccessPoints().stream()
+                .map(WifiAccessPointDTO::new)
                 .collect(Collectors.toList());
-
     }
 }

@@ -24,6 +24,4 @@ import org.freedesktop.dbus.interfaces.DBusInterface;
 @DBusInterfaceName("org.freedesktop.NetworkManager.Device.Lowpan")
 @DBusProperty(name = "HwAddress", type = String.class, access = Access.READ)
 @DBusProperty(name = "Parent", type = DBusPath.class, access = Access.READ)
-public interface Lowpan extends DBusInterface {
-
-}
+public interface Lowpan extends DBusInterface {}

@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
 import org.eclipse.kura.configuration.SelfConfiguringComponent;
@@ -40,14 +39,14 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(name = "org.eclipse.kura.internal.floodingprotection.FloodingProtectionConfigurator", //
-    immediate = true, //
-    configurationPolicy = ConfigurationPolicy.OPTIONAL, //
-    property = { //
-        "kura.service.pid=org.eclipse.kura.internal.floodingprotection.FloodingProtectionConfigurator", //
-        "kura.ui.service.hide=true" //
-    }
-)
+@Component(
+        name = "org.eclipse.kura.internal.floodingprotection.FloodingProtectionConfigurator", //
+        immediate = true, //
+        configurationPolicy = ConfigurationPolicy.OPTIONAL, //
+        property = { //
+            "kura.service.pid=org.eclipse.kura.internal.floodingprotection.FloodingProtectionConfigurator", //
+            "kura.ui.service.hide=true" //
+        })
 public class FloodingProtectionConfigurator
         implements FloodingProtectionConfigurationService, ThreatManagerService, SelfConfiguringComponent {
 
@@ -62,7 +61,10 @@ public class FloodingProtectionConfigurator
         this.firewallService = firewallService;
     }
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+    @Reference(
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.STATIC,
+            policyOption = ReferencePolicyOption.GREEDY)
     public synchronized void setFirewallConfigurationServiceIPv6(FirewallConfigurationServiceIPv6 firewallServiceIPv6) {
         this.optionalFirewallServiceIPv6 = Optional.of(firewallServiceIPv6);
     }
@@ -124,9 +126,11 @@ public class FloodingProtectionConfigurator
             configureThreshold(this.floodingProtectionOptions.getFragmentLowThresholdIPv4FileName(), 0);
             configureThreshold(this.floodingProtectionOptions.getFragmentHighThresholdIPv4FileName(), 0);
         } else {
-            configureThreshold(this.floodingProtectionOptions.getFragmentHighThresholdIPv4FileName(),
+            configureThreshold(
+                    this.floodingProtectionOptions.getFragmentHighThresholdIPv4FileName(),
                     this.floodingProtectionOptions.getFragmentHighThresholdDefault());
-            configureThreshold(this.floodingProtectionOptions.getFragmentLowThresholdIPv4FileName(),
+            configureThreshold(
+                    this.floodingProtectionOptions.getFragmentLowThresholdIPv4FileName(),
                     this.floodingProtectionOptions.getFragmentLowThresholdDefault());
         }
     }
@@ -137,9 +141,11 @@ public class FloodingProtectionConfigurator
                 configureThreshold(this.floodingProtectionOptions.getFragmentLowThresholdIPv6FileName(), 0);
                 configureThreshold(this.floodingProtectionOptions.getFragmentHighThresholdIPv6FileName(), 0);
             } else {
-                configureThreshold(this.floodingProtectionOptions.getFragmentHighThresholdIPv6FileName(),
+                configureThreshold(
+                        this.floodingProtectionOptions.getFragmentHighThresholdIPv6FileName(),
                         this.floodingProtectionOptions.getFragmentHighThresholdDefault());
-                configureThreshold(this.floodingProtectionOptions.getFragmentLowThresholdIPv6FileName(),
+                configureThreshold(
+                        this.floodingProtectionOptions.getFragmentLowThresholdIPv6FileName(),
                         this.floodingProtectionOptions.getFragmentLowThresholdDefault());
             }
         }
@@ -160,8 +166,10 @@ public class FloodingProtectionConfigurator
 
     @Override
     public ComponentConfiguration getConfiguration() throws KuraException {
-        return new ComponentConfigurationImpl(this.floodingProtectionOptions.getPid(),
-                this.floodingProtectionOptions.getDefinition(), this.floodingProtectionOptions.getProperties());
+        return new ComponentConfigurationImpl(
+                this.floodingProtectionOptions.getPid(),
+                this.floodingProtectionOptions.getDefinition(),
+                this.floodingProtectionOptions.getProperties());
     }
 
     @Override
@@ -193,5 +201,4 @@ public class FloodingProtectionConfigurator
     public Set<String> getFloodingProtectionMangleRulesIPv6() {
         return this.floodingProtectionOptions.getFloodingProtectionMangleRulesIPv6();
     }
-
 }

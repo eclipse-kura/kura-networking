@@ -19,7 +19,6 @@ import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-
 import org.eclipse.kura.core.net.util.NetworkUtil;
 import org.eclipse.kura.net.wifi.WifiMode;
 import org.eclipse.kura.net.wifi.WifiSecurity;
@@ -184,7 +183,8 @@ public class WifiAccessPointImplTest {
 
         ap.setHardwareAddress(mac);
 
-        String expected = "ssid=ssid :: hardwareAddress=12:34:56:78:90:AB :: frequency=0 :: channel=0 :: mode=null :: strength=0";
+        String expected =
+                "ssid=ssid :: hardwareAddress=12:34:56:78:90:AB :: frequency=0 :: channel=0 :: mode=null :: strength=0";
 
         assertEquals(expected, ap.toString());
     }
@@ -255,7 +255,8 @@ public class WifiAccessPointImplTest {
 
         ap.setWpaSecurity(EnumSet.of(WifiSecurity.GROUP_CCMP, WifiSecurity.GROUP_TKIP));
 
-        String expected = "ssid=ssid :: frequency=0 :: channel=0 :: mode=null :: strength=0 :: wpaSecurity=GROUP_TKIP GROUP_CCMP ";
+        String expected =
+                "ssid=ssid :: frequency=0 :: channel=0 :: mode=null :: strength=0 :: wpaSecurity=GROUP_TKIP GROUP_CCMP ";
 
         assertEquals(expected, ap.toString());
     }
@@ -277,7 +278,8 @@ public class WifiAccessPointImplTest {
 
         ap.setRsnSecurity(EnumSet.of(WifiSecurity.GROUP_CCMP, WifiSecurity.GROUP_TKIP));
 
-        String expected = "ssid=ssid :: frequency=0 :: channel=0 :: mode=null :: strength=0 :: rsnSecurity=GROUP_TKIP GROUP_CCMP ";
+        String expected =
+                "ssid=ssid :: frequency=0 :: channel=0 :: mode=null :: strength=0 :: rsnSecurity=GROUP_TKIP GROUP_CCMP ";
 
         assertEquals(expected, ap.toString());
     }

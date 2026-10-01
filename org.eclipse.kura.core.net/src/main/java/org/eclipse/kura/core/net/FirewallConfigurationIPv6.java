@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -14,7 +14,6 @@ package org.eclipse.kura.core.net;
 
 import java.net.UnknownHostException;
 import java.util.Map;
-
 import org.eclipse.kura.net.IP6Address;
 import org.eclipse.kura.net.IPAddress;
 import org.eclipse.kura.net.NetProtocol;
@@ -89,17 +88,23 @@ public class FirewallConfigurationIPv6 extends FirewallConfiguration {
         String portRange = null;
         if (openPortRuleItems[0].contains(":")) {
             portRange = openPortRuleItems[0];
-            builder.withPortRange(portRange).withProtocol(protocol)
+            builder.withPortRange(portRange)
+                    .withProtocol(protocol)
                     .withPermittedNetwork(convertNetworkPairIPv6(permittedNetwork + "/" + permittedNetworkMask))
-                    .withPermittedInterfaceName(permittedIface).withUnpermittedInterfaceName(unpermittedIface)
-                    .withPermittedMac(permittedMAC).withSourcePortRange(sourcePortRange);
+                    .withPermittedInterfaceName(permittedIface)
+                    .withUnpermittedInterfaceName(unpermittedIface)
+                    .withPermittedMac(permittedMAC)
+                    .withSourcePortRange(sourcePortRange);
             openPortEntry = builder.build();
         } else {
             port = Integer.parseInt(openPortRuleItems[0]);
-            builder.withPort(port).withProtocol(protocol)
+            builder.withPort(port)
+                    .withProtocol(protocol)
                     .withPermittedNetwork(convertNetworkPairIPv6(permittedNetwork + "/" + permittedNetworkMask))
-                    .withPermittedInterfaceName(permittedIface).withUnpermittedInterfaceName(unpermittedIface)
-                    .withPermittedMac(permittedMAC).withSourcePortRange(sourcePortRange);
+                    .withPermittedInterfaceName(permittedIface)
+                    .withUnpermittedInterfaceName(unpermittedIface)
+                    .withPermittedMac(permittedMAC)
+                    .withSourcePortRange(sourcePortRange);
             openPortEntry = builder.build();
         }
         return openPortEntry;
@@ -138,10 +143,16 @@ public class FirewallConfigurationIPv6 extends FirewallConfiguration {
             sourcePortRange = rulesItems[9];
         }
         FirewallPortForwardConfigIP6Builder builder = FirewallPortForwardConfigIP6.builder();
-        builder.withInboundIface(inboundIface).withOutboundIface(outboundIface).withAddress((IP6Address) address)
-                .withProtocol(protocol).withInPort(inPort).withOutPort(outPort).withMasquerade(masquerade)
+        builder.withInboundIface(inboundIface)
+                .withOutboundIface(outboundIface)
+                .withAddress((IP6Address) address)
+                .withProtocol(protocol)
+                .withInPort(inPort)
+                .withOutPort(outPort)
+                .withMasquerade(masquerade)
                 .withPermittedNetwork(convertNetworkPairIPv6(permittedNetwork + "/" + permittedNetworkMask))
-                .withPermittedMac(permittedMAC).withSourcePortRange(sourcePortRange);
+                .withPermittedMac(permittedMAC)
+                .withSourcePortRange(sourcePortRange);
 
         return builder.build();
     }

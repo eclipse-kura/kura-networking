@@ -22,6 +22,7 @@ public class NeedSecretsTuple extends Tuple {
 
     @Position(0)
     private String username;
+
     @Position(1)
     private String password;
 
@@ -45,5 +46,4 @@ public class NeedSecretsTuple extends Tuple {
     public String getPassword() {
         return this.password;
     }
-
 }

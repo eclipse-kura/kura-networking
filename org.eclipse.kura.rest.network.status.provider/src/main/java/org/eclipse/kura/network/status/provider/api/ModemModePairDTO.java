@@ -13,7 +13,6 @@
 package org.eclipse.kura.network.status.provider.api;
 
 import java.util.Set;
-
 import org.eclipse.kura.net.status.modem.ModemMode;
 import org.eclipse.kura.net.status.modem.ModemModePair;
 

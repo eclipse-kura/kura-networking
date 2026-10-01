@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.device;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
@@ -36,9 +35,7 @@ import org.freedesktop.dbus.types.Variant;
 @DBusProperty(name = "Carrier", type = Boolean.class, access = Access.READ)
 public interface Wired extends DBusInterface {
 
-    public static interface PropertyS390SubchannelsType extends TypeRef<List<String>> {
-
-    }
+    public static interface PropertyS390SubchannelsType extends TypeRef<List<String>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -52,6 +49,5 @@ public interface Wired extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 }
