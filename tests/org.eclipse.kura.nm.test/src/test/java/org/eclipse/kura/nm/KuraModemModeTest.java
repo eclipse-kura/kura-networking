@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.nm.enums.MMModemMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,21 +36,21 @@ public class KuraModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new String("NONE"), KuraModemMode.KURA_MODEM_MODE_NONE, null });
-            params.add(new Object[] { new String("CS"), KuraModemMode.KURA_MODEM_MODE_CS, null });
-            params.add(new Object[] { new String("MODE_2G"), KuraModemMode.KURA_MODEM_MODE_2G, null });
-            params.add(new Object[] { new String("MODE_3G"), KuraModemMode.KURA_MODEM_MODE_3G, null });
-            params.add(new Object[] { new String("MODE_4G"), KuraModemMode.KURA_MODEM_MODE_4G, null });
-            params.add(new Object[] { new String("MODE_5G"), KuraModemMode.KURA_MODEM_MODE_5G, null });
-            params.add(new Object[] { new String("ANY"), KuraModemMode.KURA_MODEM_MODE_ANY, null });
-            params.add(new Object[] { new String(""), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String(" "), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String("MODE_6G"), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String("none"), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String("Any"), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String(" MODE_2G "), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String("MM_MODEM_MODE_2G"), null, IllegalArgumentException.class });
-            params.add(new Object[] { new String("NONE,CS"), null, IllegalArgumentException.class });
+            params.add(new Object[] {new String("NONE"), KuraModemMode.KURA_MODEM_MODE_NONE, null});
+            params.add(new Object[] {new String("CS"), KuraModemMode.KURA_MODEM_MODE_CS, null});
+            params.add(new Object[] {new String("MODE_2G"), KuraModemMode.KURA_MODEM_MODE_2G, null});
+            params.add(new Object[] {new String("MODE_3G"), KuraModemMode.KURA_MODEM_MODE_3G, null});
+            params.add(new Object[] {new String("MODE_4G"), KuraModemMode.KURA_MODEM_MODE_4G, null});
+            params.add(new Object[] {new String("MODE_5G"), KuraModemMode.KURA_MODEM_MODE_5G, null});
+            params.add(new Object[] {new String("ANY"), KuraModemMode.KURA_MODEM_MODE_ANY, null});
+            params.add(new Object[] {new String(""), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String(" "), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String("MODE_6G"), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String("none"), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String("Any"), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String(" MODE_2G "), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String("MM_MODEM_MODE_2G"), null, IllegalArgumentException.class});
+            params.add(new Object[] {new String("NONE,CS"), null, IllegalArgumentException.class});
             return params;
         }
 
@@ -61,8 +60,8 @@ public class KuraModemModeTest {
         private KuraModemMode calculatedModemMode;
         private Exception occurredException;
 
-        public KuraModemModeFromStringTest(String stringValue, KuraModemMode modemMode,
-                Class<? extends Exception> expectedExceptionClass) {
+        public KuraModemModeFromStringTest(
+                String stringValue, KuraModemMode modemMode, Class<? extends Exception> expectedExceptionClass) {
             this.inputValue = stringValue;
             this.expectedModemMode = modemMode;
             this.expectedExceptionClass = expectedExceptionClass;
@@ -108,90 +107,93 @@ public class KuraModemModeTest {
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
             params.add(new Object[] { //
-                    Arrays.asList("NONE"), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE), //
-                    null //
+                Arrays.asList("NONE"), //
+                EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList("CS", "MODE_2G"), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G), //
-                    null //
+                Arrays.asList("CS", "MODE_2G"), //
+                EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList("MODE_2G", "MODE_3G"), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_2G, KuraModemMode.KURA_MODEM_MODE_3G), //
-                    null //
+                Arrays.asList("MODE_2G", "MODE_3G"), //
+                EnumSet.of(KuraModemMode.KURA_MODEM_MODE_2G, KuraModemMode.KURA_MODEM_MODE_3G), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList("MODE_3G"), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_3G), //
-                    null //
+                Arrays.asList("MODE_3G"), //
+                EnumSet.of(KuraModemMode.KURA_MODEM_MODE_3G), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList("CS", "MODE_2G", "MODE_3G", "MODE_4G"), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_CS, KuraModemMode.KURA_MODEM_MODE_2G,
-                            KuraModemMode.KURA_MODEM_MODE_3G, KuraModemMode.KURA_MODEM_MODE_4G), //
-                    null //
+                Arrays.asList("CS", "MODE_2G", "MODE_3G", "MODE_4G"), //
+                EnumSet.of(
+                        KuraModemMode.KURA_MODEM_MODE_CS,
+                        KuraModemMode.KURA_MODEM_MODE_2G,
+                        KuraModemMode.KURA_MODEM_MODE_3G,
+                        KuraModemMode.KURA_MODEM_MODE_4G), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList("ANY"), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_ANY), //
-                    null //
+                Arrays.asList("ANY"), //
+                EnumSet.of(KuraModemMode.KURA_MODEM_MODE_ANY), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList(), //
-                    EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE), //
-                    null //
+                Arrays.asList(), //
+                EnumSet.of(KuraModemMode.KURA_MODEM_MODE_NONE), //
+                null //
             });
             params.add(new Object[] { //
-                    Arrays.asList("ANY", "NONE"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("ANY", "NONE"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("ANY", "MODE_2G"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("ANY", "MODE_2G"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("NONE", "MODE_2G"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("NONE", "MODE_2G"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("NONE", "CS", "MODE_2G", "MODE_3G", "MODE_4G"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("NONE", "CS", "MODE_2G", "MODE_3G", "MODE_4G"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("ANY", "CS", "MODE_2G", "MODE_3G", "MODE_4G"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("ANY", "CS", "MODE_2G", "MODE_3G", "MODE_4G"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("NONE", "CS", "MODE_2G", "MODE_3G", "MODE_4G", "MODE_5G", "ANY"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("NONE", "CS", "MODE_2G", "MODE_3G", "MODE_4G", "MODE_5G", "ANY"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("MODE_6G"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("MODE_6G"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("MODE_2G", "MODE_6G"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("MODE_2G", "MODE_6G"), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList(""), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList(""), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    Arrays.asList("none", "cs"), //
-                    null, //
-                    IllegalArgumentException.class //
+                Arrays.asList("none", "cs"), //
+                null, //
+                IllegalArgumentException.class //
             });
             return params;
         }
@@ -202,7 +204,9 @@ public class KuraModemModeTest {
         private Set<KuraModemMode> calculatedModemModes;
         private Exception occurredException;
 
-        public KuraModemModeFromStringListTest(List<String> inputValue, Set<KuraModemMode> modemModes,
+        public KuraModemModeFromStringListTest(
+                List<String> inputValue,
+                Set<KuraModemMode> modemModes,
                 Class<? extends Exception> expectedExceptionClass) {
             this.inputValue = inputValue;
             this.expectedModemModes = modemModes;
@@ -240,7 +244,6 @@ public class KuraModemModeTest {
             assertNotNull(this.occurredException);
             assertEquals(expectedException, this.occurredException.getClass());
         }
-
     }
 
     @RunWith(Parameterized.class)
@@ -249,13 +252,13 @@ public class KuraModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_NONE });
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_CS });
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_2G });
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_3G });
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_4G, MMModemMode.MM_MODEM_MODE_4G });
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_5G, MMModemMode.MM_MODEM_MODE_5G });
-            params.add(new Object[] { KuraModemMode.KURA_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_ANY });
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_NONE});
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_CS});
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_2G});
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_3G});
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_4G, MMModemMode.MM_MODEM_MODE_4G});
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_5G, MMModemMode.MM_MODEM_MODE_5G});
+            params.add(new Object[] {KuraModemMode.KURA_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_ANY});
             return params;
         }
 

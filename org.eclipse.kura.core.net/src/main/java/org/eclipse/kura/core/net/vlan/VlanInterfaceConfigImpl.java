@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2023 Areti and others
- * 
+ * Copyright (c) 2023, 2026 Areti and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Areti
  *  Eurotech
@@ -15,7 +15,6 @@ package org.eclipse.kura.core.net.vlan;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.core.net.NetInterfaceAddressConfigImpl;
 import org.eclipse.kura.net.NetInterfaceAddress;
 import org.eclipse.kura.net.NetInterfaceAddressConfig;
@@ -37,8 +36,8 @@ public class VlanInterfaceConfigImpl extends VlanInterfaceImpl<NetInterfaceAddre
         ArrayList<NetInterfaceAddressConfig> interfaceAddresses = new ArrayList<>();
         if (otherNetInterfaceAddresses != null) {
             for (NetInterfaceAddress netInterfaceAddress : otherNetInterfaceAddresses) {
-                NetInterfaceAddressConfigImpl copiedInterfaceAddressImpl = new NetInterfaceAddressConfigImpl(
-                        netInterfaceAddress);
+                NetInterfaceAddressConfigImpl copiedInterfaceAddressImpl =
+                        new NetInterfaceAddressConfigImpl(netInterfaceAddress);
                 interfaceAddresses.add(copiedInterfaceAddressImpl);
             }
         }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,8 +14,7 @@ package org.eclipse.kura.network.status.provider.api;
 
 public class AddressUtil {
 
-    private AddressUtil() {
-    }
+    private AddressUtil() {}
 
     public static String formatHardwareAddress(final byte[] value) {
         final StringBuilder result = new StringBuilder();

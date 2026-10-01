@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -56,7 +55,8 @@ public class DhcpServerConfigWriter {
 
     public void writeConfiguration() throws KuraException, UnknownHostException {
         String dhcpConfigFileName = getConfigFilename();
-        String tmpDhcpConfigFileName = new StringBuilder(dhcpConfigFileName).append(".tmp").toString();
+        String tmpDhcpConfigFileName =
+                new StringBuilder(dhcpConfigFileName).append(".tmp").toString();
         logger.debug("Writing DHCP Server configuration for {} in {}", this.interfaceName, dhcpConfigFileName);
 
         writeConfigFile(tmpDhcpConfigFileName, buildDhcpServerConfiguration());
@@ -67,8 +67,8 @@ public class DhcpServerConfigWriter {
                 if (tmpDhcpConfigFile.renameTo(dhcpConfigFile)) {
                     logger.debug("Successfully wrote DHCP config file for {}", this.interfaceName);
                 } else {
-                    throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR,
-                            WRITE_ERROR_MESSAGE + this.interfaceName);
+                    throw new KuraException(
+                            KuraErrorCode.CONFIGURATION_ERROR, WRITE_ERROR_MESSAGE + this.interfaceName);
                 }
             } else {
                 logger.debug("Not rewriting DHCP config file for {} because it is the same", this.interfaceName);
@@ -81,7 +81,8 @@ public class DhcpServerConfigWriter {
     }
 
     private void writeConfigFile(String configFileName, DhcpServerConfig4 dhcpServerConfig) throws KuraException {
-        try (FileOutputStream fos = new FileOutputStream(configFileName); PrintWriter pw = new PrintWriter(fos)) {
+        try (FileOutputStream fos = new FileOutputStream(configFileName);
+                PrintWriter pw = new PrintWriter(fos)) {
             logger.debug("writing to {} with: {}", configFileName, dhcpServerConfig);
             Optional<DhcpServerConfigConverter> configConverter = DhcpServerManager.getConfigConverter();
             configConverter.ifPresent(converter -> pw.print(converter.convert(dhcpServerConfig)));
@@ -97,8 +98,8 @@ public class DhcpServerConfigWriter {
         Integer defaultLeaseTime = getDhcpServer4DefaultLeaseTime();
         Integer maxLeaseTime = getDhcpServer4MaxLeaseTime();
         Boolean passDns = getDhcpServer4PassDns();
-        DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(this.interfaceName, isEnabled, defaultLeaseTime, maxLeaseTime,
-                passDns);
+        DhcpServerCfg dhcpServerCfg =
+                new DhcpServerCfg(this.interfaceName, isEnabled, defaultLeaseTime, maxLeaseTime, passDns);
 
         IP4Address address = getIP4Address();
         short prefix = getDhcpServer4Prefix();
@@ -113,14 +114,14 @@ public class DhcpServerConfigWriter {
         if (getDhcpServer4NatEnabled()) {
             router = getIP4Address();
         }
-        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, subnetMask, prefix, router, rangeStart,
-                rangeEnd, dnsServers);
+        DhcpServerCfgIP4 dhcpServerCfgIP4 =
+                new DhcpServerCfgIP4(subnet, subnetMask, prefix, router, rangeStart, rangeEnd, dnsServers);
         return new DhcpServerConfigIP4(dhcpServerCfg, dhcpServerCfgIP4);
     }
 
     private Boolean getDhcpServer4Enabled() {
-        Optional<Boolean> isEnabled = this.networkProperties.getOpt(Boolean.class,
-                "net.interface.%s.config.dhcpServer4.enabled", this.interfaceName);
+        Optional<Boolean> isEnabled = this.networkProperties.getOpt(
+                Boolean.class, "net.interface.%s.config.dhcpServer4.enabled", this.interfaceName);
         if (isEnabled.isPresent()) {
             return isEnabled.get();
         } else {
@@ -129,8 +130,8 @@ public class DhcpServerConfigWriter {
     }
 
     private boolean getDhcpServer4NatEnabled() {
-        Optional<Boolean> isNatEnabled = this.networkProperties.getOpt(Boolean.class,
-                "net.interface.%s.config.nat.enabled", this.interfaceName);
+        Optional<Boolean> isNatEnabled =
+                this.networkProperties.getOpt(Boolean.class, "net.interface.%s.config.nat.enabled", this.interfaceName);
         if (isNatEnabled.isPresent()) {
             return isNatEnabled.get();
         } else {
@@ -139,8 +140,8 @@ public class DhcpServerConfigWriter {
     }
 
     private Integer getDhcpServer4DefaultLeaseTime() {
-        Optional<Integer> defaultLeaseTime = this.networkProperties.getOpt(Integer.class,
-                "net.interface.%s.config.dhcpServer4.defaultLeaseTime", this.interfaceName);
+        Optional<Integer> defaultLeaseTime = this.networkProperties.getOpt(
+                Integer.class, "net.interface.%s.config.dhcpServer4.defaultLeaseTime", this.interfaceName);
         if (defaultLeaseTime.isPresent()) {
             return defaultLeaseTime.get();
         } else {
@@ -149,8 +150,8 @@ public class DhcpServerConfigWriter {
     }
 
     private Integer getDhcpServer4MaxLeaseTime() {
-        Optional<Integer> maxLeaseTime = this.networkProperties.getOpt(Integer.class,
-                "net.interface.%s.config.dhcpServer4.maxLeaseTime", this.interfaceName);
+        Optional<Integer> maxLeaseTime = this.networkProperties.getOpt(
+                Integer.class, "net.interface.%s.config.dhcpServer4.maxLeaseTime", this.interfaceName);
         if (maxLeaseTime.isPresent()) {
             return maxLeaseTime.get();
         } else {
@@ -159,8 +160,8 @@ public class DhcpServerConfigWriter {
     }
 
     private Boolean getDhcpServer4PassDns() {
-        Optional<Boolean> passDns = this.networkProperties.getOpt(Boolean.class,
-                "net.interface.%s.config.dhcpServer4.passDns", this.interfaceName);
+        Optional<Boolean> passDns = this.networkProperties.getOpt(
+                Boolean.class, "net.interface.%s.config.dhcpServer4.passDns", this.interfaceName);
         if (passDns.isPresent()) {
             return passDns.get();
         } else {
@@ -169,8 +170,8 @@ public class DhcpServerConfigWriter {
     }
 
     private short getDhcpServer4Prefix() {
-        Optional<Short> prefix = this.networkProperties.getOpt(Short.class,
-                "net.interface.%s.config.dhcpServer4.prefix", this.interfaceName);
+        Optional<Short> prefix = this.networkProperties.getOpt(
+                Short.class, "net.interface.%s.config.dhcpServer4.prefix", this.interfaceName);
         if (prefix.isPresent()) {
             return prefix.get();
         } else {
@@ -179,8 +180,8 @@ public class DhcpServerConfigWriter {
     }
 
     private IP4Address getIP4Address() throws UnknownHostException {
-        Optional<String> address = this.networkProperties.getOpt(String.class, "net.interface.%s.config.ip4.address",
-                this.interfaceName);
+        Optional<String> address =
+                this.networkProperties.getOpt(String.class, "net.interface.%s.config.ip4.address", this.interfaceName);
         if (address.isPresent()) {
             return (IP4Address) IPAddress.parseHostAddress(address.get());
         } else {
@@ -204,8 +205,8 @@ public class DhcpServerConfigWriter {
     }
 
     private IP4Address getDhcpServer4RangeStart() throws UnknownHostException {
-        Optional<String> rangeStart = this.networkProperties.getOpt(String.class,
-                "net.interface.%s.config.dhcpServer4.rangeStart", this.interfaceName);
+        Optional<String> rangeStart = this.networkProperties.getOpt(
+                String.class, "net.interface.%s.config.dhcpServer4.rangeStart", this.interfaceName);
         if (rangeStart.isPresent()) {
             return (IP4Address) IPAddress.parseHostAddress(rangeStart.get());
         } else {
@@ -214,8 +215,8 @@ public class DhcpServerConfigWriter {
     }
 
     private IP4Address getDhcpServer4RangeEnd() throws UnknownHostException {
-        Optional<String> rangeEnd = this.networkProperties.getOpt(String.class,
-                "net.interface.%s.config.dhcpServer4.rangeEnd", this.interfaceName);
+        Optional<String> rangeEnd = this.networkProperties.getOpt(
+                String.class, "net.interface.%s.config.dhcpServer4.rangeEnd", this.interfaceName);
         if (rangeEnd.isPresent()) {
             return (IP4Address) IPAddress.parseHostAddress(rangeEnd.get());
         } else {

@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.iptables;
 
 import java.net.Inet4Address;
@@ -19,7 +18,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Iterator;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.firewall.RuleType;
@@ -105,7 +103,7 @@ public class NatPreroutingChainRule {
     public NatPreroutingChainRule(String rule) throws KuraException {
         this.type = RuleType.GENERIC;
         try {
-            for (Iterator<String> ruleIterator = Arrays.asList(rule.split(" ")).iterator(); ruleIterator.hasNext();) {
+            for (Iterator<String> ruleIterator = Arrays.asList(rule.split(" ")).iterator(); ruleIterator.hasNext(); ) {
                 String aRuleToken = ruleIterator.next();
                 if ("-i".equals(aRuleToken)) {
                     this.inputInterface = ruleIterator.next();
@@ -187,8 +185,10 @@ public class NatPreroutingChainRule {
             chain = "prerouting-kura";
         }
         StringBuilder sb = new StringBuilder("-A " + chain);
-        if (this.permittedNetwork != null && !this.permittedNetwork.equals("0.0.0.0")
-                && !this.permittedNetwork.equals("::") && !this.permittedNetwork.equals("0:0:0:0:0:0:0:0:0")) {
+        if (this.permittedNetwork != null
+                && !this.permittedNetwork.equals("0.0.0.0")
+                && !this.permittedNetwork.equals("::")
+                && !this.permittedNetwork.equals("0:0:0:0:0:0:0:0:0")) {
             sb.append(" -s ").append(this.permittedNetwork).append('/').append(this.permittedNetworkMask);
         }
         sb.append(" -i ").append(this.inputInterface).append(" -p ").append(this.protocol);
@@ -200,7 +200,9 @@ public class NatPreroutingChainRule {
             sb.append(" --sport ").append(this.srcPortFirst).append(':').append(this.srcPortLast);
         }
         sb.append(" --dport ").append(this.externalPort);
-        sb.append(" -j DNAT --to-destination ").append(getIPAddress(this.dstIpAddress)).append(':')
+        sb.append(" -j DNAT --to-destination ")
+                .append(getIPAddress(this.dstIpAddress))
+                .append(':')
                 .append(this.internalPort);
         return sb.toString();
     }
@@ -210,9 +212,11 @@ public class NatPreroutingChainRule {
         try {
             InetAddress inetAddress = InetAddress.getByName(ipAddress);
 
-            if (inetAddress instanceof Inet4Address && inetAddress.getHostAddress().equals(ipAddress)) {
+            if (inetAddress instanceof Inet4Address
+                    && inetAddress.getHostAddress().equals(ipAddress)) {
                 ipAddressString = ipAddress;
-            } else if (inetAddress instanceof Inet6Address && inetAddress.getHostAddress().equals(ipAddress)) {
+            } else if (inetAddress instanceof Inet6Address
+                    && inetAddress.getHostAddress().equals(ipAddress)) {
                 ipAddressString = "[" + ipAddress + "]";
             }
         } catch (UnknownHostException e) {
@@ -258,10 +262,14 @@ public class NatPreroutingChainRule {
             return false;
         }
 
-        return compareObjects(this.rule, other.rule) && compareObjects(this.inputInterface, other.inputInterface)
-                && compareObjects(this.protocol, other.protocol) && this.externalPort == other.externalPort
-                && this.internalPort == other.internalPort && this.srcPortFirst == other.srcPortFirst
-                && this.srcPortLast == other.srcPortLast && compareObjects(this.dstIpAddress, other.dstIpAddress)
+        return compareObjects(this.rule, other.rule)
+                && compareObjects(this.inputInterface, other.inputInterface)
+                && compareObjects(this.protocol, other.protocol)
+                && this.externalPort == other.externalPort
+                && this.internalPort == other.internalPort
+                && this.srcPortFirst == other.srcPortFirst
+                && this.srcPortLast == other.srcPortLast
+                && compareObjects(this.dstIpAddress, other.dstIpAddress)
                 && compareObjects(this.permittedNetwork, other.permittedNetwork)
                 && this.permittedNetworkMask == other.permittedNetworkMask
                 && compareObjects(this.permittedMacAddress, other.permittedMacAddress)

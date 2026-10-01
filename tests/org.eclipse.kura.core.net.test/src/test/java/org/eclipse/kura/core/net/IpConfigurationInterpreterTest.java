@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.net.IP4Address;
 import org.eclipse.kura.net.IP6Address;
 import org.eclipse.kura.net.IPAddress;
@@ -288,8 +287,8 @@ public class IpConfigurationInterpreterTest {
     // When methods
 
     private void whenConfigurationIsPopulated() throws Exception {
-        this.netConfigs = IpConfigurationInterpreter.populateConfiguration(this.properties, "eth0",
-                this.currentAddress, false);
+        this.netConfigs =
+                IpConfigurationInterpreter.populateConfiguration(this.properties, "eth0", this.currentAddress, false);
     }
 
     private void whenUsbDeviceInfoIsRetrieved() {
@@ -365,8 +364,14 @@ public class IpConfigurationInterpreterTest {
     private static DhcpServerConfigIP4 expectedDhcpServerConfig() throws Exception {
         IP4Address routerAddress = ip4("192.168.1.1");
         DhcpServerCfg dhcpServerCfg = new DhcpServerCfg("eth0", true, 7200, 14400, true);
-        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(ip4("192.168.1.0"), ip4("255.255.255.0"), (short) 24,
-                routerAddress, ip4("192.168.1.100"), ip4("192.168.1.200"), Arrays.asList(routerAddress));
+        DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(
+                ip4("192.168.1.0"),
+                ip4("255.255.255.0"),
+                (short) 24,
+                routerAddress,
+                ip4("192.168.1.100"),
+                ip4("192.168.1.200"),
+                Arrays.asList(routerAddress));
         return new DhcpServerConfigIP4(dhcpServerCfg, dhcpServerCfgIP4);
     }
 

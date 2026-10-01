@@ -1,23 +1,21 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.util;
 
 import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
 import org.apache.commons.io.Charsets;
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
@@ -68,7 +66,9 @@ public class IpAddrShow {
         command.setOutputStream(new ByteArrayOutputStream());
         CommandStatus status = this.executorService.execute(command);
         if (!status.getExitStatus().isSuccessful()) {
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR, sb.toString(),
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR,
+                    sb.toString(),
                     status.getExitStatus().getExitCode());
         }
         parseExecLink(new String(((ByteArrayOutputStream) status.getOutputStream()).toByteArray(), Charsets.UTF_8));
@@ -144,7 +144,9 @@ public class IpAddrShow {
         command.setOutputStream(new ByteArrayOutputStream());
         CommandStatus status = this.executorService.execute(command);
         if (!status.getExitStatus().isSuccessful()) {
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR, sb.toString(),
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR,
+                    sb.toString(),
                     status.getExitStatus().getExitCode());
         }
         parseExecInet(new String(((ByteArrayOutputStream) status.getOutputStream()).toByteArray(), Charsets.UTF_8));
@@ -286,8 +288,9 @@ public class IpAddrShow {
         int mask = 0xffffffff << 32 - prefix;
 
         int value = mask;
-        byte[] bytes = new byte[] { (byte) (value >>> 24), (byte) (value >> 16 & 0xff), (byte) (value >> 8 & 0xff),
-                (byte) (value & 0xff) };
+        byte[] bytes = new byte[] {
+            (byte) (value >>> 24), (byte) (value >> 16 & 0xff), (byte) (value >> 8 & 0xff), (byte) (value & 0xff)
+        };
 
         InetAddress netAddr = InetAddress.getByAddress(bytes);
         return netAddr.toString().substring(1); // strip the leading '/'

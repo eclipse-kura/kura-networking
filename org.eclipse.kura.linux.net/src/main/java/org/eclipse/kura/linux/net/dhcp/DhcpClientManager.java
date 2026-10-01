@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -15,7 +15,6 @@ package org.eclipse.kura.linux.net.dhcp;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.KuraProcessExecutionErrorException;
 import org.eclipse.kura.core.linux.executor.LinuxSignal;
 import org.eclipse.kura.executor.Command;
@@ -131,8 +130,8 @@ public class DhcpClientManager {
         return sb.toString();
     }
 
-    private static String[] formCommand(String interfaceName, boolean useLeasesFile, boolean usePidFile,
-            boolean dontWait) {
+    private static String[] formCommand(
+            String interfaceName, boolean useLeasesFile, boolean usePidFile, boolean dontWait) {
         List<String> command = new ArrayList<>();
 
         if (dhcpClientTool == DhcpClientTool.DHCLIENT) {
@@ -181,10 +180,12 @@ public class DhcpClientManager {
     private List<Pid> getPid(String interfaceName) {
         if (dhcpClientTool == DhcpClientTool.DHCLIENT) {
             return new ArrayList<>(this.executorService
-                    .getPids(new String[] { DhcpClientTool.DHCLIENT.getValue(), interfaceName }).values());
+                    .getPids(new String[] {DhcpClientTool.DHCLIENT.getValue(), interfaceName})
+                    .values());
         } else if (dhcpClientTool == DhcpClientTool.UDHCPC) {
             return new ArrayList<>(this.executorService
-                    .getPids(new String[] { DhcpClientTool.UDHCPC.getValue(), interfaceName }).values());
+                    .getPids(new String[] {DhcpClientTool.UDHCPC.getValue(), interfaceName})
+                    .values());
         } else {
             return new ArrayList<>();
         }

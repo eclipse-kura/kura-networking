@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.freedesktop.networkmanager;
 
 import java.util.Map;
-
 import org.freedesktop.dbus.Tuple;
 import org.freedesktop.dbus.annotations.Position;
 import org.freedesktop.dbus.types.UInt64;
@@ -26,6 +25,7 @@ public class GetAppliedConnectionTuple extends Tuple {
 
     @Position(0)
     private Map<String, Map<String, Variant<?>>> connection;
+
     @Position(1)
     private UInt64 versionId;
 
@@ -49,5 +49,4 @@ public class GetAppliedConnectionTuple extends Tuple {
     public UInt64 getVersionId() {
         return this.versionId;
     }
-
 }

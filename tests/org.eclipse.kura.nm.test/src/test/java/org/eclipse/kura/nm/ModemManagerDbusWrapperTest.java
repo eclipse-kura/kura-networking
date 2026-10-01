@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -30,7 +30,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import org.eclipse.kura.nm.enums.MMModemMode;
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
@@ -69,7 +68,8 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldDoNothingIfModemPathIsMissing() throws DBusException {
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.empty(), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.empty(), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenNoDbusInteractionOccurred();
@@ -79,12 +79,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldSetEnabledAndPreferredModes() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
-                Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -94,12 +94,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldSetSingleEnabledMode() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("MODE_5G")),
-                Optional.of("MODE_5G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("MODE_5G")), Optional.of("MODE_5G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x00000010L, 0x00000010L);
@@ -109,12 +109,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldUseNonePreferredModeIfPreferredModeIsMissing() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")), Optional.empty());
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x00000006L, 0x00000000L);
@@ -124,8 +124,8 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldSetNoneIfEnabledModesAreEmpty() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
         whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.emptyList()), Optional.empty());
@@ -138,12 +138,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldSetAnyMode() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("ANY")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("ANY")), Optional.empty());
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0xFFFFFFFFL, 0x00000000L);
@@ -153,12 +153,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldSkipConfigurationIfModesAreAlreadySet() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
-                Optional.of("MODE_2G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")), Optional.of("MODE_2G"));
 
         thenExceptionDidNotOccur();
         thenModesWereNotSet();
@@ -168,12 +168,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldSkipConfigurationIfModesAreAlreadySetInDifferentOrder() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_2G")),
-                Optional.of("MODE_2G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_2G")), Optional.of("MODE_2G"));
 
         thenExceptionDidNotOccur();
         thenModesWereNotSet();
@@ -184,12 +184,12 @@ public class ModemManagerDbusWrapperTest {
             throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_NONE);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_NONE);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")), Optional.empty());
 
         thenExceptionDidNotOccur();
         thenModesWereNotSet();
@@ -202,8 +202,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), MMModemMode.MM_MODEM_MODE_NONE);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("ANY")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("ANY")), Optional.empty());
 
         thenExceptionDidNotOccur();
         thenModesWereNotSet();
@@ -213,12 +213,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldApplyConfigurationIfOnlyThePreferredModeDiffers() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")),
-                Optional.of("MODE_3G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G")), Optional.of("MODE_3G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x00000006L, 0x00000004L);
@@ -228,11 +228,13 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldApplyConfigurationIfOnlyTheEnabledModesDiffer() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_2G", "MODE_3G", "MODE_4G")),
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH),
+                Optional.of(Arrays.asList("MODE_2G", "MODE_3G", "MODE_4G")),
                 Optional.of("MODE_2G"));
 
         thenExceptionDidNotOccur();
@@ -243,12 +245,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldThrowWithUnrecognizedEnabledMode() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("LTE")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("LTE")), Optional.empty());
 
         thenExceptionOccurred(IllegalArgumentException.class);
         thenModesWereNotSet();
@@ -258,12 +260,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldThrowWithUnrecognizedPreferredMode() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("MODE_4G")),
-                Optional.of("LTE"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Collections.singletonList("MODE_4G")), Optional.of("LTE"));
 
         thenExceptionOccurred(IllegalArgumentException.class);
         thenModesWereNotSet();
@@ -273,12 +275,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldThrowWhenAnyIsMixedWithOtherModes() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("ANY", "MODE_4G")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("ANY", "MODE_4G")), Optional.empty());
 
         thenExceptionOccurred(IllegalArgumentException.class);
         thenModesWereNotSet();
@@ -288,12 +290,12 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldThrowWhenNoneIsMixedWithOtherModes() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("NONE", "MODE_4G")),
-                Optional.empty());
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("NONE", "MODE_4G")), Optional.empty());
 
         thenExceptionOccurred(IllegalArgumentException.class);
         thenModesWereNotSet();
@@ -303,13 +305,13 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldNotThrowIfSetCurrentModesFails() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModes(EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G),
-                MMModemMode.MM_MODEM_MODE_2G);
+        givenMockedCurrentModes(
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), MMModemMode.MM_MODEM_MODE_2G);
         givenMockedModemWillThrowOnSetCurrentModes();
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
-                Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -320,8 +322,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedDbusConnectionWillThrowWhenRetrieving(Modem.class);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
-                Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionOccurred(DBusException.class);
         thenModesWereNotSet();
@@ -333,8 +335,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedDbusConnectionWillThrowWhenRetrieving(Properties.class);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
-                Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -347,8 +349,8 @@ public class ModemManagerDbusWrapperTest {
         givenMockedCurrentModesReturning(null);
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
-                Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -358,11 +360,11 @@ public class ModemManagerDbusWrapperTest {
     public void setModemModesShouldApplyConfigurationIfCurrentModesAreIncomplete() throws DBusException {
         givenMockedModem();
         givenMockedModemProperties();
-        givenMockedCurrentModesReturning(new Object[] { new UInt32(0x0000000CL) });
+        givenMockedCurrentModesReturning(new Object[] {new UInt32(0x0000000CL)});
         givenModemManagerDbusWrapper();
 
-        whenSetModemModesIsCalledWith(Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")),
-                Optional.of("MODE_4G"));
+        whenSetModemModesIsCalledWith(
+                Optional.of(MODEM_PATH), Optional.of(Arrays.asList("MODE_3G", "MODE_4G")), Optional.of("MODE_4G"));
 
         thenExceptionDidNotOccur();
         thenModesWereSetTo(0x0000000CL, 0x00000008L);
@@ -383,8 +385,7 @@ public class ModemManagerDbusWrapperTest {
     }
 
     private void givenMockedCurrentModes(Set<MMModemMode> enabledModes, MMModemMode preferredMode) {
-        givenMockedCurrentModesReturning(
-                new Object[] { MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32() });
+        givenMockedCurrentModesReturning(new Object[] {MMModemMode.toBitMask(enabledModes), preferredMode.toUInt32()});
     }
 
     private void givenMockedCurrentModesReturning(Object[] rawCurrentModes) {
@@ -392,7 +393,8 @@ public class ModemManagerDbusWrapperTest {
     }
 
     private void givenMockedModemWillThrowOnSetCurrentModes() {
-        doThrow(new DBusExecutionException("Operation not supported")).when(this.mockedModem)
+        doThrow(new DBusExecutionException("Operation not supported"))
+                .when(this.mockedModem)
                 .SetCurrentModes(any(SetCurrentModesStruct.class));
     }
 
@@ -410,8 +412,8 @@ public class ModemManagerDbusWrapperTest {
      * When
      */
 
-    private void whenSetModemModesIsCalledWith(Optional<String> mmDbusPath, Optional<List<String>> enabledModes,
-            Optional<String> preferredMode) {
+    private void whenSetModemModesIsCalledWith(
+            Optional<String> mmDbusPath, Optional<List<String>> enabledModes, Optional<String> preferredMode) {
         try {
             this.modemManagerDbusWrapper.setModemModes(mmDbusPath, enabledModes, preferredMode);
         } catch (Exception e) {
@@ -438,8 +440,9 @@ public class ModemManagerDbusWrapperTest {
     }
 
     private void thenModesWereSetTo(long expectedEnabledModesBitMask, long expectedPreferredMode) {
-        verify(this.mockedModem, times(1)).SetCurrentModes(
-                new SetCurrentModesStruct(new UInt32(expectedEnabledModesBitMask), new UInt32(expectedPreferredMode)));
+        verify(this.mockedModem, times(1))
+                .SetCurrentModes(new SetCurrentModesStruct(
+                        new UInt32(expectedEnabledModesBitMask), new UInt32(expectedPreferredMode)));
     }
 
     private void thenModesWereNotSet() {

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -14,7 +14,6 @@ package org.eclipse.kura.core.net;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.net.NetInterfaceConfig;
 import org.eclipse.kura.net.wifi.WifiInterface;
 import org.eclipse.kura.net.wifi.WifiInterfaceAddress;
@@ -36,8 +35,8 @@ public class WifiInterfaceConfigImpl extends WifiInterfaceImpl<WifiInterfaceAddr
 
         if (otherNetInterfaceAddresses != null) {
             for (WifiInterfaceAddress wifiInterfaceAddress : otherNetInterfaceAddresses) {
-                WifiInterfaceAddressConfigImpl copiedInterfaceAddressImpl = new WifiInterfaceAddressConfigImpl(
-                        wifiInterfaceAddress);
+                WifiInterfaceAddressConfigImpl copiedInterfaceAddressImpl =
+                        new WifiInterfaceAddressConfigImpl(wifiInterfaceAddress);
                 interfaceAddresses.add(copiedInterfaceAddressImpl);
             }
         }

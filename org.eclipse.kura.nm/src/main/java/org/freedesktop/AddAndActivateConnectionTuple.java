@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -23,6 +23,7 @@ public class AddAndActivateConnectionTuple extends Tuple {
 
     @Position(0)
     private DBusPath path;
+
     @Position(1)
     private DBusPath activeConnection;
 
@@ -46,5 +47,4 @@ public class AddAndActivateConnectionTuple extends Tuple {
     public DBusPath getActiveConnection() {
         return this.activeConnection;
     }
-
 }

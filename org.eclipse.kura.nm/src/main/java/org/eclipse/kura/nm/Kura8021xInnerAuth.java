@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm;
 
 public enum Kura8021xInnerAuth {
-
     KURA_8021X_INNER_AUTH_NONE("Kura8021xInnerAuthNone"),
     KURA_8021X_INNER_AUTH_MSCHAPV2("Kura8021xInnerAuthMschapv2");
 

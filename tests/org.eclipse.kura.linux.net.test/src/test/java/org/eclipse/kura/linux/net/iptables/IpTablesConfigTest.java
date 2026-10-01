@@ -38,7 +38,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
 import org.eclipse.kura.core.linux.executor.LinuxExitStatus;
@@ -118,14 +117,28 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     public void saveKuraChainsTest() throws KuraException, IOException {
         setUpMock();
         Set<LocalRule> localRules = new LinkedHashSet<>();
-        localRules.add(new LocalRule(5400, "tcp",
-                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0), "eth0", null,
-                "00:11:22:33:44:55:66", "10100:10200"));
+        localRules.add(new LocalRule(
+                5400,
+                "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0),
+                "eth0",
+                null,
+                "00:11:22:33:44:55:66",
+                "10100:10200"));
 
         Set<PortForwardRule> portForwardRules = new LinkedHashSet<>();
-        PortForwardRule portForwardRule = new PortForwardRule().inboundIface("eth0").outboundIface("eth1")
-                .address("172.16.0.1").addressMask(32).protocol("tcp").inPort(3040).outPort(4050).masquerade(true)
-                .permittedNetwork("172.16.0.100").permittedNetworkMask(32).permittedMAC("00:11:22:33:44:55:66")
+        PortForwardRule portForwardRule = new PortForwardRule()
+                .inboundIface("eth0")
+                .outboundIface("eth1")
+                .address("172.16.0.1")
+                .addressMask(32)
+                .protocol("tcp")
+                .inPort(3040)
+                .outPort(4050)
+                .masquerade(true)
+                .permittedNetwork("172.16.0.100")
+                .permittedNetworkMask(32)
+                .permittedMAC("00:11:22:33:44:55:66")
                 .sourcePortRange("10100:10200");
         portForwardRules.add(portForwardRule);
 
@@ -136,8 +149,8 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         natRules.add(
                 new NATRule("eth4", "eth5", "tcp", "172.16.0.1/24", "172.16.0.2/24", true, RuleType.IP_FORWARDING));
 
-        IptablesConfig iptablesConfig = new IptablesConfig(localRules, portForwardRules, autoNatRules, natRules, true,
-                executorServiceMock);
+        IptablesConfig iptablesConfig =
+                new IptablesConfig(localRules, portForwardRules, autoNatRules, natRules, true, executorServiceMock);
 
         try {
             iptablesConfig.saveKuraChains();
@@ -146,12 +159,14 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         }
 
         AtomicBoolean isLocalRulePresent = new AtomicBoolean(false);
-        AtomicBoolean[] isPortForwardRulePresent = { new AtomicBoolean(false), new AtomicBoolean(false),
-                new AtomicBoolean(false), new AtomicBoolean(false) };
-        AtomicBoolean[] isAutoNatRulePresent = { new AtomicBoolean(false), new AtomicBoolean(false),
-                new AtomicBoolean(false) };
-        AtomicBoolean[] isNatRulePresent = { new AtomicBoolean(false), new AtomicBoolean(false),
-                new AtomicBoolean(false) };
+        AtomicBoolean[] isPortForwardRulePresent = {
+            new AtomicBoolean(false), new AtomicBoolean(false), new AtomicBoolean(false), new AtomicBoolean(false)
+        };
+        AtomicBoolean[] isAutoNatRulePresent = {
+            new AtomicBoolean(false), new AtomicBoolean(false), new AtomicBoolean(false)
+        };
+        AtomicBoolean[] isNatRulePresent = {new AtomicBoolean(false), new AtomicBoolean(false), new AtomicBoolean(false)
+        };
         try (Stream<String> lines = Files.lines(Paths.get(iptablesConfig.getFirewallConfigTmpFileName()))) {
             lines.forEach(line -> {
                 line = line.trim();
@@ -190,54 +205,61 @@ public class IpTablesConfigTest extends FirewallTestUtils {
                         isNatRulePresent[2].set(true);
                         break;
                 }
-
             });
         } catch (IOException e) {
             throw new KuraIOException(e, "save() :: failed to save rules on file");
         }
         assertTrue(isLocalRulePresent.get());
-        assertTrue(isPortForwardRulePresent[0].get() && isPortForwardRulePresent[1].get()
-                && isPortForwardRulePresent[2].get() && isPortForwardRulePresent[3].get());
+        assertTrue(isPortForwardRulePresent[0].get()
+                && isPortForwardRulePresent[1].get()
+                && isPortForwardRulePresent[2].get()
+                && isPortForwardRulePresent[3].get());
         assertTrue(isAutoNatRulePresent[0].get() && isAutoNatRulePresent[1].get() && isAutoNatRulePresent[2].get());
         assertTrue(isNatRulePresent[0].get() && isNatRulePresent[1].get() && isNatRulePresent[2].get());
 
         File configFile = new File(iptablesConfig.getFirewallConfigTmpFileName());
         Files.deleteIfExists(configFile.toPath());
-
     }
 
     @Test
     public void applyRulesTest() {
         setUpMock();
 
-        String[] mangleRulesArray = { "-A prerouting-kura -m conntrack --ctstate INVALID -j DROP",
-                "-A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP",
-                "-A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
-                "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
-                "-A prerouting-kura -f -j DROP" };
+        String[] mangleRulesArray = {
+            "-A prerouting-kura -m conntrack --ctstate INVALID -j DROP",
+            "-A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP",
+            "-A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
+            "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
+            "-A prerouting-kura -f -j DROP"
+        };
         Set<String> mangleRules = new HashSet<String>(Arrays.asList(mangleRulesArray));
 
         // These rules are fake...
-        String[] filterRulesArray = { "-A input-kura -p tcp -f -j DROP" };
+        String[] filterRulesArray = {"-A input-kura -p tcp -f -j DROP"};
         Set<String> filterRules = new HashSet<String>(Arrays.asList(filterRulesArray));
 
         // Also these ones...
-        String[] natRulesArray = { "-A prerouting-kura -p tcp -f -j DROP" };
+        String[] natRulesArray = {"-A prerouting-kura -p tcp -f -j DROP"};
         Set<String> natRules = new HashSet<String>(Arrays.asList(natRulesArray));
 
-        IptablesConfig iptablesConfig = new IptablesConfig(new LinkedHashSet<>(), new LinkedHashSet<>(),
-                new LinkedHashSet<>(), new LinkedHashSet<>(), false, executorServiceMock);
+        IptablesConfig iptablesConfig = new IptablesConfig(
+                new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
+                false,
+                executorServiceMock);
         iptablesConfig.setAdditionalFilterRules(filterRules);
         iptablesConfig.setAdditionalNatRules(natRules);
         iptablesConfig.setAdditionalMangleRules(mangleRules);
@@ -308,8 +330,8 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         CommandExecutorService mockService = mock(CommandExecutorService.class);
         boolean allowIcmp = false;
 
-        IptablesConfig config = new IptablesConfig(localRules, portForwardRules,
-                autoNatRules, natRules, allowIcmp, mockService);
+        IptablesConfig config =
+                new IptablesConfig(localRules, portForwardRules, autoNatRules, natRules, allowIcmp, mockService);
 
         assertSame("Local rules should be the same instance", localRules, config.getLocalRules());
         assertSame("Port forward rules should be the same instance", portForwardRules, config.getPortForwardRules());
@@ -327,9 +349,11 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         assertNotNull("getFirewallConfigFileName should not return null", config.getFirewallConfigFileName());
         assertNotNull("getFirewallConfigTmpFileName should not return null", config.getFirewallConfigTmpFileName());
-        assertTrue("getFirewallConfigFileName should contain iptables",
+        assertTrue(
+                "getFirewallConfigFileName should contain iptables",
                 config.getFirewallConfigFileName().contains("iptables"));
-        assertTrue("getFirewallConfigTmpFileName should contain tmp",
+        assertTrue(
+                "getFirewallConfigTmpFileName should contain tmp",
                 config.getFirewallConfigTmpFileName().contains("tmp"));
     }
 
@@ -395,7 +419,9 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         assertNotNull("getNotAllowIcmp should not return null", notAllowIcmp);
         // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking
         // ICMP
-        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0,
+        assertEquals(
+                "getNotAllowIcmp should return empty array (default DROP policy handles blocking)",
+                0,
                 notAllowIcmp.length);
     }
 
@@ -504,7 +530,9 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         // Verify rules remain empty
         assertTrue("Local rules should be empty", config.getLocalRules().isEmpty());
-        assertTrue("Port forward rules should be empty", config.getPortForwardRules().isEmpty());
+        assertTrue(
+                "Port forward rules should be empty",
+                config.getPortForwardRules().isEmpty());
         assertTrue("NAT rules should be empty", config.getNatRules().isEmpty());
         assertTrue("Auto NAT rules should be empty", config.getAutoNatRules().isEmpty());
     }
@@ -512,8 +540,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
     @Test
     public void testApplyRulesWithFailedCommands() {
         CommandExecutorService mockService = mock(CommandExecutorService.class);
-        CommandStatus failedStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failedStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
         when(mockService.execute(any(Command.class))).thenReturn(failedStatus);
 
         IptablesConfig config = new IptablesConfig(mockService);
@@ -614,10 +641,8 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         };
 
         // Create a file with invalid iptables content
-        String invalidContent = "*filter\n" +
-                ":INPUT DROP [0:0]\n" +
-                "-A invalid-chain-name-that-causes-parsing-error\n" +
-                "COMMIT\n";
+        String invalidContent =
+                "*filter\n" + ":INPUT DROP [0:0]\n" + "-A invalid-chain-name-that-causes-parsing-error\n" + "COMMIT\n";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(config.getFirewallConfigTmpFileName()))) {
             writer.write(invalidContent);
@@ -629,11 +654,17 @@ public class IpTablesConfigTest extends FirewallTestUtils {
             config.restore();
 
             // Verify that no valid rules were parsed from the invalid content
-            assertTrue("Local rules should be empty after parsing invalid content", config.getLocalRules().isEmpty());
-            assertTrue("Port forward rules should be empty after parsing invalid content",
+            assertTrue(
+                    "Local rules should be empty after parsing invalid content",
+                    config.getLocalRules().isEmpty());
+            assertTrue(
+                    "Port forward rules should be empty after parsing invalid content",
                     config.getPortForwardRules().isEmpty());
-            assertTrue("NAT rules should be empty after parsing invalid content", config.getNatRules().isEmpty());
-            assertTrue("Auto NAT rules should be empty after parsing invalid content",
+            assertTrue(
+                    "NAT rules should be empty after parsing invalid content",
+                    config.getNatRules().isEmpty());
+            assertTrue(
+                    "Auto NAT rules should be empty after parsing invalid content",
                     config.getAutoNatRules().isEmpty());
         } finally {
             File tempFile = new File(config.getFirewallConfigTmpFileName());
@@ -677,7 +708,9 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         assertTrue("getAllowIcmp should return non-empty array", config.getAllowIcmp().length > 0);
         // DO_NOT_ALLOW_ICMP is now empty as the default DROP policy handles blocking
         // ICMP
-        assertEquals("getNotAllowIcmp should return empty array (default DROP policy handles blocking)", 0,
+        assertEquals(
+                "getNotAllowIcmp should return empty array (default DROP policy handles blocking)",
+                0,
                 config.getNotAllowIcmp().length);
     }
 
@@ -687,10 +720,10 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         // Create a temporary config that we can control file paths for
         IptablesConfig config = new IptablesConfig(executorServiceMock) {
-            private String tempFileName = System.getProperty("java.io.tmpdir") + "/test-iptables-"
-                    + System.currentTimeMillis() + ".tmp";
-            private String configFileName = System.getProperty("java.io.tmpdir") + "/test-iptables-"
-                    + System.currentTimeMillis() + ".conf";
+            private String tempFileName =
+                    System.getProperty("java.io.tmpdir") + "/test-iptables-" + System.currentTimeMillis() + ".tmp";
+            private String configFileName =
+                    System.getProperty("java.io.tmpdir") + "/test-iptables-" + System.currentTimeMillis() + ".conf";
 
             @Override
             public String getFirewallConfigTmpFileName() {
@@ -722,8 +755,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status to simulate command execution failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
 
         // Mock any command execution to return failure status
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
@@ -741,8 +773,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status to simulate iptables-save command failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
 
         // Mock save command to return failure
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
@@ -760,8 +791,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status to simulate iptables-save command failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
 
         // Mock save command to return failure
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
@@ -779,8 +809,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status to simulate iptables-restore command failure
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
 
         // Mock restore command to return failure
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
@@ -802,8 +831,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create success status for the restore command
-        CommandStatus successStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(0));
+        CommandStatus successStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(0));
 
         // Mock restore command to return success
         when(executorServiceMock.execute(any(Command.class))).thenReturn(successStatus);
@@ -825,8 +853,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status for any command execution
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
 
         // Create IptablesConfig with local rules
@@ -848,16 +875,15 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status for any command execution
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
 
         // Create IptablesConfig with NAT rules
         IptablesConfig iptablesConfig = new IptablesConfig(executorServiceMock);
         Set<NATRule> natRules = new HashSet<>();
         try {
-            NATRule natRule = new NATRule("eth0", "eth1", "tcp", "192.168.1.0/24", "0.0.0.0/0", true,
-                    RuleType.IP_FORWARDING);
+            NATRule natRule =
+                    new NATRule("eth0", "eth1", "tcp", "192.168.1.0/24", "0.0.0.0/0", true, RuleType.IP_FORWARDING);
             natRules.add(natRule);
             iptablesConfig.setNatRules(natRules);
         } catch (Exception e) {
@@ -877,8 +903,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         setUpMock();
 
         // Create failure status for any command execution
-        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}),
-                new LinuxExitStatus(1));
+        CommandStatus failureStatus = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(1));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(failureStatus);
 
         // Create IptablesConfig with auto NAT rules
@@ -963,7 +988,7 @@ public class IpTablesConfigTest extends FirewallTestUtils {
 
         IptablesConfig cfg = new IptablesConfig(executorServiceMock);
         // Stub restore command success explicitly to be safe
-        Command cmd = new Command(new String[] { "iptables-restore", "-w", "-n", tempDir.getAbsolutePath() });
+        Command cmd = new Command(new String[] {"iptables-restore", "-w", "-n", tempDir.getAbsolutePath()});
         cmd.setExecuteInAShell(true);
         CommandStatus ok = new CommandStatus(cmd, new LinuxExitStatus(0));
         org.mockito.Mockito.when(executorServiceMock.execute(cmd)).thenReturn(ok);
@@ -975,5 +1000,4 @@ public class IpTablesConfigTest extends FirewallTestUtils {
         inner.delete();
         tempDir.delete();
     }
-
 }

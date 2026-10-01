@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2024 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
 import org.eclipse.kura.KuraProcessExecutionErrorException;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -43,10 +42,10 @@ public class DnsmasqTool implements DhcpLinuxTool {
     private String globalConfigFilename = "/etc/dnsmasq.d/dnsmasq-globals.conf";
     private static final String GLOBAL_CONFIGURATION = "port=0\nbind-dynamic\n";
 
-    static final String[] IS_ACTIVE_COMMANDLINE = new String[] { "systemctl", "is-active", "--quiet",
-            DhcpServerTool.DNSMASQ.getValue() };
-    static final String[] RESTART_COMMANDLINE = new String[] { "systemctl", "restart",
-            DhcpServerTool.DNSMASQ.getValue() };
+    static final String[] IS_ACTIVE_COMMANDLINE =
+            new String[] {"systemctl", "is-active", "--quiet", DhcpServerTool.DNSMASQ.getValue()};
+    static final String[] RESTART_COMMANDLINE =
+            new String[] {"systemctl", "restart", DhcpServerTool.DNSMASQ.getValue()};
 
     private CommandExecutorService executorService;
     private Map<String, byte[]> configsLastHash = Collections.synchronizedMap(new HashMap<>());
@@ -62,11 +61,12 @@ public class DnsmasqTool implements DhcpLinuxTool {
 
         boolean isRunning;
         try {
-            isRunning = status.getExitStatus().isSuccessful() && !isConfigFileAlteredOrNonExistent(interfaceName)
+            isRunning = status.getExitStatus().isSuccessful()
+                    && !isConfigFileAlteredOrNonExistent(interfaceName)
                     && !shouldWriteGlobalConfig();
         } catch (NoSuchAlgorithmException | IOException e) {
-            throw new KuraProcessExecutionErrorException(e,
-                    "Failed to check if DHCP server is running for interface: " + interfaceName);
+            throw new KuraProcessExecutionErrorException(
+                    e, "Failed to check if DHCP server is running for interface: " + interfaceName);
         }
         logger.debug("Is dnsmasq running updated for interface {}? {}", interfaceName, isRunning);
 
@@ -78,12 +78,12 @@ public class DnsmasqTool implements DhcpLinuxTool {
         logger.debug("Starting dnsmasq service for interface {}.", interfaceName);
 
         try {
-            this.configsLastHash.put(interfaceName,
-                    sha1(Paths.get(DhcpServerManager.getConfigFilename(interfaceName))));
+            this.configsLastHash.put(
+                    interfaceName, sha1(Paths.get(DhcpServerManager.getConfigFilename(interfaceName))));
             writeGlobalConfig();
         } catch (NoSuchAlgorithmException | IOException e) {
-            throw new KuraProcessExecutionErrorException(e,
-                    "Failed to start DHCP server for interface: " + interfaceName);
+            throw new KuraProcessExecutionErrorException(
+                    e, "Failed to start DHCP server for interface: " + interfaceName);
         }
 
         Command restartCommand = new Command(RESTART_COMMANDLINE);

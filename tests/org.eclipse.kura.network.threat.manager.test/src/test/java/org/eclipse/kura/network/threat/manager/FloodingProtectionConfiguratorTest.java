@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2021, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
 import org.eclipse.kura.internal.floodingprotection.FloodingProtectionConfigurator;
@@ -43,89 +42,93 @@ import org.junit.Test;
 public class FloodingProtectionConfiguratorTest {
 
     private static final String[] FLOODING_PROTECTION_MANGLE_RULES = {
-            "-A prerouting-kura -m conntrack --ctstate INVALID -j DROP",
-            "-A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP",
-            "-A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
-            "-A prerouting-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j DROP", 
-            "-A prerouting-kura -f -j DROP" };
+        "-A prerouting-kura -m conntrack --ctstate INVALID -j DROP",
+        "-A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP",
+        "-A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
+        "-A prerouting-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j DROP",
+        "-A prerouting-kura -f -j DROP"
+    };
 
     private static final String[] FLOODING_PROTECTION_MANGLE_RULES_IPV6 = {
-            "-A prerouting-kura -m conntrack --ctstate INVALID -j DROP",
-            "-A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP",
-            "-A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
-            "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
-            "-A prerouting-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j DROP",
-            "-A prerouting-kura -m ipv6header --header dst --soft -j DROP",
-            "-A prerouting-kura -m ipv6header --header hop --soft -j DROP",
-            "-A prerouting-kura -m ipv6header --header route --soft -j DROP",
-            "-A prerouting-kura -m ipv6header --header frag --soft -j DROP",
-            "-A prerouting-kura -m ipv6header --header auth --soft -j DROP",
-            "-A prerouting-kura -m ipv6header --header esp --soft -j DROP",
-            "-A prerouting-kura -m ipv6header --header none --soft -j DROP",
-            "-A prerouting-kura -m rt --rt-type 0 -j DROP", "-A output-kura -m rt --rt-type 0 -j DROP" };
+        "-A prerouting-kura -m conntrack --ctstate INVALID -j DROP",
+        "-A prerouting-kura -p tcp ! --syn -m conntrack --ctstate NEW -j DROP",
+        "-A prerouting-kura -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags SYN,RST SYN,RST -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags FIN,RST FIN,RST -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags FIN,ACK FIN -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ACK,URG URG -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ACK,FIN FIN -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ACK,PSH PSH -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL ALL -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL NONE -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP",
+        "-A prerouting-kura -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP",
+        "-A prerouting-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j DROP",
+        "-A prerouting-kura -m ipv6header --header dst --soft -j DROP",
+        "-A prerouting-kura -m ipv6header --header hop --soft -j DROP",
+        "-A prerouting-kura -m ipv6header --header route --soft -j DROP",
+        "-A prerouting-kura -m ipv6header --header frag --soft -j DROP",
+        "-A prerouting-kura -m ipv6header --header auth --soft -j DROP",
+        "-A prerouting-kura -m ipv6header --header esp --soft -j DROP",
+        "-A prerouting-kura -m ipv6header --header none --soft -j DROP",
+        "-A prerouting-kura -m rt --rt-type 0 -j DROP",
+        "-A output-kura -m rt --rt-type 0 -j DROP"
+    };
 
     private static final String[] FLOODING_PROTECTION_FILTER_RULES_IPV6 = {
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 129 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 130 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 131 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 132 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 133 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 134 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 135 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 136 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 141 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 142 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 148 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 149 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 151 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 152 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 153 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT" };
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 129 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 130 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 131 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 132 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 133 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 134 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 135 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 136 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 141 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 142 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 148 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 149 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 151 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 152 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 153 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT"
+    };
 
     private static final String FRAG_LOW_THR_IPV4_NAME = "/tmp/ipfrag_low_thresh";
     private static final String FRAG_HIGH_THR_IPV4_NAME = "/tmp/ipfrag_high_thresh";
@@ -226,8 +229,8 @@ public class FloodingProtectionConfiguratorTest {
 
         whenFloodingProtectionConfiguratorIsActivated(true, true);
 
-        thenFirewallRulesAreApplied(new HashSet<>(), new HashSet<>(),
-                new HashSet<>(Arrays.asList(FLOODING_PROTECTION_MANGLE_RULES)));
+        thenFirewallRulesAreApplied(
+                new HashSet<>(), new HashSet<>(), new HashSet<>(Arrays.asList(FLOODING_PROTECTION_MANGLE_RULES)));
     }
 
     @Test
@@ -245,8 +248,10 @@ public class FloodingProtectionConfiguratorTest {
 
         whenFloodingProtectionConfiguratorIsActivated(true, true);
 
-        thenFirewallRulesIPv6AreApplied(new HashSet<>(Arrays.asList(FLOODING_PROTECTION_FILTER_RULES_IPV6)),
-                new HashSet<>(), new HashSet<>(Arrays.asList(FLOODING_PROTECTION_MANGLE_RULES_IPV6)));
+        thenFirewallRulesIPv6AreApplied(
+                new HashSet<>(Arrays.asList(FLOODING_PROTECTION_FILTER_RULES_IPV6)),
+                new HashSet<>(),
+                new HashSet<>(Arrays.asList(FLOODING_PROTECTION_MANGLE_RULES_IPV6)));
     }
 
     @Test
@@ -266,8 +271,11 @@ public class FloodingProtectionConfiguratorTest {
 
         whenFloodingProtectionConfiguratorIsActivated(false, false);
 
-        thenFragmentFilteringFilesContain(FRAG_LOW_THR_IPV4_NAME, Integer.toString(FRAG_LOW_THR_DEFAULT),
-                FRAG_HIGH_THR_IPV4_NAME, Integer.toString(FRAG_HIGH_THR_DEFAULT));
+        thenFragmentFilteringFilesContain(
+                FRAG_LOW_THR_IPV4_NAME,
+                Integer.toString(FRAG_LOW_THR_DEFAULT),
+                FRAG_HIGH_THR_IPV4_NAME,
+                Integer.toString(FRAG_HIGH_THR_DEFAULT));
     }
 
     @Test
@@ -287,8 +295,11 @@ public class FloodingProtectionConfiguratorTest {
 
         whenFloodingProtectionConfiguratorIsActivated(false, false);
 
-        thenFragmentFilteringFilesContain(FRAG_LOW_THR_IPV6_NAME, Integer.toString(FRAG_LOW_THR_DEFAULT),
-                FRAG_HIGH_THR_IPV6_NAME, Integer.toString(FRAG_HIGH_THR_DEFAULT));
+        thenFragmentFilteringFilesContain(
+                FRAG_LOW_THR_IPV6_NAME,
+                Integer.toString(FRAG_LOW_THR_DEFAULT),
+                FRAG_HIGH_THR_IPV6_NAME,
+                Integer.toString(FRAG_HIGH_THR_DEFAULT));
     }
 
     private void givenFloodingProtectionConfigurator() {
@@ -399,13 +410,14 @@ public class FloodingProtectionConfiguratorTest {
         verify(this.mockFirewallService, times(1)).addFloodingProtectionRules(filterRules, natRules, mangleRules);
     }
 
-    private void thenFirewallRulesIPv6AreApplied(Set<String> filterRules, Set<String> natRules,
-            Set<String> mangleRules) {
+    private void thenFirewallRulesIPv6AreApplied(
+            Set<String> filterRules, Set<String> natRules, Set<String> mangleRules) {
         verify(this.mockFirewallServiceIPv6, times(1)).addFloodingProtectionRules(filterRules, natRules, mangleRules);
     }
 
-    private void thenFragmentFilteringFilesContain(String lowThresholdFilenane, String lowThreshold,
-            String highThresholdFilenane, String highThreshold) throws IOException {
+    private void thenFragmentFilteringFilesContain(
+            String lowThresholdFilenane, String lowThreshold, String highThresholdFilenane, String highThreshold)
+            throws IOException {
         assertTrue(fileContains(lowThresholdFilenane, lowThreshold));
         assertTrue(fileContains(highThresholdFilenane, highThreshold));
     }

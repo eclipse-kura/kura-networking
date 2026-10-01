@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2023 Areti and others
- * 
+ * Copyright (c) 2023, 2026 Areti and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Areti
  *******************************************************************************/
@@ -62,7 +62,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof SemanticVersion)) {
-                return false;
+            return false;
         }
         return this.compareTo((SemanticVersion) obj) == 0;
     }
@@ -75,14 +75,25 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(this.getClass().getName());
-        sb.append(": [").append("major=").append(this.major).append(", minor=").append(this.minor)
-                .append(", revision=").append(this.revision).append(']');
+        sb.append(": [")
+                .append("major=")
+                .append(this.major)
+                .append(", minor=")
+                .append(this.minor)
+                .append(", revision=")
+                .append(this.revision)
+                .append(']');
         return sb.toString();
     }
-    
+
     public String asStringValue() {
-        return new StringBuilder().append(this.major).append(".").append(this.minor)
-                .append(".").append(this.revision).toString();
+        return new StringBuilder()
+                .append(this.major)
+                .append(".")
+                .append(this.minor)
+                .append(".")
+                .append(this.revision)
+                .toString();
     }
 
     public static SemanticVersion parse(String version) {

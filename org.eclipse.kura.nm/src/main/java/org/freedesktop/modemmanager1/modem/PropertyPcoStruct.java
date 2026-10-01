@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.freedesktop.modemmanager1.modem;
 
 import java.util.List;
-
 import org.freedesktop.dbus.Struct;
 import org.freedesktop.dbus.annotations.Position;
 import org.freedesktop.dbus.types.UInt32;
@@ -25,6 +24,7 @@ public class PropertyPcoStruct extends Struct {
 
     @Position(0)
     private final UInt32 member0;
+
     @Position(1)
     private final boolean member1;
 
@@ -48,5 +48,4 @@ public class PropertyPcoStruct extends Struct {
     public List<Byte> getMember2() {
         return this.member2;
     }
-
 }

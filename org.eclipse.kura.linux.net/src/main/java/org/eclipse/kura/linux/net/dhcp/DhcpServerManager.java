@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -15,7 +15,6 @@ package org.eclipse.kura.linux.net.dhcp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
@@ -44,19 +43,20 @@ public class DhcpServerManager {
 
     public DhcpServerManager(CommandExecutorService service) {
         switch (dhcpServerTool) {
-        case DNSMASQ:
-            this.linuxTool = Optional.of(new DnsmasqTool(service));
-            break;
-        case NONE:
-            this.linuxTool = Optional.empty();
-            break;
-        default:
-            throw new IllegalArgumentException(dhcpServerTool.name() + " not supported.");
+            case DNSMASQ:
+                this.linuxTool = Optional.of(new DnsmasqTool(service));
+                break;
+            case NONE:
+                this.linuxTool = Optional.empty();
+                break;
+            default:
+                throw new IllegalArgumentException(dhcpServerTool.name() + " not supported.");
         }
     }
 
     public static DhcpServerTool getTool() {
-        if (dhcpServerTool == DhcpServerTool.NONE && LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue())
+        if (dhcpServerTool == DhcpServerTool.NONE
+                && LinuxNetworkUtil.toolExists(DhcpServerTool.DNSMASQ.getValue())
                 && LinuxNetworkUtil.systemdSystemUnitExists(DhcpServerTool.DNSMASQ.getValue() + ".service")) {
             dhcpServerTool = DhcpServerTool.DNSMASQ;
         }
@@ -71,7 +71,6 @@ public class DhcpServerManager {
             return false;
         }
         return this.linuxTool.get().isRunning(interfaceName);
-
     }
 
     public boolean enable(String interfaceName) throws KuraException {

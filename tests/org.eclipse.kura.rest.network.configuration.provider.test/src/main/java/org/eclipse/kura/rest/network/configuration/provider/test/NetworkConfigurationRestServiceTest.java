@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021, 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2021, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
 import org.eclipse.kura.configuration.ConfigurationService;
@@ -61,8 +60,10 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
     private static final String REST_APP_ID = "networkConfiguration/v1";
 
     private static final String NETWORK_CONF_SERVICE_PID = "org.eclipse.kura.net.admin.NetworkConfigurationService";
-    private static final String IP4_FIREWALL_CONF_SERVICE_PID = "org.eclipse.kura.net.admin.FirewallConfigurationService";
-    private static final String IP6_FIREWALL_CONF_SERVICE_PID = "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6";
+    private static final String IP4_FIREWALL_CONF_SERVICE_PID =
+            "org.eclipse.kura.net.admin.FirewallConfigurationService";
+    private static final String IP6_FIREWALL_CONF_SERVICE_PID =
+            "org.eclipse.kura.net.admin.ipv6.FirewallConfigurationServiceIPv6";
 
     private final Map<String, Map<String, Object>> receivedConfigsByPid = new HashMap<>();
 
@@ -120,7 +121,9 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenBasicCredentials(Optional.of("admin:password"));
         givenMockGetNetworkConfiguration();
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_POST), "/configurableComponents/configurations/byPid",
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_POST),
+                "/configurableComponents/configurations/byPid",
                 RestNetworkConfigurationJson.FIREWALL_IP6_BYPID_REQUEST);
 
         thenRequestSucceeds();
@@ -133,7 +136,8 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenBasicCredentials(Optional.of("admin:password"));
         givenMockGetDefaultNetworkConfiguration();
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_POST),
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_POST),
                 "/configurableComponents/configurations/byPid/_default",
                 RestNetworkConfigurationJson.FIREWALL_IP6_BYPID_REQUEST);
 
@@ -147,12 +151,14 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenIdentity("admin", Optional.of("password"), Collections.emptyList());
         givenBasicCredentials(Optional.of("admin:password"));
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_PUT), "/configurableComponents/configurations/_update",
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_PUT),
+                "/configurableComponents/configurations/_update",
                 RestNetworkConfigurationJson.FIREWALL_IP6_UPDATE_REQUEST);
 
         thenRequestSucceeds();
-        thenValueIsUpdated(IP6_FIREWALL_CONF_SERVICE_PID, "firewall.ipv6.open.ports",
-                "1234,tcp,0:0:0:0:0:0:0:0/0,,,,,#");
+        thenValueIsUpdated(
+                IP6_FIREWALL_CONF_SERVICE_PID, "firewall.ipv6.open.ports", "1234,tcp,0:0:0:0:0:0:0:0/0,,,,,#");
     }
 
     @Test
@@ -162,7 +168,9 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenIdentity("admin", Optional.of("password"), Collections.emptyList());
         givenBasicCredentials(Optional.of("admin:password"));
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_PUT), "/configurableComponents/configurations/_update",
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_PUT),
+                "/configurableComponents/configurations/_update",
                 RestNetworkConfigurationJson.NETWORK_CONFIGURATION_UPDATE_REQUEST);
 
         thenRequestSucceeds();
@@ -187,7 +195,9 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenIdentity("admin", Optional.of("password"), Collections.emptyList());
         givenBasicCredentials(Optional.of("admin:password"));
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_POST), "/factoryComponents",
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_POST),
+                "/factoryComponents",
                 RestNetworkConfigurationJson.EMPTY_CONFIGS_REQUEST);
 
         thenResponseCodeIs(200);
@@ -199,7 +209,9 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenIdentity("admin", Optional.of("password"), Collections.emptyList());
         givenBasicCredentials(Optional.of("admin:password"));
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_DELETE, "DEL"), "/factoryComponents/byPid",
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_DELETE, "DEL"),
+                "/factoryComponents/byPid",
                 RestNetworkConfigurationJson.INVALID_PID_DELETE_REQUEST);
 
         thenResponseBodyEqualsJson(RestNetworkConfigurationJson.INVALID_PID_DELETE_RESPONSE);
@@ -222,7 +234,9 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         givenIdentity("admin", Optional.of("password"), Collections.emptyList());
         givenBasicCredentials(Optional.of("admin:password"));
 
-        whenRequestIsPerformed(new MethodSpec(METHOD_SPEC_POST), "/factoryComponents/ocd/byFactoryPid",
+        whenRequestIsPerformed(
+                new MethodSpec(METHOD_SPEC_POST),
+                "/factoryComponents/ocd/byFactoryPid",
                 RestNetworkConfigurationJson.EMPTY_PIDS_REQUEST);
 
         thenResponseBodyEqualsJson(RestNetworkConfigurationJson.EMPTY_CONFIGS_RESPONSE);
@@ -270,16 +284,18 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
             this.receivedConfigsByPid.put(i.getArgument(0, String.class), i.getArgument(1, Map.class));
             return (Void) null;
         };
-        Mockito.doAnswer(configurationUpdateAnswer).when(configurationService)
+        Mockito.doAnswer(configurationUpdateAnswer)
+                .when(configurationService)
                 .updateConfiguration(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyBoolean());
     }
 
     private void givenMockNetworkConfigurationService() throws KuraException {
         Map<String, Object> properties = new HashMap<>();
         properties.put("net.interfaces", "eth0");
-        ComponentConfiguration componentConfig = new ComponentConfigurationImpl(NETWORK_CONF_SERVICE_PID,
-                new ObjectFactory().createTocd(), properties);
-        when(configurationService.getComponentConfiguration(NETWORK_CONF_SERVICE_PID)).thenReturn(componentConfig);
+        ComponentConfiguration componentConfig =
+                new ComponentConfigurationImpl(NETWORK_CONF_SERVICE_PID, new ObjectFactory().createTocd(), properties);
+        when(configurationService.getComponentConfiguration(NETWORK_CONF_SERVICE_PID))
+                .thenReturn(componentConfig);
     }
 
     /*
@@ -297,8 +313,9 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
     @BeforeClass
     public static void setUp() throws Exception {
         ServiceUtil.trackService(ConfigurationService.class, Optional.empty()).get(30, TimeUnit.SECONDS);
-        final ConfigurationAdmin configurationAdmin = ServiceUtil
-                .trackService(ConfigurationAdmin.class, Optional.empty()).get(30, TimeUnit.SECONDS);
+        final ConfigurationAdmin configurationAdmin = ServiceUtil.trackService(
+                        ConfigurationAdmin.class, Optional.empty())
+                .get(30, TimeUnit.SECONDS);
         final Configuration config = configurationAdmin.getConfiguration(
                 "org.eclipse.kura.internal.rest.network.configuration.NetworkConfigurationRestService", "?");
         final Dictionary<String, Object> properties = new Hashtable<>();
@@ -307,14 +324,16 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
         final Dictionary<String, Object> configurationServiceProperties = new Hashtable<>();
         configurationServiceProperties.put("service.ranking", Integer.MIN_VALUE);
         configurationServiceProperties.put("kura.service.pid", "mockConfigurationService");
-        FrameworkUtil.getBundle(NetworkConfigurationRestServiceTest.class).getBundleContext()
+        FrameworkUtil.getBundle(NetworkConfigurationRestServiceTest.class)
+                .getBundleContext()
                 .registerService(ConfigurationService.class, configurationService, configurationServiceProperties);
     }
 
     private void givenIdentity(final String username, final Optional<String> password, final List<String> roles) {
         final UserAdmin userAdmin;
         try {
-            userAdmin = ServiceUtil.trackService(UserAdmin.class, Optional.empty()).get(30, TimeUnit.SECONDS);
+            userAdmin =
+                    ServiceUtil.trackService(UserAdmin.class, Optional.empty()).get(30, TimeUnit.SECONDS);
         } catch (Exception e) {
             fail("failed to track UserAdmin");
             return;
@@ -331,7 +350,8 @@ public class NetworkConfigurationRestServiceTest extends AbstractRequestHandlerT
             }
         }
         for (final String role : roles) {
-            getRoleOrCreateOne(userAdmin, "kura.permission." + role, Group.class).addMember(user);
+            getRoleOrCreateOne(userAdmin, "kura.permission." + role, Group.class)
+                    .addMember(user);
         }
     }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2024, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -15,11 +15,9 @@ package org.eclipse.kura.nm.enums;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.freedesktop.dbus.types.UInt32;
 
 public enum NM80211ApFlags {
-
     NM_802_11_AP_FLAGS_NONE(0x00000000),
     NM_802_11_AP_FLAGS_PRIVACY(0x00000001),
     NM_802_11_AP_FLAGS_WPS(0x00000002),

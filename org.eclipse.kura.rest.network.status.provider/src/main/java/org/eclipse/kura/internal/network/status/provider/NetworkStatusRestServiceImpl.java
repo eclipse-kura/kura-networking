@@ -12,9 +12,15 @@
  *******************************************************************************/
 package org.eclipse.kura.internal.network.status.provider;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.cloudconnection.request.RequestHandler;
@@ -35,24 +41,17 @@ import org.osgi.service.useradmin.UserAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-
 @Path("/networkStatus/v1")
-@Component(name = "org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl", //
-    immediate = true, //
-    property = { //
-        "service.pid=org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl", //
-        "kura.service.pid=org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl", //
-        "osgi.jakartars.resource=true" //
-    }, //
-    service = NetworkStatusRestServiceImpl.class //
-)
+@Component(
+        name = "org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl", //
+        immediate = true, //
+        property = { //
+            "service.pid=org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl", //
+            "kura.service.pid=org.eclipse.kura.internal.network.status.provider.NetworkStatusRestServiceImpl", //
+            "osgi.jakartars.resource=true" //
+        }, //
+        service = NetworkStatusRestServiceImpl.class //
+        )
 public class NetworkStatusRestServiceImpl {
 
     private static final String KURA_PERMISSION_REST_NETWORK_STATUS_ROLE = "kura.permission.rest.network.status";
@@ -64,7 +63,10 @@ public class NetworkStatusRestServiceImpl {
 
     private final RequestHandler requestHandler = new JaxRsRequestHandlerProxy(this);
 
-    @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, unbind = "unsetRequestHandlerRegistry")
+    @Reference(
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRequestHandlerRegistry")
     public void setRequestHandlerRegistry(final RequestHandlerRegistry registry) {
         try {
             registry.registerRequestHandler(APP_ID, this.requestHandler);
@@ -136,7 +138,8 @@ public class NetworkStatusRestServiceImpl {
 
         for (final String interfaceId : interfaceIds) {
             try {
-                final NetworkInterfaceStatus status = this.networkStatusService.getNetworkStatus(interfaceId)
+                final NetworkInterfaceStatus status = this.networkStatusService
+                        .getNetworkStatus(interfaceId)
                         .orElseThrow(() -> new KuraException(KuraErrorCode.NOT_FOUND, "Interface not found"));
 
                 interfaces.add(status);
@@ -147,5 +150,4 @@ public class NetworkStatusRestServiceImpl {
 
         return new InterfaceStatusListDTO(interfaces, failures);
     }
-
 }

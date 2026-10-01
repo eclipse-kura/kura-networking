@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.Command;
@@ -79,8 +78,10 @@ public class WpaSupplicantManager {
             CommandStatus status = this.executorService.execute(command);
             int exitValue = status.getExitStatus().getExitCode();
             if (exitValue != 0 && exitValue != 255) {
-                logger.error("failed to start wpa_supplicant for the {} interface for unknown reason - errorCode={}",
-                        interfaceName, exitValue);
+                logger.error(
+                        "failed to start wpa_supplicant for the {} interface for unknown reason - errorCode={}",
+                        interfaceName,
+                        exitValue);
                 throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR, "failed to start hostapd for unknown reason");
             }
         } catch (Exception e) {
@@ -93,8 +94,9 @@ public class WpaSupplicantManager {
      * This method forms wpa_supplicant start command
      */
     private String[] formSupplicantStartCommand(String ifaceName, File configFile) {
-        return new String[] { WPA_SUPPLICANT, "-B", "-D", this.supplicantDriver, "-i", ifaceName, "-c",
-                configFile.getAbsolutePath() };
+        return new String[] {
+            WPA_SUPPLICANT, "-B", "-D", this.supplicantDriver, "-i", ifaceName, "-c", configFile.getAbsolutePath()
+        };
     }
 
     /**
@@ -103,22 +105,23 @@ public class WpaSupplicantManager {
      * @return {@link boolean}
      */
     public boolean isRunning(String ifaceName) {
-        return this.executorService.isRunning(new String[] { WPA_SUPPLICANT, "-i", ifaceName });
+        return this.executorService.isRunning(new String[] {WPA_SUPPLICANT, "-i", ifaceName});
     }
 
     public int getPid(String ifaceName) throws KuraException {
-        List<Pid> pids = new ArrayList<>(
-                this.executorService.getPids(new String[] { WPA_SUPPLICANT, "-i", ifaceName }).values());
+        List<Pid> pids = new ArrayList<>(this.executorService
+                .getPids(new String[] {WPA_SUPPLICANT, "-i", ifaceName})
+                .values());
         if (!pids.isEmpty()) {
             return pids.get(0).getPid();
         } else {
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
-                    "Failed to get wpa_supplicant pid for interface " + ifaceName);
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR, "Failed to get wpa_supplicant pid for interface " + ifaceName);
         }
     }
 
     public boolean isTempRunning() {
-        return this.executorService.isRunning(new String[] { WPA_SUPPLICANT, "-c", TEMP_CONFIG_FILE.toString() });
+        return this.executorService.isRunning(new String[] {WPA_SUPPLICANT, "-c", TEMP_CONFIG_FILE.toString()});
     }
 
     /**
@@ -127,11 +130,11 @@ public class WpaSupplicantManager {
      * @throws Exception
      */
     public void stop(String ifaceName) throws KuraException {
-        Map<String, Pid> pids = this.executorService.getPids(new String[] { WPA_SUPPLICANT, "-i", ifaceName });
+        Map<String, Pid> pids = this.executorService.getPids(new String[] {WPA_SUPPLICANT, "-i", ifaceName});
         for (Pid pid : pids.values()) {
             if (!ProcessStopUtil.stopAndKill(executorService, pid)) {
-                throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
-                        "Failed to stop hostapd for interface " + ifaceName);
+                throw new KuraException(
+                        KuraErrorCode.OS_COMMAND_ERROR, "Failed to stop hostapd for interface " + ifaceName);
             }
         }
         this.linuxNetworkUtil.disableInterface(ifaceName);

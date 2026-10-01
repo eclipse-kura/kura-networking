@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.net.status.modem.ModemMode;
 import org.freedesktop.dbus.types.UInt32;
 import org.junit.Test;
@@ -39,14 +38,14 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00000000L), MMModemMode.MM_MODEM_MODE_NONE });
-            params.add(new Object[] { new UInt32(0x00000001L), MMModemMode.MM_MODEM_MODE_CS });
-            params.add(new Object[] { new UInt32(0x00000002L), MMModemMode.MM_MODEM_MODE_2G });
-            params.add(new Object[] { new UInt32(0x00000004L), MMModemMode.MM_MODEM_MODE_3G });
-            params.add(new Object[] { new UInt32(0x00000008L), MMModemMode.MM_MODEM_MODE_4G });
-            params.add(new Object[] { new UInt32(0x00000010L), MMModemMode.MM_MODEM_MODE_5G });
-            params.add(new Object[] { new UInt32(0xFFFFFFFFL), MMModemMode.MM_MODEM_MODE_ANY });
-            params.add(new Object[] { new UInt32(0x12345678L), MMModemMode.MM_MODEM_MODE_NONE });
+            params.add(new Object[] {new UInt32(0x00000000L), MMModemMode.MM_MODEM_MODE_NONE});
+            params.add(new Object[] {new UInt32(0x00000001L), MMModemMode.MM_MODEM_MODE_CS});
+            params.add(new Object[] {new UInt32(0x00000002L), MMModemMode.MM_MODEM_MODE_2G});
+            params.add(new Object[] {new UInt32(0x00000004L), MMModemMode.MM_MODEM_MODE_3G});
+            params.add(new Object[] {new UInt32(0x00000008L), MMModemMode.MM_MODEM_MODE_4G});
+            params.add(new Object[] {new UInt32(0x00000010L), MMModemMode.MM_MODEM_MODE_5G});
+            params.add(new Object[] {new UInt32(0xFFFFFFFFL), MMModemMode.MM_MODEM_MODE_ANY});
+            params.add(new Object[] {new UInt32(0x12345678L), MMModemMode.MM_MODEM_MODE_NONE});
             return params;
         }
 
@@ -80,14 +79,14 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00000000L), ModemMode.NONE });
-            params.add(new Object[] { new UInt32(0x00000001L), ModemMode.CS });
-            params.add(new Object[] { new UInt32(0x00000002L), ModemMode.MODE_2G });
-            params.add(new Object[] { new UInt32(0x00000004L), ModemMode.MODE_3G });
-            params.add(new Object[] { new UInt32(0x00000008L), ModemMode.MODE_4G });
-            params.add(new Object[] { new UInt32(0x00000010L), ModemMode.MODE_5G });
-            params.add(new Object[] { new UInt32(0xFFFFFFFFL), ModemMode.ANY });
-            params.add(new Object[] { new UInt32(0x12345678L), ModemMode.NONE });
+            params.add(new Object[] {new UInt32(0x00000000L), ModemMode.NONE});
+            params.add(new Object[] {new UInt32(0x00000001L), ModemMode.CS});
+            params.add(new Object[] {new UInt32(0x00000002L), ModemMode.MODE_2G});
+            params.add(new Object[] {new UInt32(0x00000004L), ModemMode.MODE_3G});
+            params.add(new Object[] {new UInt32(0x00000008L), ModemMode.MODE_4G});
+            params.add(new Object[] {new UInt32(0x00000010L), ModemMode.MODE_5G});
+            params.add(new Object[] {new UInt32(0xFFFFFFFFL), ModemMode.ANY});
+            params.add(new Object[] {new UInt32(0x12345678L), ModemMode.NONE});
             return params;
         }
 
@@ -121,14 +120,16 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { new UInt32(0x00000000L), EnumSet.of(ModemMode.NONE) });
-            params.add(new Object[] { new UInt32(0x00000003L), EnumSet.of(ModemMode.CS, ModemMode.MODE_2G) });
-            params.add(new Object[] { new UInt32(0x00000006L), EnumSet.of(ModemMode.MODE_2G, ModemMode.MODE_3G) });
-            params.add(new Object[] { new UInt32(0x00000004L), EnumSet.of(ModemMode.MODE_3G) });
-            params.add(new Object[] { new UInt32(0x0000000FL),
-                    EnumSet.of(ModemMode.CS, ModemMode.MODE_2G, ModemMode.MODE_3G, ModemMode.MODE_4G) });
-            params.add(new Object[] { new UInt32(0xFFFFFFFFL), EnumSet.of(ModemMode.ANY) });
-            params.add(new Object[] { new UInt32(0x12345600L), EnumSet.noneOf(ModemMode.class) });
+            params.add(new Object[] {new UInt32(0x00000000L), EnumSet.of(ModemMode.NONE)});
+            params.add(new Object[] {new UInt32(0x00000003L), EnumSet.of(ModemMode.CS, ModemMode.MODE_2G)});
+            params.add(new Object[] {new UInt32(0x00000006L), EnumSet.of(ModemMode.MODE_2G, ModemMode.MODE_3G)});
+            params.add(new Object[] {new UInt32(0x00000004L), EnumSet.of(ModemMode.MODE_3G)});
+            params.add(new Object[] {
+                new UInt32(0x0000000FL),
+                EnumSet.of(ModemMode.CS, ModemMode.MODE_2G, ModemMode.MODE_3G, ModemMode.MODE_4G)
+            });
+            params.add(new Object[] {new UInt32(0xFFFFFFFFL), EnumSet.of(ModemMode.ANY)});
+            params.add(new Object[] {new UInt32(0x12345600L), EnumSet.noneOf(ModemMode.class)});
             return params;
         }
 
@@ -154,7 +155,6 @@ public class MMModemModeTest {
         private void thenCalculatedModemModesIsCorrect() {
             assertEquals(this.expectedModemModes, this.calculatedModemModes);
         }
-
     }
 
     @RunWith(Parameterized.class)
@@ -164,78 +164,89 @@ public class MMModemModeTest {
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), //
-                    new UInt32(0x00000000L), //
-                    null //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE), //
+                new UInt32(0x00000000L), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G), //
-                    new UInt32(0x00000003L), //
-                    null //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G), //
+                new UInt32(0x00000003L), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), //
-                    new UInt32(0x00000006L), //
-                    null //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G), //
+                new UInt32(0x00000006L), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), //
-                    new UInt32(0x00000004L), //
-                    null //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_3G), //
+                new UInt32(0x00000004L), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_CS, MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
-                            MMModemMode.MM_MODEM_MODE_4G), //
-                    new UInt32(0x0000000FL), //
-                    null //
+                EnumSet.of(
+                        MMModemMode.MM_MODEM_MODE_CS,
+                        MMModemMode.MM_MODEM_MODE_2G,
+                        MMModemMode.MM_MODEM_MODE_3G,
+                        MMModemMode.MM_MODEM_MODE_4G), //
+                new UInt32(0x0000000FL), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G,
-                            MMModemMode.MM_MODEM_MODE_4G), //
-                    new UInt32(0x0000000EL), //
-                    null //
+                EnumSet.of(
+                        MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G), //
+                new UInt32(0x0000000EL), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), //
-                    new UInt32(0xFFFFFFFFL), //
-                    null //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY), //
+                new UInt32(0xFFFFFFFFL), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.noneOf(MMModemMode.class), //
-                    new UInt32(0x00000000L), //
-                    null //
+                EnumSet.noneOf(MMModemMode.class), //
+                new UInt32(0x00000000L), //
+                null //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_NONE), //
-                    null, //
-                    IllegalArgumentException.class //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_NONE), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_2G), //
-                    null, //
-                    IllegalArgumentException.class //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_2G), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_2G), //
-                    null, //
-                    IllegalArgumentException.class //
+                EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_2G), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_NONE, MMModemMode.MM_MODEM_MODE_CS,
-                            MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G), //
-                    null, //
-                    IllegalArgumentException.class //
+                EnumSet.of(
+                        MMModemMode.MM_MODEM_MODE_NONE,
+                        MMModemMode.MM_MODEM_MODE_CS,
+                        MMModemMode.MM_MODEM_MODE_2G,
+                        MMModemMode.MM_MODEM_MODE_3G,
+                        MMModemMode.MM_MODEM_MODE_4G), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    EnumSet.of(MMModemMode.MM_MODEM_MODE_ANY, MMModemMode.MM_MODEM_MODE_CS,
-                            MMModemMode.MM_MODEM_MODE_2G, MMModemMode.MM_MODEM_MODE_3G, MMModemMode.MM_MODEM_MODE_4G), //
-                    null, //
-                    IllegalArgumentException.class //
+                EnumSet.of(
+                        MMModemMode.MM_MODEM_MODE_ANY,
+                        MMModemMode.MM_MODEM_MODE_CS,
+                        MMModemMode.MM_MODEM_MODE_2G,
+                        MMModemMode.MM_MODEM_MODE_3G,
+                        MMModemMode.MM_MODEM_MODE_4G), //
+                null, //
+                IllegalArgumentException.class //
             });
             params.add(new Object[] { //
-                    EnumSet.allOf(MMModemMode.class), //
-                    null, //
-                    IllegalArgumentException.class //
+                EnumSet.allOf(MMModemMode.class), //
+                null, //
+                IllegalArgumentException.class //
             });
             return params;
         }
@@ -246,8 +257,8 @@ public class MMModemModeTest {
         private UInt32 calculatedInt;
         private Exception occurredException;
 
-        public MMModemModeToBitMaskFromModemModeSetTest(Set<MMModemMode> modemModes, UInt32 intValue,
-                Class<? extends Exception> expectedExceptionClass) {
+        public MMModemModeToBitMaskFromModemModeSetTest(
+                Set<MMModemMode> modemModes, UInt32 intValue, Class<? extends Exception> expectedExceptionClass) {
             this.expectedInt = intValue;
             this.inputValue = modemModes;
             this.expectedExceptionClass = expectedExceptionClass;
@@ -284,7 +295,6 @@ public class MMModemModeTest {
             assertNotNull(this.occurredException);
             assertEquals(expectedException, this.occurredException.getClass());
         }
-
     }
 
     @RunWith(Parameterized.class)
@@ -293,13 +303,15 @@ public class MMModemModeTest {
         @Parameters
         public static Collection<Object[]> ModemModeParams() {
             List<Object[]> params = new ArrayList<>();
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_NONE, new UInt32(0x00000000L), });
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_CS, new UInt32(0x00000001L) });
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_2G, new UInt32(0x00000002L) });
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_3G, new UInt32(0x00000004L) });
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_4G, new UInt32(0x00000008L) });
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_5G, new UInt32(0x00000010L) });
-            params.add(new Object[] { MMModemMode.MM_MODEM_MODE_ANY, new UInt32(0xFFFFFFFFL) });
+            params.add(new Object[] {
+                MMModemMode.MM_MODEM_MODE_NONE, new UInt32(0x00000000L),
+            });
+            params.add(new Object[] {MMModemMode.MM_MODEM_MODE_CS, new UInt32(0x00000001L)});
+            params.add(new Object[] {MMModemMode.MM_MODEM_MODE_2G, new UInt32(0x00000002L)});
+            params.add(new Object[] {MMModemMode.MM_MODEM_MODE_3G, new UInt32(0x00000004L)});
+            params.add(new Object[] {MMModemMode.MM_MODEM_MODE_4G, new UInt32(0x00000008L)});
+            params.add(new Object[] {MMModemMode.MM_MODEM_MODE_5G, new UInt32(0x00000010L)});
+            params.add(new Object[] {MMModemMode.MM_MODEM_MODE_ANY, new UInt32(0xFFFFFFFFL)});
             return params;
         }
 

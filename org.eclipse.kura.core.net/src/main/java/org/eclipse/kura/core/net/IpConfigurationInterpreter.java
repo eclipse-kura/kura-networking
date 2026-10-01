@@ -18,7 +18,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.net.util.NetworkUtil;
 import org.eclipse.kura.net.IP4Address;
@@ -48,12 +47,11 @@ public class IpConfigurationInterpreter {
 
     private static final String NET_INTERFACE = "net.interface.";
 
-    private IpConfigurationInterpreter() {
+    private IpConfigurationInterpreter() {}
 
-    }
-
-    public static List<NetConfig> populateConfiguration(Map<String, Object> props, String interfaceName,
-            IPAddress netInterfaceAddress, boolean virtualInterface) throws UnknownHostException {
+    public static List<NetConfig> populateConfiguration(
+            Map<String, Object> props, String interfaceName, IPAddress netInterfaceAddress, boolean virtualInterface)
+            throws UnknownHostException {
         List<NetConfig> netConfigs = new ArrayList<>();
 
         if (isNull(props)) {
@@ -88,8 +86,8 @@ public class IpConfigurationInterpreter {
             }
         }
 
-        DhcpServerConfigIP4 dhcpServerConfigIP4 = getDhcpServerIp4(props, interfaceName, netInterfaceAddress,
-                netConfigIP4);
+        DhcpServerConfigIP4 dhcpServerConfigIP4 =
+                getDhcpServerIp4(props, interfaceName, netInterfaceAddress, netConfigIP4);
         if (!isNull(dhcpServerConfigIP4)) {
             netConfigs.add(dhcpServerConfigIP4);
         }
@@ -100,11 +98,11 @@ public class IpConfigurationInterpreter {
         }
 
         return netConfigs;
-
     }
 
-    private static DhcpServerConfigIP4 getDhcpServerIp4(Map<String, Object> props, String interfaceName,
-            IPAddress netInterfaceAddress, NetConfigIP4 netConfigIP4) throws UnknownHostException {
+    private static DhcpServerConfigIP4 getDhcpServerIp4(
+            Map<String, Object> props, String interfaceName, IPAddress netInterfaceAddress, NetConfigIP4 netConfigIP4)
+            throws UnknownHostException {
         DhcpServerConfigIP4 dhcpServerConfigIP4 = null;
         String configDhcpServerEnabled = NET_INTERFACE + interfaceName + ".config.dhcpServer4.enabled";
         if (props.containsKey(configDhcpServerEnabled)) {
@@ -137,17 +135,19 @@ public class IpConfigurationInterpreter {
                 dnServers.add(routerAddress);
 
                 boolean dhcpServerEnabled = (Boolean) props.get(configDhcpServerEnabled);
-                DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(interfaceName, dhcpServerEnabled, defaultLeaseTime,
-                        maximumLeaseTime, passDns);
-                DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(subnet, subnetMask, prefix, routerAddress,
-                        rangeStart, rangeEnd, dnServers);
+                DhcpServerCfg dhcpServerCfg = new DhcpServerCfg(
+                        interfaceName, dhcpServerEnabled, defaultLeaseTime, maximumLeaseTime, passDns);
+                DhcpServerCfgIP4 dhcpServerCfgIP4 = new DhcpServerCfgIP4(
+                        subnet, subnetMask, prefix, routerAddress, rangeStart, rangeEnd, dnServers);
 
                 try {
                     dhcpServerConfigIP4 = new DhcpServerConfigIP4(dhcpServerCfg, dhcpServerCfgIP4);
                 } catch (KuraException e) {
                     // If the DHCP Server is disabled, ignore the configuration validity
                     if (dhcpServerEnabled) {
-                        logger.warn("This invalid DhcpServerCfgIP4 configuration is ignored - {}, {}", dhcpServerCfg,
+                        logger.warn(
+                                "This invalid DhcpServerCfgIP4 configuration is ignored - {}, {}",
+                                dhcpServerCfg,
                                 dhcpServerCfgIP4);
                     }
                 }
@@ -157,7 +157,8 @@ public class IpConfigurationInterpreter {
     }
 
     private static SystemService getSystemService() {
-        BundleContext context = FrameworkUtil.getBundle(NetworkConfiguration.class).getBundleContext();
+        BundleContext context =
+                FrameworkUtil.getBundle(NetworkConfiguration.class).getBundleContext();
         ServiceReference<SystemService> systemServiceSR = context.getServiceReference(SystemService.class);
         return context.getService(systemServiceSR);
     }
@@ -225,7 +226,8 @@ public class IpConfigurationInterpreter {
         }
 
         StringBuilder sbPrefix = new StringBuilder();
-        String netIfReadOnlyPrefix = sbPrefix.append(NET_INTERFACE).append(interfaceName).append(".").toString();
+        String netIfReadOnlyPrefix =
+                sbPrefix.append(NET_INTERFACE).append(interfaceName).append(".").toString();
         // USB
         String vendorId = (String) props.get(netIfReadOnlyPrefix + "usb.vendor.id");
         String vendorName = (String) props.get(netIfReadOnlyPrefix + "usb.vendor.name");
@@ -235,15 +237,15 @@ public class IpConfigurationInterpreter {
         String usbDevicePath = (String) props.get(netIfReadOnlyPrefix + "usb.devicePath");
 
         if (vendorId != null && productId != null) {
-            usbDevice = new UsbNetDevice(vendorId, productId, vendorName, productName, usbBusNumber, usbDevicePath,
-                    interfaceName);
+            usbDevice = new UsbNetDevice(
+                    vendorId, productId, vendorName, productName, usbBusNumber, usbDevicePath, interfaceName);
             logger.trace("adding usbDevice: {}, port: {}", usbDevice, usbDevice.getUsbPort());
         }
         return usbDevice;
     }
 
-    private static NetConfigIP4 getIp4NetConfig(Map<String, Object> props, String interfaceName,
-            boolean virtualInterface) throws UnknownHostException {
+    private static NetConfigIP4 getIp4NetConfig(
+            Map<String, Object> props, String interfaceName, boolean virtualInterface) throws UnknownHostException {
 
         NetInterfaceStatus status4 = getIp4Status(props, interfaceName, virtualInterface);
         NetConfigIP4 netConfigIP4 = new NetConfigIP4(status4, getAutoConnectProperty(status4));
@@ -274,8 +276,8 @@ public class IpConfigurationInterpreter {
         return netConfigIP4;
     }
 
-    private static NetInterfaceStatus getIp4Status(Map<String, Object> props, String interfaceName,
-            boolean virtualInterface) {
+    private static NetInterfaceStatus getIp4Status(
+            Map<String, Object> props, String interfaceName, boolean virtualInterface) {
         NetInterfaceStatus configStatus4 = NetworkConfigurationConstants.DEFAULT_IPV4_STATUS_VALUE;
         String configStatus4Key = NET_INTERFACE + interfaceName + ".config.ip4.status";
         if (props.containsKey(configStatus4Key)) {
@@ -371,8 +373,8 @@ public class IpConfigurationInterpreter {
     private static int getDhcpServer4DefaultLeaseTime(Map<String, Object> props, String interfaceName) {
         int defaultLeaseTime = NetworkConfigurationConstants.DEFAULT_IPV4_DHCP_SERVER_DEFAULT_LEASE_TIME_VALUE;
         // default lease time
-        String configDhcpServerDefaultLeaseTime = NET_INTERFACE + interfaceName
-                + ".config.dhcpServer4.defaultLeaseTime";
+        String configDhcpServerDefaultLeaseTime =
+                NET_INTERFACE + interfaceName + ".config.dhcpServer4.defaultLeaseTime";
         if (props.containsKey(configDhcpServerDefaultLeaseTime)) {
             if (props.get(configDhcpServerDefaultLeaseTime) instanceof Integer) {
                 defaultLeaseTime = (Integer) props.get(configDhcpServerDefaultLeaseTime);
@@ -468,7 +470,6 @@ public class IpConfigurationInterpreter {
             if (!ip6DomainNames.isEmpty()) {
                 netConfigIP6.setDomains(ip6DomainNames);
             }
-
         }
         return netConfigIP6;
     }

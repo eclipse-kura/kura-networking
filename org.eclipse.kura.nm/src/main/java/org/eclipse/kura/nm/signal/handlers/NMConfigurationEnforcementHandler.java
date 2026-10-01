@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,6 @@
 package org.eclipse.kura.nm.signal.handlers;
 
 import java.util.Objects;
-
 import org.eclipse.kura.nm.NMDbusConnector;
 import org.eclipse.kura.nm.enums.NMDeviceState;
 import org.eclipse.kura.nm.enums.NMDeviceStateReason;
@@ -39,8 +38,12 @@ public class NMConfigurationEnforcementHandler implements DBusSigHandler<Device.
         NMDeviceState newState = NMDeviceState.fromUInt32(s.getNewState());
         NMDeviceStateReason reason = NMDeviceStateReason.fromUInt32(s.getReason());
 
-        logger.debug("Device state change detected by configuration enforcer: {} -> {} (reason: {}), for device {}",
-                oldState, newState, reason, s.getPath());
+        logger.debug(
+                "Device state change detected by configuration enforcer: {} -> {} (reason: {}), for device {}",
+                oldState,
+                newState,
+                reason,
+                s.getPath());
 
         boolean deviceDisconnectedBecauseOfConfigurationEvent = oldState != NMDeviceState.NM_DEVICE_STATE_FAILED
                 && oldState != NMDeviceState.NM_DEVICE_STATE_UNAVAILABLE
@@ -53,8 +56,10 @@ public class NMConfigurationEnforcementHandler implements DBusSigHandler<Device.
                 String deviceId = this.nm.getInterfaceIdByDBusPath(s.getPath());
                 this.nm.apply(deviceId);
             } catch (DBusException e) {
-                logger.error("Failed to handle network configuration change event for device: {}. Caused by:",
-                        s.getPath(), e);
+                logger.error(
+                        "Failed to handle network configuration change event for device: {}. Caused by:",
+                        s.getPath(),
+                        e);
             }
         }
     }

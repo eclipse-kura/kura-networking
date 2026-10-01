@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.device;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.TypeRef;
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
@@ -42,9 +41,7 @@ public interface WiMax extends DBusInterface {
 
     public List<DBusPath> GetNspList();
 
-    public static interface PropertyNspsType extends TypeRef<List<DBusPath>> {
-
-    }
+    public static interface PropertyNspsType extends TypeRef<List<DBusPath>> {}
 
     public static class PropertiesChanged extends DBusSignal {
 
@@ -58,7 +55,6 @@ public interface WiMax extends DBusInterface {
         public Map<String, Variant<?>> getProperties() {
             return this.properties;
         }
-
     }
 
     public static class NspAdded extends DBusSignal {
@@ -73,7 +69,6 @@ public interface WiMax extends DBusInterface {
         public DBusPath getNsp() {
             return this.nsp;
         }
-
     }
 
     public static class NspRemoved extends DBusSignal {
@@ -88,6 +83,5 @@ public interface WiMax extends DBusInterface {
         public DBusPath getNsp() {
             return this.nsp;
         }
-
     }
 }

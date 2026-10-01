@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.executor.Command;
@@ -60,8 +59,10 @@ public class HostapdManager {
             logger.info("starting hostapd for the {} interface --> {}", ifaceName, launchHostapdCommand);
             CommandStatus status = this.executorService.execute(new Command(launchHostapdCommand));
             if (!status.getExitStatus().isSuccessful()) {
-                logger.error("failed to start hostapd for the {} interface for unknown reason - errorCode={}",
-                        ifaceName, status.getExitStatus().getExitCode());
+                logger.error(
+                        "failed to start hostapd for the {} interface for unknown reason - errorCode={}",
+                        ifaceName,
+                        status.getExitStatus().getExitCode());
                 throw KuraException.internalError("failed to start hostapd for unknown reason");
             }
             Thread.sleep(1000);
@@ -73,13 +74,14 @@ public class HostapdManager {
     public void stop(String ifaceName) throws KuraException {
         boolean failed = false;
 
-        for (final Pid pid : this.executorService.getPids(formHostapdStartCommand(ifaceName)).values()) {
+        for (final Pid pid :
+                this.executorService.getPids(formHostapdStartCommand(ifaceName)).values()) {
             failed |= !ProcessStopUtil.stopAndKill(executorService, pid);
         }
 
         if (failed) {
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
-                    "Failed to stop hostapd for interface " + ifaceName);
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR, "Failed to stop hostapd for interface " + ifaceName);
         }
     }
 
@@ -91,19 +93,20 @@ public class HostapdManager {
         String[] command = formHostapdStartCommand(ifaceName);
         // Filter the pid whose command exactly matches the connectCommand
         List<Pid> pids = this.executorService.getPids(command).entrySet().stream()
-                .filter(entry -> entry.getKey().equals(String.join(" ", command))).map(Map.Entry::getValue)
+                .filter(entry -> entry.getKey().equals(String.join(" ", command)))
+                .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
         if (!pids.isEmpty()) {
             return pids.get(0).getPid();
         } else {
-            throw new KuraException(KuraErrorCode.OS_COMMAND_ERROR,
-                    "Failed to get hostapd pid for interface " + ifaceName);
+            throw new KuraException(
+                    KuraErrorCode.OS_COMMAND_ERROR, "Failed to get hostapd pid for interface " + ifaceName);
         }
     }
 
     private static String[] formHostapdStartCommand(String ifaceName) {
         File configFile = new File(getHostapdConfigFileName(ifaceName));
-        return new String[] { HOSTAPD, "-B", configFile.getAbsolutePath() };
+        return new String[] {HOSTAPD, "-B", configFile.getAbsolutePath()};
     }
 
     public static String getHostapdConfigFileName(String ifaceName) {

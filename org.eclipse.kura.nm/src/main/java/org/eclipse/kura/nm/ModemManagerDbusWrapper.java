@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
 import org.eclipse.kura.nm.enums.MMModemMode;
 import org.eclipse.kura.nm.enums.MMModemState;
@@ -61,29 +60,32 @@ public class ModemManagerDbusWrapper {
         enableModem(modemDevicePath.get());
 
         boolean isGPSSourceEnabled = enableGPS.isPresent() && enableGPS.get();
-        KuraModemGPSMode desiredGPSMode = gpsModeString.isPresent() ? KuraModemGPSMode.fromString(gpsModeString.get())
+        KuraModemGPSMode desiredGPSMode = gpsModeString.isPresent()
+                ? KuraModemGPSMode.fromString(gpsModeString.get())
                 : KuraModemGPSMode.KURA_MODEM_GPS_MODE_UNMANAGED;
 
-        Location modemLocation = this.dbusConnection.getRemoteObject(MM_BUS_NAME, modemDevicePath.get(),
-                Location.class);
-        Properties modemLocationProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME,
-                modemLocation.getObjectPath(), Properties.class);
+        Location modemLocation =
+                this.dbusConnection.getRemoteObject(MM_BUS_NAME, modemDevicePath.get(), Location.class);
+        Properties modemLocationProperties =
+                this.dbusConnection.getRemoteObject(MM_BUS_NAME, modemLocation.getObjectPath(), Properties.class);
 
-        Set<MMModemLocationSource> availableLocationSources = EnumSet
-                .of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE);
-        Set<MMModemLocationSource> currentLocationSources = EnumSet
-                .of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE);
-        Set<MMModemLocationSource> desiredLocationSources = EnumSet
-                .of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE);
+        Set<MMModemLocationSource> availableLocationSources =
+                EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE);
+        Set<MMModemLocationSource> currentLocationSources =
+                EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE);
+        Set<MMModemLocationSource> desiredLocationSources =
+                EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE);
 
         try {
             availableLocationSources = MMModemLocationSource.toMMModemLocationSourceFromBitMask(
                     modemLocationProperties.Get(MM_LOCATION_BUS_NAME, "Capabilities"));
-            currentLocationSources = MMModemLocationSource
-                    .toMMModemLocationSourceFromBitMask(modemLocationProperties.Get(MM_LOCATION_BUS_NAME, "Enabled"));
+            currentLocationSources = MMModemLocationSource.toMMModemLocationSourceFromBitMask(
+                    modemLocationProperties.Get(MM_LOCATION_BUS_NAME, "Enabled"));
         } catch (DBusExecutionException e) {
-            logger.warn("Cannot retrive Modem.Location capabilities for {}. Caused by: ",
-                    modemLocationProperties.getObjectPath(), e);
+            logger.warn(
+                    "Cannot retrive Modem.Location capabilities for {}. Caused by: ",
+                    modemLocationProperties.getObjectPath(),
+                    e);
             return;
         }
 
@@ -91,7 +93,9 @@ public class ModemManagerDbusWrapper {
             desiredLocationSources = KuraModemGPSMode.toMMModemLocationSources(desiredGPSMode);
 
             if (!availableLocationSources.containsAll(desiredLocationSources)) {
-                logger.warn("Cannot setup Modem.Location, {} not supported for {}", desiredLocationSources,
+                logger.warn(
+                        "Cannot setup Modem.Location, {} not supported for {}",
+                        desiredLocationSources,
                         modemLocationProperties.getObjectPath());
                 return;
             }
@@ -101,21 +105,23 @@ public class ModemManagerDbusWrapper {
 
         if (!currentLocationSources.equals(desiredLocationSources)) {
             if (!EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE).equals(desiredLocationSources)) {
-                modemLocation.Setup(MMModemLocationSource.toBitMaskFromMMModemLocationSource(
-                        EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE)), false);
+                modemLocation.Setup(
+                        MMModemLocationSource.toBitMaskFromMMModemLocationSource(
+                                EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_NONE)),
+                        false);
             }
-            modemLocation.Setup(MMModemLocationSource.toBitMaskFromMMModemLocationSource(desiredLocationSources),
-                    false);
+            modemLocation.Setup(
+                    MMModemLocationSource.toBitMaskFromMMModemLocationSource(desiredLocationSources), false);
         }
     }
 
     protected void enableModem(String modemDevicePath) throws DBusException {
         Modem modem = this.dbusConnection.getRemoteObject(MM_BUS_NAME, modemDevicePath, Modem.class);
-        Properties modemProperties = this.dbusConnection.getRemoteObject(MM_BUS_NAME, modemDevicePath,
-                Properties.class);
+        Properties modemProperties =
+                this.dbusConnection.getRemoteObject(MM_BUS_NAME, modemDevicePath, Properties.class);
 
-        MMModemState currentModemState = MMModemState
-                .toMMModemState(modemProperties.Get(MM_MODEM_NAME, MM_MODEM_PROPERTY_STATE));
+        MMModemState currentModemState =
+                MMModemState.toMMModemState(modemProperties.Get(MM_MODEM_NAME, MM_MODEM_PROPERTY_STATE));
 
         if (currentModemState.getValue() < MMModemState.MM_MODEM_STATE_ENABLED.getValue()) {
             logger.info("Modem {} not enabled. Enabling modem...", modemDevicePath);
@@ -166,8 +172,8 @@ public class ModemManagerDbusWrapper {
                 // Multiple SIM slots aren't supported
                 DBusPath simPath = modemProperties.Get(MM_MODEM_NAME, "Sim");
                 if (!simPath.getPath().equals("/")) {
-                    Properties simProp = this.dbusConnection.getRemoteObject(MM_BUS_NAME, simPath.getPath(),
-                            Properties.class);
+                    Properties simProp =
+                            this.dbusConnection.getRemoteObject(MM_BUS_NAME, simPath.getPath(), Properties.class);
                     simProperties.add(new SimProperties(simProp, true, true));
                 }
             } else {
@@ -191,11 +197,10 @@ public class ModemManagerDbusWrapper {
             // Fallback for ModemManager version prior to 1.16
             DBusPath simPath = modemProperties.Get(MM_MODEM_NAME, "Sim");
             if (!simPath.getPath().equals("/")) {
-                Properties simProp = this.dbusConnection.getRemoteObject(MM_BUS_NAME, simPath.getPath(),
-                        Properties.class);
+                Properties simProp =
+                        this.dbusConnection.getRemoteObject(MM_BUS_NAME, simPath.getPath(), Properties.class);
                 simProperties.add(new SimProperties(simProp, true, true));
             }
-
         }
         return simProperties;
     }
@@ -236,16 +241,18 @@ public class ModemManagerDbusWrapper {
         List<Properties> bearerProperties = new ArrayList<>();
         for (DBusPath bearerPath : bearerPaths) {
             if (!bearerPath.getPath().equals("/")) {
-                bearerProperties
-                        .add(this.dbusConnection.getRemoteObject(MM_BUS_NAME, bearerPath.getPath(), Properties.class));
+                bearerProperties.add(
+                        this.dbusConnection.getRemoteObject(MM_BUS_NAME, bearerPath.getPath(), Properties.class));
             }
         }
         return bearerProperties;
-
     }
 
-    public void setModemModes(Optional<String> mmDbusPath, Optional<List<String>> enabledModesOption,
-            Optional<String> preferredModeOption) throws DBusException {
+    public void setModemModes(
+            Optional<String> mmDbusPath,
+            Optional<List<String>> enabledModesOption,
+            Optional<String> preferredModeOption)
+            throws DBusException {
 
         if (enabledModesOption.isEmpty()) {
             logger.debug("Enabled modes are missing. Skipping Modem Mode configuration.");
@@ -268,7 +275,8 @@ public class ModemManagerDbusWrapper {
 
         Set<MMModemMode> enabledMMModemModes = EnumSet.noneOf(MMModemMode.class);
         enabledModes.forEach(value -> enabledMMModemModes.add(value.toMMModemMode()));
-        SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(MMModemMode.toBitMask(enabledMMModemModes),
+        SetCurrentModesStruct desiredModes = new SetCurrentModesStruct(
+                MMModemMode.toBitMask(enabledMMModemModes),
                 preferredMode.toMMModemMode().toUInt32());
 
         // Retrieve current modes

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.modemmanager1.Modem;
 import org.freedesktop.networkmanager.Device;
@@ -159,20 +158,21 @@ public class ModemTaskSchedulerTest {
     /**
      * Given
      */
-
     private void givenNMDbusConnectorMock(boolean isConnectedFirstCall, boolean isConnectedSecondCall)
             throws DBusException {
         this.nmDbusConnector = mock(NMDbusConnector.class);
-        when(this.nmDbusConnector.isConnectionActivated(any())).thenReturn(isConnectedFirstCall)
+        when(this.nmDbusConnector.isConnectionActivated(any()))
+                .thenReturn(isConnectedFirstCall)
                 .thenReturn(isConnectedSecondCall);
-        when(this.nmDbusConnector.isModemConnected(any())).thenReturn(isConnectedFirstCall)
+        when(this.nmDbusConnector.isModemConnected(any()))
+                .thenReturn(isConnectedFirstCall)
                 .thenReturn(isConnectedSecondCall);
         this.modem = mock(Modem.class);
         when(this.nmDbusConnector.getModem(any())).thenReturn(Optional.of(this.modem));
     }
 
-    private void givenModemTaskScheduler(String deviceId, boolean autoconnect, int maxFail, int holdoff,
-            int resetTimeout) {
+    private void givenModemTaskScheduler(
+            String deviceId, boolean autoconnect, int maxFail, int holdoff, int resetTimeout) {
         this.device = mock(Device.class);
         Map<String, Object> rawProperties = new HashMap<>();
         rawProperties.put("net.interface." + deviceId + ".config.persist", autoconnect);
@@ -187,7 +187,6 @@ public class ModemTaskSchedulerTest {
     /**
      * When
      */
-
     private void whenScheduleConnection(int timeout) {
         this.modemTaskScheduler.scheduleConnection();
         wait(timeout);
@@ -201,7 +200,6 @@ public class ModemTaskSchedulerTest {
     /**
      * Then
      */
-
     private void thenConnectionIsNotScheduled() {
         assertFalse(this.modemTaskScheduler.isConnectionScheduled());
     }

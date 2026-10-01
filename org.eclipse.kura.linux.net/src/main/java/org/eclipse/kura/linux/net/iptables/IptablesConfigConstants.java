@@ -62,7 +62,8 @@ public class IptablesConfigConstants {
     protected static final String RETURN_FORWARD_KURA_PF_CHAIN = "-A forward-kura-pf -j RETURN";
     protected static final String RETURN_FORWARD_KURA_IPF_CHAIN = "-A forward-kura-ipf -j RETURN";
     protected static final String ALLOW_ALL_TRAFFIC_TO_LOOPBACK = "-A input-kura -i lo -j ACCEPT";
-    protected static final String ALLOW_ONLY_INCOMING_TO_OUTGOING = "-A input-kura -m state --state RELATED,ESTABLISHED -j ACCEPT";
+    protected static final String ALLOW_ONLY_INCOMING_TO_OUTGOING =
+            "-A input-kura -m state --state RELATED,ESTABLISHED -j ACCEPT";
     protected static final String POSTROUTING_KURA_POLICY = ":postrouting-kura - [0:0]";
     protected static final String POSTROUTING_KURA_PF_POLICY = ":postrouting-kura-pf - [0:0]";
     protected static final String POSTROUTING_KURA_IPF_POLICY = ":postrouting-kura-ipf - [0:0]";
@@ -80,77 +81,96 @@ public class IptablesConfigConstants {
     protected static final String FORWARD_ACCEPT_POLICY = ":FORWARD ACCEPT [0:0]";
     protected static final String FORWARD_DROP_POLICY = ":FORWARD DROP [0:0]";
     protected static final String INPUT_DROP_POLICY = ":INPUT DROP [0:0]";
-    protected static final String[] IPTABLES_CREATE_INPUT_KURA_CHAIN = { "-N", INPUT_KURA_CHAIN, "-t", FILTER };
-    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_CHAIN = { "-N", FORWARD_KURA_CHAIN, "-t", FILTER };
-    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_PF_CHAIN = { "-N", FORWARD_KURA_PF_CHAIN, "-t",
-            FILTER };
-    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_IPF_CHAIN = { "-N", FORWARD_KURA_IPF_CHAIN, "-t",
-            FILTER };
-    protected static final String[] IPTABLES_CREATE_OUTPUT_KURA_CHAIN = { "-N", OUTPUT_KURA_CHAIN, "-t", FILTER };
-    protected static final String[] IPTABLES_INPUT_DROP_POLICY = { "-P", INPUT, "DROP" };
-    protected static final String[] IPTABLES_FORWARD_DROP_POLICY = { "-P", FORWARD, "DROP" };
-    protected static final String[] IPTABLES_CHECK_INPUT_KURA_CHAIN = { "-C", INPUT, "-j", INPUT_KURA_CHAIN, "-t",
-            FILTER };
-    protected static final String[] IPTABLES_CHECK_OUTPUT_KURA_CHAIN = { "-C", OUTPUT, "-j", OUTPUT_KURA_CHAIN, "-t",
-            FILTER };
-    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_CHAIN = { "-C", FORWARD, "-j", FORWARD_KURA_CHAIN, "-t",
-            FILTER };
-    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_PF_CHAIN = { "-C", FORWARD_KURA_CHAIN, "-j",
-            FORWARD_KURA_PF_CHAIN, "-t", FILTER };
-    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_IPF_CHAIN = { "-C", FORWARD_KURA_CHAIN, "-j",
-            FORWARD_KURA_IPF_CHAIN, "-t", FILTER };
-    protected static final String[] IPTABLES_CREATE_INPUT_KURA_CHAIN_NAT = { "-N", INPUT_KURA_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CREATE_OUTPUT_KURA_CHAIN_NAT = { "-N", OUTPUT_KURA_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CREATE_PREROUTING_KURA_CHAIN = { "-N", PREROUTING_KURA_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CREATE_PREROUTING_KURA_PF_CHAIN = { "-N", PREROUTING_KURA_PF_CHAIN, "-t",
-            NAT };
-    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_CHAIN = { "-N", POSTROUTING_KURA_CHAIN, "-t",
-            NAT };
-    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_PF_CHAIN = { "-N", POSTROUTING_KURA_PF_CHAIN, "-t",
-            NAT };
-    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_IPF_CHAIN = { "-N", POSTROUTING_KURA_IPF_CHAIN,
-            "-t", NAT };
-    protected static final String[] IPTABLES_CHECK_INPUT_KURA_CHAIN_NAT = { "-C", INPUT, "-j", INPUT_KURA_CHAIN, "-t",
-            NAT };
-    protected static final String[] IPTABLES_CHECK_OUTPUT_KURA_CHAIN_NAT = { "-C", OUTPUT, "-j", OUTPUT_KURA_CHAIN,
-            "-t", NAT };
-    protected static final String[] IPTABLES_CHECK_PREROUTING_KURA_CHAIN = { "-C", PREROUTING, "-j",
-            PREROUTING_KURA_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CHECK_PREROUTING_KURA_PF_CHAIN = { "-C", PREROUTING_KURA_CHAIN, "-j",
-            PREROUTING_KURA_PF_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_CHAIN = { "-C", POSTROUTING, "-j",
-            POSTROUTING_KURA_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_PF_CHAIN = { "-C", POSTROUTING_KURA_CHAIN, "-j",
-            POSTROUTING_KURA_PF_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_IPF_CHAIN = { "-C", POSTROUTING_KURA_CHAIN, "-j",
-            POSTROUTING_KURA_IPF_CHAIN, "-t", NAT };
-    protected static final String[] IPTABLES_CREATE_INPUT_KURA_CHAIN_MANGLE = { "-N", INPUT_KURA_CHAIN, "-t", MANGLE };
-    protected static final String[] IPTABLES_CREATE_OUTPUT_KURA_CHAIN_MANGLE = { "-N", OUTPUT_KURA_CHAIN, "-t",
-            MANGLE };
-    protected static final String[] IPTABLES_CHECK_INPUT_KURA_CHAIN_MANGLE = { "-C", INPUT, "-j", INPUT_KURA_CHAIN,
-            "-t", MANGLE };
-    protected static final String[] IPTABLES_CHECK_OUTPUT_KURA_CHAIN_MANGLE = { "-C", OUTPUT, "-j", OUTPUT_KURA_CHAIN,
-            "-t", MANGLE };
-    protected static final String[] IPTABLES_CREATE_PREROUTING_KURA_CHAIN_MANGLE = { "-N", PREROUTING_KURA_CHAIN, "-t",
-            MANGLE };
-    protected static final String[] IPTABLES_CHECK_PREROUTING_KURA_CHAIN_MANGLE = { "-C", PREROUTING, "-j",
-            PREROUTING_KURA_CHAIN, "-t", MANGLE };
-    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_CHAIN_MANGLE = { "-N", POSTROUTING_KURA_CHAIN,
-            "-t", MANGLE };
-    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_CHAIN_MANGLE = { "-C", POSTROUTING, "-j",
-            POSTROUTING_KURA_CHAIN, "-t", MANGLE };
-    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_CHAIN_MANGLE = { "-N", FORWARD_KURA_CHAIN, "-t",
-            MANGLE };
-    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_CHAIN_MANGLE = { "-C", FORWARD, "-j",
-            FORWARD_KURA_CHAIN, "-t", MANGLE };
+    protected static final String[] IPTABLES_CREATE_INPUT_KURA_CHAIN = {"-N", INPUT_KURA_CHAIN, "-t", FILTER};
+    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_CHAIN = {"-N", FORWARD_KURA_CHAIN, "-t", FILTER};
+    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_PF_CHAIN = {"-N", FORWARD_KURA_PF_CHAIN, "-t", FILTER};
+    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_IPF_CHAIN = {"-N", FORWARD_KURA_IPF_CHAIN, "-t", FILTER
+    };
+    protected static final String[] IPTABLES_CREATE_OUTPUT_KURA_CHAIN = {"-N", OUTPUT_KURA_CHAIN, "-t", FILTER};
+    protected static final String[] IPTABLES_INPUT_DROP_POLICY = {"-P", INPUT, "DROP"};
+    protected static final String[] IPTABLES_FORWARD_DROP_POLICY = {"-P", FORWARD, "DROP"};
+    protected static final String[] IPTABLES_CHECK_INPUT_KURA_CHAIN = {"-C", INPUT, "-j", INPUT_KURA_CHAIN, "-t", FILTER
+    };
+    protected static final String[] IPTABLES_CHECK_OUTPUT_KURA_CHAIN = {
+        "-C", OUTPUT, "-j", OUTPUT_KURA_CHAIN, "-t", FILTER
+    };
+    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_CHAIN = {
+        "-C", FORWARD, "-j", FORWARD_KURA_CHAIN, "-t", FILTER
+    };
+    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_PF_CHAIN = {
+        "-C", FORWARD_KURA_CHAIN, "-j", FORWARD_KURA_PF_CHAIN, "-t", FILTER
+    };
+    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_IPF_CHAIN = {
+        "-C", FORWARD_KURA_CHAIN, "-j", FORWARD_KURA_IPF_CHAIN, "-t", FILTER
+    };
+    protected static final String[] IPTABLES_CREATE_INPUT_KURA_CHAIN_NAT = {"-N", INPUT_KURA_CHAIN, "-t", NAT};
+    protected static final String[] IPTABLES_CREATE_OUTPUT_KURA_CHAIN_NAT = {"-N", OUTPUT_KURA_CHAIN, "-t", NAT};
+    protected static final String[] IPTABLES_CREATE_PREROUTING_KURA_CHAIN = {"-N", PREROUTING_KURA_CHAIN, "-t", NAT};
+    protected static final String[] IPTABLES_CREATE_PREROUTING_KURA_PF_CHAIN = {
+        "-N", PREROUTING_KURA_PF_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_CHAIN = {"-N", POSTROUTING_KURA_CHAIN, "-t", NAT};
+    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_PF_CHAIN = {
+        "-N", POSTROUTING_KURA_PF_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_IPF_CHAIN = {
+        "-N", POSTROUTING_KURA_IPF_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_INPUT_KURA_CHAIN_NAT = {
+        "-C", INPUT, "-j", INPUT_KURA_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_OUTPUT_KURA_CHAIN_NAT = {
+        "-C", OUTPUT, "-j", OUTPUT_KURA_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_PREROUTING_KURA_CHAIN = {
+        "-C", PREROUTING, "-j", PREROUTING_KURA_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_PREROUTING_KURA_PF_CHAIN = {
+        "-C", PREROUTING_KURA_CHAIN, "-j", PREROUTING_KURA_PF_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_CHAIN = {
+        "-C", POSTROUTING, "-j", POSTROUTING_KURA_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_PF_CHAIN = {
+        "-C", POSTROUTING_KURA_CHAIN, "-j", POSTROUTING_KURA_PF_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_IPF_CHAIN = {
+        "-C", POSTROUTING_KURA_CHAIN, "-j", POSTROUTING_KURA_IPF_CHAIN, "-t", NAT
+    };
+    protected static final String[] IPTABLES_CREATE_INPUT_KURA_CHAIN_MANGLE = {"-N", INPUT_KURA_CHAIN, "-t", MANGLE};
+    protected static final String[] IPTABLES_CREATE_OUTPUT_KURA_CHAIN_MANGLE = {"-N", OUTPUT_KURA_CHAIN, "-t", MANGLE};
+    protected static final String[] IPTABLES_CHECK_INPUT_KURA_CHAIN_MANGLE = {
+        "-C", INPUT, "-j", INPUT_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CHECK_OUTPUT_KURA_CHAIN_MANGLE = {
+        "-C", OUTPUT, "-j", OUTPUT_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CREATE_PREROUTING_KURA_CHAIN_MANGLE = {
+        "-N", PREROUTING_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CHECK_PREROUTING_KURA_CHAIN_MANGLE = {
+        "-C", PREROUTING, "-j", PREROUTING_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CREATE_POSTROUTING_KURA_CHAIN_MANGLE = {
+        "-N", POSTROUTING_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CHECK_POSTROUTING_KURA_CHAIN_MANGLE = {
+        "-C", POSTROUTING, "-j", POSTROUTING_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CREATE_FORWARD_KURA_CHAIN_MANGLE = {"-N", FORWARD_KURA_CHAIN, "-t", MANGLE
+    };
+    protected static final String[] IPTABLES_CHECK_FORWARD_KURA_CHAIN_MANGLE = {
+        "-C", FORWARD, "-j", FORWARD_KURA_CHAIN, "-t", MANGLE
+    };
 
     protected static final String COMMAND_EXECUTOR_SERVICE_MESSAGE = "CommandExecutorService not set.";
     protected static final String CHAIN_CREATION_FAILED_MESSAGE = "Failed to create chain";
     protected static final String CHAIN_RETURN_RULE_FAILED_MESSAGE = "Failed to add return rule";
 
     protected static final String[] ALLOW_ICMP = {
-            "-A input-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT",
-            "-A output-kura -p icmp -m icmp --icmp-type 0 -m state --state RELATED,ESTABLISHED -j ACCEPT" };
+        "-A input-kura -p icmp -m icmp --icmp-type 8 -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT",
+        "-A output-kura -p icmp -m icmp --icmp-type 0 -m state --state RELATED,ESTABLISHED -j ACCEPT"
+    };
 
     protected static final String[] DO_NOT_ALLOW_ICMP = {}; // The INPUT and FORWARD chains are dropped by default
 

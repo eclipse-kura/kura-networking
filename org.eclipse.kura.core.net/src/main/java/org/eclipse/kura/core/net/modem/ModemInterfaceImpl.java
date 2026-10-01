@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *  Red Hat Inc
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
 import org.eclipse.kura.core.net.AbstractNetInterface;
 import org.eclipse.kura.net.NetInterfaceType;
 import org.eclipse.kura.net.modem.ModemDevice;
@@ -50,8 +49,8 @@ public class ModemInterfaceImpl<T extends ModemInterfaceAddress> extends Abstrac
         super(name);
     }
 
-    public ModemInterfaceImpl(Class<T> modemInterfaceAddressClass,
-            ModemInterface<? extends ModemInterfaceAddress> other) {
+    public ModemInterfaceImpl(
+            Class<T> modemInterfaceAddressClass, ModemInterface<? extends ModemInterfaceAddress> other) {
         super(other);
         this.modemId = other.getModemIdentifier();
         this.pppNum = other.getPppNum();
@@ -74,8 +73,8 @@ public class ModemInterfaceImpl<T extends ModemInterfaceAddress> extends Abstrac
         if (otherNetInterfaceAddresses != null) {
             for (ModemInterfaceAddress modemInterfaceAddress : otherNetInterfaceAddresses) {
                 try {
-                    ModemInterfaceAddressImpl copiedInterfaceAddressImpl = new ModemInterfaceAddressImpl(
-                            modemInterfaceAddress);
+                    ModemInterfaceAddressImpl copiedInterfaceAddressImpl =
+                            new ModemInterfaceAddressImpl(modemInterfaceAddress);
                     interfaceAddresses.add(modemInterfaceAddressClass.cast(copiedInterfaceAddressImpl));
                 } catch (Exception e) {
                     logger.debug("Could not copy interface address: {}", modemInterfaceAddress);
@@ -194,8 +193,18 @@ public class ModemInterfaceImpl<T extends ModemInterfaceAddress> extends Abstrac
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + Arrays.hashCode(revisionId);
-        result = prime * result + Objects.hash(gpsSupported, manufacturer, model, modemDevice, modemId, powerMode,
-                poweredOn, pppNum, serialNumber, technologyTypes);
+        result = prime * result
+                + Objects.hash(
+                        gpsSupported,
+                        manufacturer,
+                        model,
+                        modemDevice,
+                        modemId,
+                        powerMode,
+                        poweredOn,
+                        pppNum,
+                        serialNumber,
+                        technologyTypes);
         return result;
     }
 
@@ -211,10 +220,15 @@ public class ModemInterfaceImpl<T extends ModemInterfaceAddress> extends Abstrac
             return false;
         }
         ModemInterfaceImpl<?> other = (ModemInterfaceImpl<?>) obj;
-        return gpsSupported == other.gpsSupported && Objects.equals(manufacturer, other.manufacturer)
-                && Objects.equals(model, other.model) && Objects.equals(modemDevice, other.modemDevice)
-                && Objects.equals(modemId, other.modemId) && powerMode == other.powerMode
-                && poweredOn == other.poweredOn && pppNum == other.pppNum && Arrays.equals(revisionId, other.revisionId)
+        return gpsSupported == other.gpsSupported
+                && Objects.equals(manufacturer, other.manufacturer)
+                && Objects.equals(model, other.model)
+                && Objects.equals(modemDevice, other.modemDevice)
+                && Objects.equals(modemId, other.modemId)
+                && powerMode == other.powerMode
+                && poweredOn == other.poweredOn
+                && pppNum == other.pppNum
+                && Arrays.equals(revisionId, other.revisionId)
                 && Objects.equals(serialNumber, other.serialNumber)
                 && Objects.equals(technologyTypes, other.technologyTypes);
     }

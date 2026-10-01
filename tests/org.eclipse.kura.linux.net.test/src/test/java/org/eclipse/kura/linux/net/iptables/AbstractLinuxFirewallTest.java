@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
 import org.eclipse.kura.net.IP4Address;
@@ -162,13 +161,26 @@ public class AbstractLinuxFirewallTest {
     }
 
     private LocalRule newLocalRule(int port) throws UnknownHostException {
-        return new LocalRule(port, "tcp", new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"),
-                (short) 0), "eth0", null, "00:11:22:33:44:55:66", "10100:10200");
+        return new LocalRule(
+                port,
+                "tcp",
+                new NetworkPair<>((IP4Address) IPAddress.parseHostAddress("0.0.0.0"), (short) 0),
+                "eth0",
+                null,
+                "00:11:22:33:44:55:66",
+                "10100:10200");
     }
 
     private PortForwardRule newPortForwardRule(int inPort) {
-        return new PortForwardRule().inboundIface("eth0").outboundIface("eth1").address("172.16.0.1")
-                .protocol("tcp").inPort(inPort).outPort(4050).masquerade(true).permittedNetwork("172.16.0.100")
+        return new PortForwardRule()
+                .inboundIface("eth0")
+                .outboundIface("eth1")
+                .address("172.16.0.1")
+                .protocol("tcp")
+                .inPort(inPort)
+                .outPort(4050)
+                .masquerade(true)
+                .permittedNetwork("172.16.0.100")
                 .permittedNetworkMask(32);
     }
 

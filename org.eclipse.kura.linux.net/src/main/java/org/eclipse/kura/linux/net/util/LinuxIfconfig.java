@@ -1,20 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
-
 package org.eclipse.kura.linux.net.util;
 
 import java.util.Map;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.net.NetInterfaceType;
 
@@ -142,7 +140,7 @@ public class LinuxIfconfig {
     public byte[] getMacAddressBytes() throws KuraException {
 
         if (this.macAddress == null) {
-            return new byte[] { 0, 0, 0, 0, 0, 0 };
+            return new byte[] {0, 0, 0, 0, 0, 0};
         }
         String macAddr = this.macAddress.replaceAll(":", "");
         byte[] mac = new byte[6];
@@ -156,11 +154,27 @@ public class LinuxIfconfig {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.name).append(":-> type: ").append(this.type).append(", MAC: ").append(this.macAddress)
-                .append(", IP Address: ").append(this.inetAddress).append(", Netmask: ").append(this.inetMask)
-                .append(", Broadcast: ").append(this.inetBcast).append(", Peer IP Address: ").append(this.peerInetAddr)
-                .append(", MTU: ").append(this.mtu).append(", multicast?: ").append(this.multicast).append(", up?: ")
-                .append(this.up).append(", link up?: ").append(this.linkUp);
+        sb.append(this.name)
+                .append(":-> type: ")
+                .append(this.type)
+                .append(", MAC: ")
+                .append(this.macAddress)
+                .append(", IP Address: ")
+                .append(this.inetAddress)
+                .append(", Netmask: ")
+                .append(this.inetMask)
+                .append(", Broadcast: ")
+                .append(this.inetBcast)
+                .append(", Peer IP Address: ")
+                .append(this.peerInetAddr)
+                .append(", MTU: ")
+                .append(this.mtu)
+                .append(", multicast?: ")
+                .append(this.multicast)
+                .append(", up?: ")
+                .append(this.up)
+                .append(", link up?: ")
+                .append(this.linkUp);
         return sb.toString();
     }
 }

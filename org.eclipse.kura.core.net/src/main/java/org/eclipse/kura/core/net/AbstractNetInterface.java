@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.core.net.util.NetworkUtil;
@@ -222,15 +221,31 @@ public abstract class AbstractNetInterface<T extends NetInterfaceAddress> implem
         if (this.hardwareAddress != null && this.hardwareAddress.length == 6) {
             sb.append(" :: hardwareAddress=").append(NetworkUtil.macToString(this.hardwareAddress));
         }
-        sb.append(" :: loopback=").append(this.loopback).append(" :: pointToPoint=").append(this.pointToPoint)
-                .append(" :: virtual=").append(this.virtual).append(" :: supportsMulticast=")
-                .append(this.supportsMulticast).append(" :: up=").append(this.up).append(" :: mtu=").append(this.mtu);
+        sb.append(" :: loopback=")
+                .append(this.loopback)
+                .append(" :: pointToPoint=")
+                .append(this.pointToPoint)
+                .append(" :: virtual=")
+                .append(this.virtual)
+                .append(" :: supportsMulticast=")
+                .append(this.supportsMulticast)
+                .append(" :: up=")
+                .append(this.up)
+                .append(" :: mtu=")
+                .append(this.mtu);
         if (this.usbDevice != null) {
             sb.append(" :: usbDevice=").append(this.usbDevice);
         }
-        sb.append(" :: driver=").append(this.driver).append(" :: driverVersion=").append(this.driverVersion)
-                .append(" :: firmwareVersion=").append(this.firmwareVersion).append(" :: state=").append(this.state)
-                .append(" :: autoConnect=").append(this.autoConnect);
+        sb.append(" :: driver=")
+                .append(this.driver)
+                .append(" :: driverVersion=")
+                .append(this.driverVersion)
+                .append(" :: firmwareVersion=")
+                .append(this.firmwareVersion)
+                .append(" :: state=")
+                .append(this.state)
+                .append(" :: autoConnect=")
+                .append(this.autoConnect);
         if (this.interfaceAddresses != null && !this.interfaceAddresses.isEmpty()) {
             sb.append(" :: InterfaceAddress=");
             for (T interfaceAddress : this.interfaceAddresses) {
@@ -348,7 +363,8 @@ public abstract class AbstractNetInterface<T extends NetInterfaceAddress> implem
     }
 
     public NetInterfaceAddressConfig getNetInterfaceAddressConfig() throws KuraException {
-        if (this.getNetInterfaceAddresses() == null || this.getNetInterfaceAddresses().isEmpty()) {
+        if (this.getNetInterfaceAddresses() == null
+                || this.getNetInterfaceAddresses().isEmpty()) {
             throw new KuraException(KuraErrorCode.CONFIGURATION_ERROR, "Empty NetInterfaceAddressConfig list");
         }
         return (NetInterfaceAddressConfig) this.getNetInterfaceAddresses().get(0);
@@ -426,7 +442,8 @@ public abstract class AbstractNetInterface<T extends NetInterfaceAddress> implem
      */
     public boolean isInterfaceEnabled() {
         NetInterfaceStatus status = getInterfaceStatus();
-        return status == NetInterfaceStatus.netIPv4StatusL2Only || status == NetInterfaceStatus.netIPv4StatusEnabledLAN
+        return status == NetInterfaceStatus.netIPv4StatusL2Only
+                || status == NetInterfaceStatus.netIPv4StatusEnabledLAN
                 || status == NetInterfaceStatus.netIPv4StatusEnabledWAN;
     }
 

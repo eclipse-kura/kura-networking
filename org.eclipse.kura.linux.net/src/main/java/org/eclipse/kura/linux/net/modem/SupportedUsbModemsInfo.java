@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2011, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -16,9 +16,7 @@ import org.eclipse.kura.usb.UsbDevice;
 
 public class SupportedUsbModemsInfo {
 
-    private SupportedUsbModemsInfo() {
-
-    }
+    private SupportedUsbModemsInfo() {}
 
     public static SupportedUsbModemInfo getModem(UsbDevice usbDevice) {
         if (usbDevice == null) {
@@ -34,7 +32,8 @@ public class SupportedUsbModemsInfo {
         }
 
         for (SupportedUsbModemInfo modem : SupportedUsbModemInfo.values()) {
-            if (vendorId.equals(modem.getVendorId()) && productId.equals(modem.getProductId())
+            if (vendorId.equals(modem.getVendorId())
+                    && productId.equals(modem.getProductId())
                     && (modem.getProductName().isEmpty() || productName.equals(modem.getProductName()))) {
                 return modem;
             }

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2020 Eurotech and/or its affiliates and others
- * 
+ * Copyright (c) 2020, 2026 Eurotech and/or its affiliates and others
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  ******************************************************************************/
@@ -15,7 +15,6 @@ package org.eclipse.kura.linux.net.iptables;
 import static org.junit.Assert.assertEquals;
 
 import java.net.UnknownHostException;
-
 import org.eclipse.kura.KuraException;
 import org.junit.Test;
 
@@ -34,5 +33,4 @@ public class FilterForwardChainRuleTest {
         assertEquals(32, forwardRule.getSrcMask());
         assertEquals("172.16.0.100", forwardRule.getSrcNetwork());
     }
-
 }

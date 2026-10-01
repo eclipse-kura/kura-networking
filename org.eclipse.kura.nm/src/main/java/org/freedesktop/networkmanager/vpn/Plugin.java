@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,7 +14,6 @@ package org.freedesktop.networkmanager.vpn;
 
 import java.util.List;
 import java.util.Map;
-
 import org.freedesktop.dbus.annotations.DBusInterfaceName;
 import org.freedesktop.dbus.annotations.DBusProperty;
 import org.freedesktop.dbus.annotations.DBusProperty.Access;
@@ -61,7 +60,6 @@ public interface Plugin extends DBusInterface {
         public UInt32 getState() {
             return this.state;
         }
-
     }
 
     public static class SecretsRequired extends DBusSignal {
@@ -82,7 +80,6 @@ public interface Plugin extends DBusInterface {
         public List<String> getSecrets() {
             return this.secrets;
         }
-
     }
 
     public static class Config extends DBusSignal {
@@ -97,7 +94,6 @@ public interface Plugin extends DBusInterface {
         public Map<String, Variant<?>> getConfig() {
             return this.config;
         }
-
     }
 
     public static class Ip4Config extends DBusSignal {
@@ -112,7 +108,6 @@ public interface Plugin extends DBusInterface {
         public Map<String, Variant<?>> getIp4config() {
             return this.ip4config;
         }
-
     }
 
     public static class Ip6Config extends DBusSignal {
@@ -127,7 +122,6 @@ public interface Plugin extends DBusInterface {
         public Map<String, Variant<?>> getIp6config() {
             return this.ip6config;
         }
-
     }
 
     public static class LoginBanner extends DBusSignal {
@@ -142,7 +136,6 @@ public interface Plugin extends DBusInterface {
         public String getBanner() {
             return this.banner;
         }
-
     }
 
     public static class Failure extends DBusSignal {
@@ -157,6 +150,5 @@ public interface Plugin extends DBusInterface {
         public UInt32 getReason() {
             return this.reason;
         }
-
     }
 }

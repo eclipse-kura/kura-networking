@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -23,20 +23,18 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.security.PrivateKey;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStore.TrustedCertificateEntry;
+import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
 import org.eclipse.kura.configuration.ConfigurationService;
@@ -473,7 +471,6 @@ public class NMConfigurationServiceImplTest {
             e.printStackTrace();
             fail();
         }
-
     }
 
     private void givenPropertiesWithPppInterfaceNames() {
@@ -520,8 +517,8 @@ public class NMConfigurationServiceImplTest {
             }
 
             @Override
-            protected DhcpServerConfigWriter buildDhcpServerConfigWriter(String interfaceName,
-                    NetworkProperties properties) {
+            protected DhcpServerConfigWriter buildDhcpServerConfigWriter(
+                    String interfaceName, NetworkProperties properties) {
                 dhcpConfigWriterInterfaces.add(interfaceName);
                 return Mockito.mock(DhcpServerConfigWriter.class);
             }
@@ -542,24 +539,27 @@ public class NMConfigurationServiceImplTest {
         this.posted = new AtomicBoolean(false);
 
         doAnswer(invocation -> {
-            this.event = invocation.getArgument(0, Event.class);
-            assertEquals("org/eclipse/kura/net/admin/event/NETWORK_EVENT_CONFIG_CHANGE_TOPIC", this.event.getTopic());
+                    this.event = invocation.getArgument(0, Event.class);
+                    assertEquals(
+                            "org/eclipse/kura/net/admin/event/NETWORK_EVENT_CONFIG_CHANGE_TOPIC",
+                            this.event.getTopic());
 
-            this.posted.set(true);
+                    this.posted.set(true);
 
-            synchronized (this.lock) {
-                this.lock.notifyAll();
-            }
+                    synchronized (this.lock) {
+                        this.lock.notifyAll();
+                    }
 
-            return null;
-        }).when(eventAdminMock).postEvent(any());
+                    return null;
+                })
+                .when(eventAdminMock)
+                .postEvent(any());
 
         CommandExecutorService executorServiceMock = mock(CommandExecutorService.class);
         CommandStatus status = new CommandStatus(new Command(new String[] {}), new LinuxExitStatus(0));
         when(executorServiceMock.execute(any(Command.class))).thenReturn(status);
 
         this.networkConfigurationService.setExecutorService(executorServiceMock);
-
     }
 
     private void whenServiceIsActivated() {
@@ -954,9 +954,12 @@ public class NMConfigurationServiceImplTest {
 
     private void thenPppInterfaceNamesAreReplaced() {
         for (String propertyName : this.event.getPropertyNames()) {
-            assertTrue(propertyName.startsWith("net.interface.1-4") || propertyName.startsWith("net.interface.eno1")
-                    || propertyName.startsWith("net.interface.wlp1s0") || propertyName.startsWith("net.interface.lo")
-                    || propertyName.startsWith("net.interface.enp5s0") || propertyName.equals("net.interfaces")
+            assertTrue(propertyName.startsWith("net.interface.1-4")
+                    || propertyName.startsWith("net.interface.eno1")
+                    || propertyName.startsWith("net.interface.wlp1s0")
+                    || propertyName.startsWith("net.interface.lo")
+                    || propertyName.startsWith("net.interface.enp5s0")
+                    || propertyName.equals("net.interfaces")
                     || propertyName.equals("event.topics"));
         }
     }
@@ -984,7 +987,5 @@ public class NMConfigurationServiceImplTest {
         } else {
             return NetInterfaceType.UNKNOWN;
         }
-
     }
-
 }

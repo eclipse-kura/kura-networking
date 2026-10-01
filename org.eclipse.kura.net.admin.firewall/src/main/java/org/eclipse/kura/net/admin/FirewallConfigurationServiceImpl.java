@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -17,7 +17,6 @@ import static org.osgi.framework.Constants.SERVICE_PID;
 
 import java.net.UnknownHostException;
 import java.util.Map;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.configuration.ComponentConfiguration;
@@ -48,15 +47,17 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(name = "org.eclipse.kura.net.admin.FirewallConfigurationService", //
+@Component(
+        name = "org.eclipse.kura.net.admin.FirewallConfigurationService", //
         immediate = true, //
         configurationPolicy = ConfigurationPolicy.OPTIONAL, //
         property = { //
-                "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
-                "kura.ui.service.hide=true" //
+            "kura.service.pid=org.eclipse.kura.net.admin.FirewallConfigurationService", //
+            "kura.ui.service.hide=true" //
         })
-public class FirewallConfigurationServiceImpl extends
-        AbstractFirewallConfigurationServiceImpl<IP4Address, FirewallOpenPortConfigIP4Builder, FirewallPortForwardConfigIP4Builder>
+public class FirewallConfigurationServiceImpl
+        extends AbstractFirewallConfigurationServiceImpl<
+                IP4Address, FirewallOpenPortConfigIP4Builder, FirewallPortForwardConfigIP4Builder>
         implements FirewallConfigurationService, SelfConfiguringComponent {
 
     private static final Logger logger = LoggerFactory.getLogger(FirewallConfigurationServiceImpl.class);
@@ -105,8 +106,8 @@ public class FirewallConfigurationServiceImpl extends
     public ComponentConfiguration getConfiguration() throws KuraException {
         logger.debug("getConfiguration()");
         try {
-            Map<String, Object> firewallConfigurationProperties = getFirewallConfiguration()
-                    .getConfigurationProperties();
+            Map<String, Object> firewallConfigurationProperties =
+                    getFirewallConfiguration().getConfigurationProperties();
             firewallConfigurationProperties.put(KURA_SERVICE_PID, PID);
             firewallConfigurationProperties.put(SERVICE_PID, PID);
             return new ComponentConfigurationImpl(PID, getDefinition(), firewallConfigurationProperties);
@@ -167,5 +168,4 @@ public class FirewallConfigurationServiceImpl extends
         }
         return this.firewall;
     }
-
 }

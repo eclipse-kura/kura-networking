@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Eurotech and/or its affiliates and others
+ * Copyright (c) 2023, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -12,17 +12,15 @@
  *******************************************************************************/
 package org.eclipse.kura.nm;
 
+import fi.w1.Wpa_supplicant1;
+import fi.w1.wpa_supplicant1.Interface;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.kura.nm.signal.handlers.WPAScanLock;
 import org.freedesktop.dbus.DBusPath;
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.types.Variant;
-
-import fi.w1.Wpa_supplicant1;
-import fi.w1.wpa_supplicant1.Interface;
 
 public class WpaSupplicantDbusWrapper {
 
@@ -36,8 +34,8 @@ public class WpaSupplicantDbusWrapper {
 
     public WpaSupplicantDbusWrapper(DBusConnection dbusConnection) throws DBusException {
         this.dbusConnection = dbusConnection;
-        this.wpaSupplicant = this.dbusConnection.getRemoteObject(WPA_SUPPLICANT_BUS_NAME, WPA_SUPPLICANT_BUS_PATH,
-                Wpa_supplicant1.class);
+        this.wpaSupplicant = this.dbusConnection.getRemoteObject(
+                WPA_SUPPLICANT_BUS_NAME, WPA_SUPPLICANT_BUS_PATH, Wpa_supplicant1.class);
     }
 
     public void syncScan(String interfaceName) throws DBusException {
@@ -63,8 +61,8 @@ public class WpaSupplicantDbusWrapper {
     }
 
     private void triggerScan(DBusPath interfaceObjectPath) throws DBusException {
-        Interface interfaceObject = this.dbusConnection.getRemoteObject(WPA_SUPPLICANT_BUS_NAME,
-                interfaceObjectPath.getPath(), Interface.class);
+        Interface interfaceObject = this.dbusConnection.getRemoteObject(
+                WPA_SUPPLICANT_BUS_NAME, interfaceObjectPath.getPath(), Interface.class);
 
         Map<String, Variant<?>> options = new HashMap<>();
         options.put("Type", new Variant<>("active"));
@@ -72,5 +70,4 @@ public class WpaSupplicantDbusWrapper {
 
         interfaceObject.Scan(options);
     }
-
 }

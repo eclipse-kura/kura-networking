@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Eurotech and/or its affiliates and others
+ * Copyright (c) 2024, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,11 +14,9 @@ package org.eclipse.kura.nm;
 
 import java.util.EnumSet;
 import java.util.Set;
-
 import org.eclipse.kura.nm.enums.MMModemLocationSource;
 
 public enum KuraModemGPSMode {
-
     KURA_MODEM_GPS_MODE_UNMANAGED("kuraModemGpsModeUnmanaged"),
     KURA_MODEM_GPS_MODE_MANAGED_GPS("kuraModemGpsModeManagedGps");
 
@@ -44,13 +42,14 @@ public enum KuraModemGPSMode {
 
     public static Set<MMModemLocationSource> toMMModemLocationSources(KuraModemGPSMode mode) {
         switch (mode) {
-        case KURA_MODEM_GPS_MODE_UNMANAGED:
-            return EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED);
-        case KURA_MODEM_GPS_MODE_MANAGED_GPS:
-            return EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW,
-                    MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA);
-        default:
-            throw new IllegalArgumentException(String.format("Unsupported modem GPS mode value: \"%s\"", mode));
+            case KURA_MODEM_GPS_MODE_UNMANAGED:
+                return EnumSet.of(MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_UNMANAGED);
+            case KURA_MODEM_GPS_MODE_MANAGED_GPS:
+                return EnumSet.of(
+                        MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_RAW,
+                        MMModemLocationSource.MM_MODEM_LOCATION_SOURCE_GPS_NMEA);
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported modem GPS mode value: \"%s\"", mode));
         }
     }
 

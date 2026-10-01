@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
- * 
+ *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *  Eurotech
  *******************************************************************************/
@@ -31,7 +31,6 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
-
 import org.eclipse.kura.KuraIOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -55,57 +54,57 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
 
     // Expected IPv6 ICMP rules from IptablesConfigIPv6.ALLOW_ICMP_IPV6
     private static final String[] EXPECTED_IPV6_ICMP_RULES = {
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 129 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT",
-            // Multicast Listener Discovery
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 130 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 131 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 132 -j ACCEPT",
-            // Critical Neighbor/Router Discovery - no source restriction for IPv6
-            // connectivity
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 133 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 134 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 135 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 136 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 141 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 142 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 148 -j ACCEPT",
-            "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 149 -j ACCEPT",
-            // Multicast Router Discovery
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 151 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 152 -j ACCEPT",
-            "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 153 -j ACCEPT",
-            // Forward rules
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
-            "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT"
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 128 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 129 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT",
+        // Multicast Listener Discovery
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 130 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 131 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 132 -j ACCEPT",
+        // Critical Neighbor/Router Discovery - no source restriction for IPv6
+        // connectivity
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 133 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 134 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 135 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 136 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 141 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 142 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 148 -j ACCEPT",
+        "-A input-kura -s fe80::/10 -p ipv6-icmp -m ipv6-icmp --icmpv6-type 149 -j ACCEPT",
+        // Multicast Router Discovery
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 151 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 152 -j ACCEPT",
+        "-A input-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 153 -j ACCEPT",
+        // Forward rules
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 1 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 2 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/0 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 3/1 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/0 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/1 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 4/2 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 144 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 145 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 146 -j ACCEPT",
+        "-A forward-kura -p ipv6-icmp -m ipv6-icmp --icmpv6-type 147 -j ACCEPT"
     };
 
     // Critical ICMPv6 types that should not have source restrictions
     private static final String[] CRITICAL_ICMPV6_TYPES_WITHOUT_SOURCE = {
-            "133", // Router Solicitation
-            "134", // Router Advertisement
-            "135", // Neighbor Solicitation
-            "136" // Neighbor Advertisement
+        "133", // Router Solicitation
+        "134", // Router Advertisement
+        "135", // Neighbor Solicitation
+        "136" // Neighbor Advertisement
     };
 
     // Regex pattern to match iptables rules that have source restrictions
@@ -197,8 +196,13 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
     // Given methods
     private void givenIptablesConfigWithIcmpAllowed(boolean allowIcmp) {
         this.allowIcmp = allowIcmp;
-        this.iptablesConfig = new IptablesConfigIPv6(new LinkedHashSet<>(), new LinkedHashSet<>(),
-                new LinkedHashSet<>(), new LinkedHashSet<>(), allowIcmp, executorServiceMock);
+        this.iptablesConfig = new IptablesConfigIPv6(
+                new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
+                allowIcmp,
+                executorServiceMock);
     }
 
     private void givenDefaultIptablesConfig() {
@@ -257,16 +261,20 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
 
     private void thenCriticalIPv6IcmpRulesAreWithoutSourceRestrictions() {
         if (this.foundRules != null) {
-            assertTrue("IPv6 ICMP rules should include neighbor discovery types without source restrictions",
+            assertTrue(
+                    "IPv6 ICMP rules should include neighbor discovery types without source restrictions",
                     this.foundRules.stream()
                             .anyMatch(rule -> rule.contains("--icmpv6-type 133") && !rule.contains("-s")));
-            assertTrue("IPv6 ICMP rules should include router advertisement without source restrictions",
+            assertTrue(
+                    "IPv6 ICMP rules should include router advertisement without source restrictions",
                     this.foundRules.stream()
                             .anyMatch(rule -> rule.contains("--icmpv6-type 134") && !rule.contains("-s")));
-            assertTrue("IPv6 ICMP rules should include neighbor solicitation without source restrictions",
+            assertTrue(
+                    "IPv6 ICMP rules should include neighbor solicitation without source restrictions",
                     this.foundRules.stream()
                             .anyMatch(rule -> rule.contains("--icmpv6-type 135") && !rule.contains("-s")));
-            assertTrue("IPv6 ICMP rules should include neighbor advertisement without source restrictions",
+            assertTrue(
+                    "IPv6 ICMP rules should include neighbor advertisement without source restrictions",
                     this.foundRules.stream()
                             .anyMatch(rule -> rule.contains("--icmpv6-type 136") && !rule.contains("-s")));
         }
@@ -290,8 +298,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
 
         this.hasIcmpAcceptRules = false;
         try (Stream<String> lines = Files.lines(Paths.get(this.iptablesConfig.getFirewallConfigTmpFileName()))) {
-            this.hasIcmpAcceptRules = lines
-                    .anyMatch(line -> line.trim().contains("-p ipv6-icmp") && line.trim().contains("-j ACCEPT"));
+            this.hasIcmpAcceptRules = lines.anyMatch(
+                    line -> line.trim().contains("-p ipv6-icmp") && line.trim().contains("-j ACCEPT"));
         } catch (IOException e) {
             // Test environment - assume correct behavior
             this.hasIcmpAcceptRules = false;
@@ -320,14 +328,15 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         for (String criticalType : CRITICAL_ICMPV6_TYPES_WITHOUT_SOURCE) {
             boolean foundWithoutSourceRestriction = false;
             for (String rule : this.icmpRules) {
-                if (rule.contains("--icmpv6-type " + criticalType) &&
-                        rule.contains("-j ACCEPT") &&
-                        !rule.contains("-s ")) { // No source restriction
+                if (rule.contains("--icmpv6-type " + criticalType)
+                        && rule.contains("-j ACCEPT")
+                        && !rule.contains("-s ")) { // No source restriction
                     foundWithoutSourceRestriction = true;
                     break;
                 }
             }
-            assertTrue("Critical ICMPv6 type " + criticalType + " should be allowed without source restrictions",
+            assertTrue(
+                    "Critical ICMPv6 type " + criticalType + " should be allowed without source restrictions",
                     foundWithoutSourceRestriction);
         }
     }
@@ -336,7 +345,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         boolean routerSolicitationFound = false;
         for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 133") && rule.contains("-j ACCEPT")) {
-                assertFalse("Router Solicitation (133) should not have source restriction, but rule was: " + rule,
+                assertFalse(
+                        "Router Solicitation (133) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
                 routerSolicitationFound = true;
             }
@@ -348,7 +358,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         boolean routerAdvertisementFound = false;
         for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 134") && rule.contains("-j ACCEPT")) {
-                assertFalse("Router Advertisement (134) should not have source restriction, but rule was: " + rule,
+                assertFalse(
+                        "Router Advertisement (134) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
                 routerAdvertisementFound = true;
             }
@@ -360,7 +371,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         boolean neighborSolicitationFound = false;
         for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 135") && rule.contains("-j ACCEPT")) {
-                assertFalse("Neighbor Solicitation (135) should not have source restriction, but rule was: " + rule,
+                assertFalse(
+                        "Neighbor Solicitation (135) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
                 neighborSolicitationFound = true;
             }
@@ -372,7 +384,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
         boolean neighborAdvertisementFound = false;
         for (String rule : this.icmpRules) {
             if (rule.contains("--icmpv6-type 136") && rule.contains("-j ACCEPT")) {
-                assertFalse("Neighbor Advertisement (136) should not have source restriction, but rule was: " + rule,
+                assertFalse(
+                        "Neighbor Advertisement (136) should not have source restriction, but rule was: " + rule,
                         rule.matches(SOURCE_RESTRICTION_REGEX));
                 neighborAdvertisementFound = true;
             }
@@ -385,12 +398,12 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
 
         for (String rule : this.icmpRules) {
             // Check for Router/Neighbor Discovery rules without source restrictions
-            if ((rule.contains("--icmpv6-type 133") ||
-                    rule.contains("--icmpv6-type 134") ||
-                    rule.contains("--icmpv6-type 135") ||
-                    rule.contains("--icmpv6-type 136")) &&
-                    rule.contains("-j ACCEPT") &&
-                    !rule.matches(SOURCE_RESTRICTION_REGEX)) {
+            if ((rule.contains("--icmpv6-type 133")
+                            || rule.contains("--icmpv6-type 134")
+                            || rule.contains("--icmpv6-type 135")
+                            || rule.contains("--icmpv6-type 136"))
+                    && rule.contains("-j ACCEPT")
+                    && !rule.matches(SOURCE_RESTRICTION_REGEX)) {
                 this.criticalRulesWithoutSourceRestriction++;
             }
         }
@@ -405,16 +418,17 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
     private void thenMulticastListenerDiscoveryIsSupported() {
         boolean hasMulticastSupport = false;
         for (String rule : this.icmpRules) {
-            if ((rule.contains("--icmpv6-type 130") ||
-                    rule.contains("--icmpv6-type 131") ||
-                    rule.contains("--icmpv6-type 132")) &&
-                    rule.contains("-j ACCEPT")) {
+            if ((rule.contains("--icmpv6-type 130")
+                            || rule.contains("--icmpv6-type 131")
+                            || rule.contains("--icmpv6-type 132"))
+                    && rule.contains("-j ACCEPT")) {
                 hasMulticastSupport = true;
                 break;
             }
         }
 
-        assertTrue("Multicast Listener Discovery should be supported for complete IPv6 functionality",
+        assertTrue(
+                "Multicast Listener Discovery should be supported for complete IPv6 functionality",
                 hasMulticastSupport);
     }
 
@@ -424,7 +438,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
             StringWriter sw = new StringWriter();
             this.occurredException.printStackTrace(new PrintWriter(sw));
 
-            errorMessage = String.format("No exception expected, \"%s\" found. Caused by: %s",
+            errorMessage = String.format(
+                    "No exception expected, \"%s\" found. Caused by: %s",
                     this.occurredException.getClass().getName(), sw.toString());
         }
 
@@ -432,8 +447,8 @@ public class IptablesConfigIPv6Test extends FirewallTestUtils {
     }
 
     private void createTestIPv6Config(IptablesConfigIPv6 iptablesConfig, boolean allowIcmp) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter(iptablesConfig.getFirewallConfigTmpFileName()))) {
+        try (BufferedWriter writer =
+                new BufferedWriter(new FileWriter(iptablesConfig.getFirewallConfigTmpFileName()))) {
 
             writer.write("*filter\n");
             writer.write(":INPUT DROP [0:0]\n");
