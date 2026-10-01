@@ -73,7 +73,6 @@ public abstract class AbstractLinuxFirewall {
      *             newLocalRules)}
      */
     @Deprecated
-    @SuppressWarnings("checkstyle:parameterNumber")
     public void addLocalRule(int port, String protocol, String permittedNetwork, String permittedNetworkPrefix,
             String permittedInterfaceName, String unpermittedInterfaceName, String permittedMAC, String sourcePortRange)
             throws KuraException {
@@ -122,7 +121,6 @@ public abstract class AbstractLinuxFirewall {
      *             newPortForwardRules)}
      */
     @Deprecated
-    @SuppressWarnings("checkstyle:parameterNumber")
     public void addPortForwardRule(String inboundIface, String outboundIface, String address, String protocol,
             int inPort, int outPort, boolean masquerade, String permittedNetwork, String permittedNetworkPrefix,
             String permittedMAC, String sourcePortRange) throws KuraException {

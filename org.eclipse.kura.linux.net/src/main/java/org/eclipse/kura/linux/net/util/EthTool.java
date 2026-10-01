@@ -72,7 +72,6 @@ public class EthTool implements LinkTool {
         return status.getExitStatus().isSuccessful();
     }
 
-    @SuppressWarnings("checkstyle:innerAssignment")
     private void parse(String commandOutput) {
         String[] lines = commandOutput.split("\n");
         for (String line : lines) {
