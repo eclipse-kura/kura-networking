@@ -208,4 +208,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	io.netty.transport-native-unix-common;version='[4.1.137,4.1.138)',\
 	org.apache.tomcat-servlet-api;version='[9.0.80,9.0.81)',\
 	org.osgi.service.useradmin;version='[1.1.1,1.1.2)',\
-	org.osgi.util.position;version='[1.0.1,1.0.2)'
+	org.osgi.util.position;version='[1.0.1,1.0.2)',\
+	bcpkix;version='[1.86.0,1.86.1)',\
+	bcprov;version='[1.86.0,1.86.1)',\
+	bcutil;version='[1.86.0,1.86.1)'
