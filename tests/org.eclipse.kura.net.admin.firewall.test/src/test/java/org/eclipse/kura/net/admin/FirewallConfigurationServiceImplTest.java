@@ -355,7 +355,7 @@ public class FirewallConfigurationServiceImplTest {
         assertEquals(1, forwardConfigs.size());
 
         FirewallPortForwardConfigIP<? extends IPAddress> fwd = forwardConfigs.get(0);
-        assertEquals("10.10.1.15", fwd.getAddress().getHostAddress());
+        assertEquals("10.10.1.15", fwd.getIPAddress().getHostAddress());
         assertEquals("wlan0", fwd.getInboundInterface());
         assertEquals(1234, fwd.getInPort());
         assertEquals("eth0", fwd.getOutboundInterface());

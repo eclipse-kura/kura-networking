@@ -202,6 +202,7 @@
                             jffi-native.jar
                         Import-Package: org.eclipse.kura.linux.position.options;resolution:=optional,\
                             org.eclipse.kura.linux.position.provider;resolution:=optional,\
+                            org.eclipse.kura.position;version="[2.0,3.0)",\
                             !org.w3c.dom,\
                             !org.xml.sax,\
                             !sun.misc,\
