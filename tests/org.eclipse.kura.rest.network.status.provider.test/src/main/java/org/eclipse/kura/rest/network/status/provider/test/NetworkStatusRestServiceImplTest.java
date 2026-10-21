@@ -816,8 +816,9 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
                         .withHardwareRevision("hwrev") //
                         .withPrimaryPort("port") //
                         .withPorts(Collections.singletonMap("foo", ModemPortType.AUDIO)) //
-                        .withAllSupportedModemCapabilities(
-                                Arrays.asList(EnumSet.of(ModemCapability.EVDO, ModemCapability.GSM_UMTS)))
+                        .withAllSupportedModemCapabilities(Arrays.asList(
+                                EnumSet.of(ModemCapability.EVDO, ModemCapability.GSM_UMTS),
+                                EnumSet.of(ModemCapability.LTE)))
                         .withCurrentModemCapabilities(EnumSet.of(ModemCapability.IRIDIUM, ModemCapability.LTE)) //
                         .withPowerState(ModemPowerState.OFF) //
                         .withSupportedModes(Collections.singleton(new ModemModePair(
@@ -848,7 +849,7 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
                         + "\"hardwareRevision\":\"hwrev\"," //
                         + "\"primaryPort\":\"port\"," //
                         + "\"ports\":{\"foo\":\"AUDIO\"}," //
-                        + "\"supportedModemCapabilities\":[\"EVDO\",\"GSM_UMTS\"]," //
+                        + "\"supportedModemCapabilities\":[[\"EVDO\",\"GSM_UMTS\"],[\"LTE\"]]," //
                         + "\"currentModemCapabilities\":[\"LTE\",\"IRIDIUM\"]," //
                         + "\"powerState\":\"OFF\"," //
                         + "\"supportedModes\":[" //

@@ -126,7 +126,6 @@ public class WifiConfigurationInterpreterTest {
         expected.setSecurity(WifiSecurity.GROUP_CCMP);
         expected.setPasskey("password");
         expected.setHardwareMode("HW mode");
-        expected.setBroadcast(true);
         expected.setRadioMode(WifiRadioMode.RADIO_MODE_80211a);
         expected.setBgscan(new WifiBgscan(WifiBgscanModule.LEARN, 1, 2, 3));
         expected.setPairwiseCiphers(WifiCiphers.CCMP);
@@ -179,7 +178,6 @@ public class WifiConfigurationInterpreterTest {
         expected.setSecurity(WifiSecurity.GROUP_CCMP);
         expected.setPasskey("password");
         expected.setHardwareMode("HW mode");
-        expected.setBroadcast(true);
         expected.setRadioMode(WifiRadioMode.RADIO_MODE_80211a);
         expected.setBgscan(new WifiBgscan(WifiBgscanModule.LEARN, 1, 2, 3));
         expected.setPairwiseCiphers(WifiCiphers.CCMP);
@@ -220,7 +218,6 @@ public class WifiConfigurationInterpreterTest {
         expected.setSecurity(WifiSecurity.GROUP_CCMP);
         expected.setPasskey("password");
         expected.setHardwareMode("HW mode");
-        expected.setBroadcast(true);
         expected.setRadioMode(WifiRadioMode.RADIO_MODE_80211a);
         expected.setPairwiseCiphers(WifiCiphers.CCMP);
         expected.setIgnoreSSID(true);
