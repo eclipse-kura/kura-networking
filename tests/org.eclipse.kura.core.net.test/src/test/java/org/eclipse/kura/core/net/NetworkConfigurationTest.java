@@ -1037,18 +1037,15 @@ public class NetworkConfigurationTest {
         netConfigs.add(netConfig2);
 
         DhcpServerConfigIP4 netConfig3 = new DhcpServerConfigIP4(
-                "if1",
-                false,
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.0"),
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.1"),
-                (IP4Address) IP4Address.parseHostAddress("255.255.255.0"),
-                1,
-                2,
-                (short) 24,
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.10"),
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.15"),
-                true,
-                null);
+                new DhcpServerCfg("if1", false, 1, 2, true),
+                new DhcpServerCfgIP4(
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.0"),
+                        (IP4Address) IP4Address.parseHostAddress("255.255.255.0"),
+                        (short) 24,
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.1"),
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.10"),
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.15"),
+                        null));
         netConfigs.add(netConfig3);
 
         netConfigs.add(new FirewallAutoNatConfig());
@@ -1529,18 +1526,15 @@ public class NetworkConfigurationTest {
         dnsServers.add((IP4Address) IP4Address.parseHostAddress("10.0.1.1"));
 
         DhcpServerConfigIP4 dhcpConfig = new DhcpServerConfigIP4(
-                "if1",
-                false,
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.0"),
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.1"),
-                (IP4Address) IP4Address.parseHostAddress("255.255.255.0"),
-                1,
-                2,
-                (short) 24,
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.10"),
-                (IP4Address) IP4Address.parseHostAddress("10.0.0.15"),
-                true,
-                dnsServers);
+                new DhcpServerCfg("if1", false, 1, 2, true),
+                new DhcpServerCfgIP4(
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.0"),
+                        (IP4Address) IP4Address.parseHostAddress("255.255.255.0"),
+                        (short) 24,
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.1"),
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.10"),
+                        (IP4Address) IP4Address.parseHostAddress("10.0.0.15"),
+                        dnsServers));
 
         String netIfConfigPrefix = "prefix.";
         HashMap<String, Object> properties = new HashMap<>();

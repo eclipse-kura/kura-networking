@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.kura.network.status.provider.api;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +66,9 @@ public class ModemInterfaceStatusDTO extends NetworkInterfaceStatusDTO {
         this.hardwareRevision = status.getHardwareRevision();
         this.primaryPort = status.getPrimaryPort();
         this.ports = status.getPorts();
-        this.supportedModemCapabilities = status.getSupportedModemCapabilities();
+        final List<Set<ModemCapability>> allSupportedModemCapabilities = status.getAllSupportedModemCapabilities();
+        this.supportedModemCapabilities =
+                allSupportedModemCapabilities.isEmpty() ? Collections.emptySet() : allSupportedModemCapabilities.get(0);
         this.currentModemCapabilities = status.getCurrentModemCapabilities();
         this.powerState = status.getPowerState();
         this.supportedModes =

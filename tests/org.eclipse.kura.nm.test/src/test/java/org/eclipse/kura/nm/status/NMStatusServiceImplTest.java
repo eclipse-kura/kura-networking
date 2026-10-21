@@ -457,7 +457,7 @@ public class NMStatusServiceImplTest {
         builder.withHardwareRevision("NaN");
         builder.withPrimaryPort("Port1");
         builder.withPorts(getPorts());
-        builder.withSupportedModemCapabilities(getSupportedModemCapabilities());
+        builder.withAllSupportedModemCapabilities(getSupportedModemCapabilities());
         builder.withCurrentModemCapabilities(getCurrentModemCapabilities());
         builder.withPowerState(ModemPowerState.LOW);
         builder.withSupportedModes(getSupportedModemModes());
@@ -489,8 +489,9 @@ public class NMStatusServiceImplTest {
         return ports;
     }
 
-    private Set<ModemCapability> getSupportedModemCapabilities() {
-        return EnumSet.of(ModemCapability.GSM_UMTS, ModemCapability.LTE, ModemCapability.IRIDIUM);
+    private List<Set<ModemCapability>> getSupportedModemCapabilities() {
+        return Collections.singletonList(
+                EnumSet.of(ModemCapability.GSM_UMTS, ModemCapability.LTE, ModemCapability.IRIDIUM));
     }
 
     private Set<ModemCapability> getCurrentModemCapabilities() {
