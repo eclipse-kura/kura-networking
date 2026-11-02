@@ -234,6 +234,11 @@ public class IpAddrShow {
         if (input.charAt(end - 1) == ':') {
             end--;
         }
+        // 'ip link' appends the parent link to the name, e.g. eth0@if65 in a container or eth0.100@eth0 for a VLAN
+        int parent = input.indexOf('@', start + 2);
+        if (parent > start + 2 && parent < end) {
+            end = parent;
+        }
         return input.substring(start + 2, end);
     }
 
