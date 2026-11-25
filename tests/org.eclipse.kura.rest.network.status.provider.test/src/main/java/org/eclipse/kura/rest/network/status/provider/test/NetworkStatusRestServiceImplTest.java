@@ -1109,7 +1109,8 @@ public class NetworkStatusRestServiceImplTest extends AbstractRequestHandlerTest
 
     @Parameterized.Parameters
     public static Collection<Transport> transports() {
-        return Arrays.asList(new RestTransport("networkStatus/v1").withReadinessProbePath(INTERFACE_IDS_PATH),
+        return Arrays.asList(
+                new RestTransport("networkStatus/v1").withReadinessProbePath(INTERFACE_IDS_PATH),
                 new MqttTransport("NET-STATUS-V1"));
     }
 
