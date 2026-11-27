@@ -17,3 +17,4 @@ lib/
 generated/
 bin/
 .eclipse/
+.allure/
